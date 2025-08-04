@@ -3,5 +3,3 @@ allure-results/
 allure-report/
 *.log
 .env
-environments/
-collections/
