@@ -184,13 +184,17 @@ app.post('/run', async (req, res) => {
     }
   }
 
-  exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
-    if (err) return res.status(500).json({ error: 'Allure generation failed' });
-    const url = `http://localhost:${PORT}/allure-report/index.html`;
-    exec(`start "" "${url}"`);
-    res.json({ message: 'Test run complete', reportUrl: url });
-  });
+// Вставь сюда твою публичную ссылку Render
+const publicUrl = 'https://postman-allure-server.onrender.com/';
+
+exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
+  if (err) return res.status(500).json({ error: 'Allure generation failed' });
+
+  const reportUrl = `${publicUrl}/allure-report/index.html`;
+  res.json({ message: 'Test run complete', reportUrl });
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен: http://localhost:${PORT}`);
