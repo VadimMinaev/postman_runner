@@ -15,6 +15,9 @@ const allureResults = path.join(__dirname, 'allure-results');
 const allureReport = path.join(__dirname, 'allure-report');
 const configPath = path.join(__dirname, 'config.json');
 
+// 👇 Подставь свою ссылку на Render (без слэша в конце!)
+const publicUrl = 'https://postman-allure-server.onrender.com';
+
 fs.ensureDirSync(collDir);
 fs.ensureDirSync(envDir);
 fs.ensureFileSync(configPath);
@@ -184,19 +187,14 @@ app.post('/run', async (req, res) => {
     }
   }
 
-// Вставь сюда твою публичную ссылку Render
-const publicUrl = 'https://postman-allure-server.onrender.com';
+  exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
+    if (err) return res.status(500).json({ error: 'Allure generation failed' });
 
-exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
-  if (err) return res.status(500).json({ error: 'Allure generation failed' });
-
-  const reportUrl = `${publicUrl}/allure-report/index.html`;
-  res.json({ message: 'Test run complete', reportUrl });
+    const reportUrl = `${publicUrl}/allure-report/index.html`;
+    res.json({ message: 'Test run complete', reportUrl });
+  });
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен: http://localhost:${PORT}`);
-});
 });
