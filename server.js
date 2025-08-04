@@ -185,7 +185,7 @@ app.post('/run', async (req, res) => {
   }
 
 // Вставь сюда твою публичную ссылку Render
-const publicUrl = 'https://postman-allure-server.onrender.com/';
+const publicUrl = 'https://postman-allure-server.onrender.com';
 
 exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
   if (err) return res.status(500).json({ error: 'Allure generation failed' });
@@ -198,4 +198,5 @@ exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport
 
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен: http://localhost:${PORT}`);
+});
 });
