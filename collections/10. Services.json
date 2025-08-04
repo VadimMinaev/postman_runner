@@ -1,0 +1,1325 @@
+{
+  "info": {
+    "_postman_id": "885bc634-84c4-4daf-8ed9-154d58d1b23b",
+    "name": "10. Services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-23T12:42:18.000Z",
+    "createdAt": "2025-07-14T14:31:38.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-885bc634-84c4-4daf-8ed9-154d58d1b23b"
+  },
+  "item": [
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List services",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры массива Service\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "    pm.expect(jsonData.length).to.be.above(0);\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    pm.expect(item).to.be.an(\"object\");\r",
+                      "\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(obj, prop, expectedType, allowNull = false) {\r",
+                      "        if (!obj.hasOwnProperty(prop)) {\r",
+                      "            errors.push(`Отсутствует свойство '${prop}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (obj[prop] === null && allowNull) return;\r",
+                      "        if (expectedType === \"date\") {\r",
+                      "            if (typeof obj[prop] !== \"string\" || isNaN(Date.parse(obj[prop]))) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть датой (ISO строка), а пришло '${obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (typeof obj[prop] !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть '${expectedType}', а пришло '${typeof obj[prop]}'`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(item, \"id\", \"number\");\r",
+                      "    checkType(item, \"sourceID\", \"string\", true);\r",
+                      "    checkType(item, \"name\", \"string\");\r",
+                      "    checkType(item, \"created_at\", \"date\");\r",
+                      "    checkType(item, \"updated_at\", \"date\");\r",
+                      "    checkType(item, \"localized_name\", \"string\");\r",
+                      "    checkType(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "    if (!item.hasOwnProperty(\"provider\") || typeof item.provider !== \"object\" || item.provider === null) {\r",
+                      "        errors.push(\"Отсутствует объект 'provider' или неверный тип\");\r",
+                      "    } else {\r",
+                      "        checkType(item.provider, \"id\", \"number\");\r",
+                      "        checkType(item.provider, \"name\", \"string\");\r",
+                      "        checkType(item.provider, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "        if (!item.provider.hasOwnProperty(\"account\") || typeof item.provider.account !== \"object\" || item.provider.account === null) {\r",
+                      "            errors.push(\"Отсутствует объект 'account' в 'provider' или неверный тип\");\r",
+                      "        } else {\r",
+                      "            checkType(item.provider.account, \"id\", \"string\");\r",
+                      "            checkType(item.provider.account, \"name\", \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    if (!item.hasOwnProperty(\"support_team\") || typeof item.support_team !== \"object\" || item.support_team === null) {\r",
+                      "        errors.push(\"Отсутствует объект 'support_team' или неверный тип\");\r",
+                      "    } else {\r",
+                      "        checkType(item.support_team, \"id\", \"number\");\r",
+                      "        checkType(item.support_team, \"name\", \"string\");\r",
+                      "        checkType(item.support_team, \"nodeID\", \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации Service:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "adc28668-750d-4eb9-a20b-b9d9eccc83d2",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services",
+                  "host": [
+                    "{{url}}services"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-adc28668-750d-4eb9-a20b-b9d9eccc83d2"
+            },
+            {
+              "name": "Predefined Filters",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Все объекты имеют disabled=true\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "   \r",
+                      "    jsonData.forEach(function(item) {\r",
+                      "        // Проверка: свойство disabled отсутствует или не равно true\r",
+                      "        if (!item.hasOwnProperty('disabled') || item.disabled !== true) {\r",
+                      "            console.log(\r",
+                      "                'В ответе есть услуга, у которой отсутствует свойство disabled или оно не равно true, id услуги: ' \r",
+                      "                + (item.id !== undefined ? item.id : 'id отсутствует')\r",
+                      "            );\r",
+                      "            pm.expect(item.disabled, \"Ошибка: id услуги \" + (item.id !== undefined ? item.id : 'id отсутствует')).to.eql(true);\r",
+                      "        }\r",
+                      "    });\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "64b429ed-23a9-44ce-98cb-ec042bde0918",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/disabled",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "disabled"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-64b429ed-23a9-44ce-98cb-ec042bde0918"
+            },
+            {
+              "name": "Get a single service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива Service\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    const item = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(obj, prop, expectedType, allowNull = false) {\r",
+                      "        if (!obj.hasOwnProperty(prop)) {\r",
+                      "            errors.push(`Отсутствует свойство '${prop}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (obj[prop] === null) {\r",
+                      "            if (!allowNull) {\r",
+                      "                errors.push(`Свойство '${prop}' не должно быть null`);\r",
+                      "            }\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (expectedType === \"date\") {\r",
+                      "            if (typeof obj[prop] !== \"string\" || isNaN(Date.parse(obj[prop]))) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть датой (ISO строка), а пришло '${obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(obj[prop])) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть массивом, а пришло '${typeof obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (typeof obj[prop] !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть '${expectedType}', а пришло '${typeof obj[prop]}'`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    function checkPerson(obj, fieldName) {\r",
+                      "        if (!obj.hasOwnProperty(fieldName) || typeof obj[fieldName] !== \"object\" || obj[fieldName] === null) {\r",
+                      "            errors.push(`Отсутствует или неверный '${fieldName}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        checkType(obj[fieldName], \"id\", \"number\");\r",
+                      "        checkType(obj[fieldName], \"name\", \"string\");\r",
+                      "        checkType(obj[fieldName], \"nodeID\", \"string\");\r",
+                      "        if (!obj[fieldName].hasOwnProperty(\"account\") || typeof obj[fieldName].account !== \"object\" || obj[fieldName].account === null) {\r",
+                      "            errors.push(`Отсутствует объект 'account' в '${fieldName}'`);\r",
+                      "        } else {\r",
+                      "            checkType(obj[fieldName].account, \"id\", \"string\");\r",
+                      "            checkType(obj[fieldName].account, \"name\", \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(item, \"id\", \"number\");\r",
+                      "    checkType(item, \"sourceID\", \"string\", true);\r",
+                      "    checkType(item, \"name\", \"string\");\r",
+                      "    checkType(item, \"created_at\", \"date\");\r",
+                      "    checkType(item, \"updated_at\", \"date\");\r",
+                      "    checkType(item, \"description\", \"string\");\r",
+                      "    checkType(item, \"localized_name\", \"string\");\r",
+                      "    checkType(item, \"localized_description\", \"string\");\r",
+                      "    checkType(item, \"keywords\", \"string\");\r",
+                      "    checkType(item, \"localized_keywords\", \"string\");\r",
+                      "    checkType(item, \"nodeID\", \"string\");\r",
+                      "    checkType(item, \"disabled\", \"boolean\");\r",
+                      "    checkType(item, \"attachments\", \"array\");\r",
+                      "    checkType(item, \"picture_uri\", \"string\", true);\r",
+                      "\r",
+                      "    checkType(item, \"provider\", \"object\");\r",
+                      "    checkType(item, \"support_team\", \"object\");\r",
+                      "    checkType(item, \"survey\", \"object\");\r",
+                      "\r",
+                      "    const managerFields = [\r",
+                      "        \"availability_manager\",\r",
+                      "        \"capacity_manager\",\r",
+                      "        \"change_manager\",\r",
+                      "        \"continuity_manager\",\r",
+                      "        \"knowledge_manager\",\r",
+                      "        \"problem_manager\",\r",
+                      "        \"release_manager\",\r",
+                      "        \"service_owner\"\r",
+                      "    ];\r",
+                      "\r",
+                      "    managerFields.forEach(field => checkPerson(item, field));\r",
+                      "\r",
+                      "    // Nullable поля\r",
+                      "    checkType(item, \"source\", \"object\", true);\r",
+                      "    checkType(item, \"custom_fields\", \"object\", true);\r",
+                      "    checkType(item, \"impact\", \"string\", true);\r",
+                      "    checkType(item, \"first_line_team\", \"object\", true);\r",
+                      "    checkType(item, \"service_category\", \"object\", true);\r",
+                      "    checkType(item, \"ui_extension\", \"object\", true);\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации массива Service:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "df43964e-2419-4fa1-8788-ed88da60c3e6",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/106",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "106"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-df43964e-2419-4fa1-8788-ed88da60c3e6"
+            }
+          ],
+          "id": "d21f6a14-8c27-49ce-82bf-229483ab0f8a",
+          "uid": "32335283-d21f6a14-8c27-49ce-82bf-229483ab0f8a"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива Service\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    const item = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(obj, prop, expectedType, allowNull = false) {\r",
+                      "        if (!obj.hasOwnProperty(prop)) {\r",
+                      "            errors.push(`Отсутствует свойство '${prop}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (obj[prop] === null) {\r",
+                      "            if (!allowNull) {\r",
+                      "                errors.push(`Свойство '${prop}' не должно быть null`);\r",
+                      "            }\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (expectedType === \"date\") {\r",
+                      "            if (typeof obj[prop] !== \"string\" || isNaN(Date.parse(obj[prop]))) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть датой (ISO строка), а пришло '${obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(obj[prop])) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть массивом, а пришло '${typeof obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (typeof obj[prop] !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть '${expectedType}', а пришло '${typeof obj[prop]}'`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    function checkPerson(obj, fieldName) {\r",
+                      "        if (!obj.hasOwnProperty(fieldName) || typeof obj[fieldName] !== \"object\" || obj[fieldName] === null) {\r",
+                      "            errors.push(`Отсутствует или неверный '${fieldName}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        checkType(obj[fieldName], \"id\", \"number\");\r",
+                      "        checkType(obj[fieldName], \"name\", \"string\");\r",
+                      "        checkType(obj[fieldName], \"nodeID\", \"string\");\r",
+                      "        if (!obj[fieldName].hasOwnProperty(\"account\") || typeof obj[fieldName].account !== \"object\" || obj[fieldName].account === null) {\r",
+                      "            errors.push(`Отсутствует объект 'account' в '${fieldName}'`);\r",
+                      "        } else {\r",
+                      "            checkType(obj[fieldName].account, \"id\", \"string\");\r",
+                      "            checkType(obj[fieldName].account, \"name\", \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(item, \"id\", \"number\");\r",
+                      "    checkType(item, \"name\", \"string\");\r",
+                      "    checkType(item, \"created_at\", \"date\");\r",
+                      "    checkType(item, \"updated_at\", \"date\");\r",
+                      "    checkType(item, \"description\", \"string\");\r",
+                      "    checkType(item, \"localized_name\", \"string\");\r",
+                      "    checkType(item, \"localized_description\", \"string\");\r",
+                      "    checkType(item, \"keywords\", \"string\");\r",
+                      "    checkType(item, \"localized_keywords\", \"string\");\r",
+                      "    checkType(item, \"nodeID\", \"string\");\r",
+                      "    checkType(item, \"disabled\", \"boolean\");\r",
+                      "    checkType(item, \"attachments\", \"array\");\r",
+                      "    checkType(item, \"picture_uri\", \"string\", true);\r",
+                      "\r",
+                      "    checkType(item, \"provider\", \"object\");\r",
+                      "    checkType(item, \"support_team\", \"object\");\r",
+                      "    checkType(item, \"survey\", \"object\");\r",
+                      "\r",
+                      "    const managerFields = [\r",
+                      "        \"availability_manager\",\r",
+                      "        \"capacity_manager\",\r",
+                      "        \"change_manager\",\r",
+                      "        \"continuity_manager\",\r",
+                      "        \"knowledge_manager\",\r",
+                      "        \"problem_manager\",\r",
+                      "        \"release_manager\",\r",
+                      "        \"service_owner\"\r",
+                      "    ];\r",
+                      "\r",
+                      "    managerFields.forEach(field => checkPerson(item, field));\r",
+                      "\r",
+                      "    // Nullable поля\r",
+                      "    checkType(item, \"custom_fields\", \"object\", true);\r",
+                      "    checkType(item, \"impact\", \"string\", true);\r",
+                      "    checkType(item, \"first_line_team\", \"object\", true);\r",
+                      "    checkType(item, \"service_category\", \"object\", true);\r",
+                      "    checkType(item, \"ui_extension\", \"object\", true);\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации массива Service:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "74b8b8d1-7e8b-4134-ac60-fb548b57db38",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"availability_manager_id\": 1031,\r\n    \"capacity_manager_id\": 1031,\r\n    \"change_manager_id\": 744,\r\n    \"continuity_manager_id\": 1031,\r\n    \"description\": \"Эта услуга обеспечивает функционирование 1С решений компании и включает:\\n\\n* __поддержку прикладного решения;__\\n* __адаптивное сопровождение прикладного решения;__\\n* __поддержка работы пользователей в системе;__\\n* __поддержка ИТ-специалистов.__\",\r\n    \"disabled\": false,\r\n    \"first_line_team\": null,\r\n    \"keywords\": \"1С\",\r\n    \"knowledge_manager_id\": 1031,\r\n    \"name\": \"1C Базовая for {{$randomCompanyName}}\",\r\n    \"picture_uri\": \"https://demo.r-service.tech/storage/instances/rrtsm_devtest2/avatars/189/services/000/000/106/d61616795233a4641934fdb1e5b6757c/original/6be3a201c4b08ea4.svg\",\r\n    \"problem_manager_id\": 1031,\r\n    \"provider_id\": 54,\r\n    \"release_manager_id\": 945,\r\n    \"service_category\": null,\r\n    \"service_owner_id\": 637,\r\n    \"support_team_id\": 42,\r\n    \"survey_id\": 1,\r\n    \"localized_description\": \"Эта услуга обеспечивает функционирование 1С решений компании и включает:\\n\\n* __поддержку прикладного решения;__\\n* __адаптивное сопровождение прикладного решения;__\\n* __поддержка работы пользователей в системе;__\\n* __поддержка ИТ-специалистов.__\",\r\n    \"localized_keywords\": \"1С\",\r\n    \"localized_name\": \"1C Базовая {{$randomCompanyName}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}services",
+                  "host": [
+                    "{{url}}services"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-74b8b8d1-7e8b-4134-ac60-fb548b57db38"
+            }
+          ],
+          "id": "6b2c7101-b59d-4a67-a0fe-5e61b9cff271",
+          "uid": "32335283-6b2c7101-b59d-4a67-a0fe-5e61b9cff271"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта Service\", function () {\r",
+                      "    const item = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(obj, prop, expectedType, allowNull = false) {\r",
+                      "        if (!obj.hasOwnProperty(prop)) {\r",
+                      "            errors.push(`Отсутствует свойство '${prop}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (obj[prop] === null) {\r",
+                      "            if (!allowNull) {\r",
+                      "                errors.push(`Свойство '${prop}' не должно быть null`);\r",
+                      "            }\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (expectedType === \"date\") {\r",
+                      "            if (typeof obj[prop] !== \"string\" || isNaN(Date.parse(obj[prop]))) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть датой (ISO строка), а пришло '${obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(obj[prop])) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть массивом, а пришло '${typeof obj[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (typeof obj[prop] !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть '${expectedType}', а пришло '${typeof obj[prop]}'`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    function checkPerson(obj, fieldName) {\r",
+                      "        if (!obj.hasOwnProperty(fieldName) || typeof obj[fieldName] !== \"object\" || obj[fieldName] === null) {\r",
+                      "            errors.push(`Отсутствует или неверный '${fieldName}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        checkType(obj[fieldName], \"id\", \"number\");\r",
+                      "        checkType(obj[fieldName], \"name\", \"string\");\r",
+                      "        checkType(obj[fieldName], \"nodeID\", \"string\");\r",
+                      "        if (!obj[fieldName].hasOwnProperty(\"account\") || typeof obj[fieldName].account !== \"object\" || obj[fieldName].account === null) {\r",
+                      "            errors.push(`Отсутствует объект 'account' в '${fieldName}'`);\r",
+                      "        } else {\r",
+                      "            checkType(obj[fieldName].account, \"id\", \"string\");\r",
+                      "            checkType(obj[fieldName].account, \"name\", \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(item, \"id\", \"number\");\r",
+                      "    checkType(item, \"name\", \"string\");\r",
+                      "    checkType(item, \"created_at\", \"date\");\r",
+                      "    checkType(item, \"updated_at\", \"date\");\r",
+                      "    checkType(item, \"description\", \"string\");\r",
+                      "    checkType(item, \"localized_name\", \"string\");\r",
+                      "    checkType(item, \"localized_description\", \"string\");\r",
+                      "    checkType(item, \"keywords\", \"string\");\r",
+                      "    checkType(item, \"localized_keywords\", \"string\");\r",
+                      "    checkType(item, \"nodeID\", \"string\");\r",
+                      "    checkType(item, \"disabled\", \"boolean\");\r",
+                      "    checkType(item, \"attachments\", \"array\");\r",
+                      "    checkType(item, \"picture_uri\", \"string\", true);\r",
+                      "\r",
+                      "    checkType(item, \"provider\", \"object\");\r",
+                      "    checkType(item, \"support_team\", \"object\");\r",
+                      "    checkType(item, \"survey\", \"object\");\r",
+                      "\r",
+                      "    const managerFields = [\r",
+                      "        \"availability_manager\",\r",
+                      "        \"capacity_manager\",\r",
+                      "        \"change_manager\",\r",
+                      "        \"continuity_manager\",\r",
+                      "        \"knowledge_manager\",\r",
+                      "        \"problem_manager\",\r",
+                      "        \"release_manager\",\r",
+                      "        \"service_owner\"\r",
+                      "    ];\r",
+                      "\r",
+                      "    managerFields.forEach(field => checkPerson(item, field));\r",
+                      "\r",
+                      "    // Nullable поля\r",
+                      "    checkType(item, \"custom_fields\", \"object\", true);\r",
+                      "    checkType(item, \"impact\", \"string\", true);\r",
+                      "    checkType(item, \"first_line_team\", \"object\", true);\r",
+                      "    checkType(item, \"service_category\", \"object\", true);\r",
+                      "    checkType(item, \"ui_extension\", \"object\", true);\r",
+                      "\r",
+                      "\r",
+                      "    if (item.keywords !== \"1С - C\") {\r",
+                      "        errors.push(`Поле 'keywords' ожидалось равным \"1С - C\", а пришло: '${item.keywords}'`);\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации объекта Service:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "90c37cb2-22a9-45ff-bbd9-93375c74924f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"keywords\": \"1С - C\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}services/106",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "106"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-90c37cb2-22a9-45ff-bbd9-93375c74924f"
+            }
+          ],
+          "id": "aac7cbfd-36b3-484f-8e7b-d6021d84b223",
+          "uid": "32335283-aac7cbfd-36b3-484f-8e7b-d6021d84b223"
+        }
+      ],
+      "id": "16a21c03-173f-499b-90ff-0dbc8e649a04",
+      "uid": "32335283-16a21c03-173f-499b-90ff-0dbc8e649a04"
+    },
+    {
+      "name": "Workflow Templates",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List workflow templates of a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива WorkflowTemplate\", function () {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function check(prop, typeCheck) {\r",
+                      "        try {\r",
+                      "            typeCheck(item[prop]);\r",
+                      "        } catch (e) {\r",
+                      "            errors.push(`Свойство '${prop}': ${e.message}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"id\", v => pm.expect(v).to.be.a(\"number\"));\r",
+                      "    check(\"sourceID\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.be.a(\"string\");\r",
+                      "    });\r",
+                      "    check(\"subject\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"created_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"updated_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "\r",
+                      "    check(\"service\", v => {\r",
+                      "        pm.expect(v).to.be.an(\"object\");\r",
+                      "        pm.expect(v).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(v).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(v).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(v).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(v.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(v.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(v.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(v.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(v.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "    });\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "cf26104a-d660-4cd6-9f12-4deb7f3bb130",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/106/workflow_templates",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "106",
+                    "workflow_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-cf26104a-d660-4cd6-9f12-4deb7f3bb130"
+            }
+          ],
+          "id": "656f1915-e2dd-4b9e-b9e3-3fb633911463",
+          "uid": "32335283-656f1915-e2dd-4b9e-b9e3-3fb633911463"
+        }
+      ],
+      "id": "349beee6-f511-4180-8215-395f928386ec",
+      "uid": "32335283-349beee6-f511-4180-8215-395f928386ec"
+    },
+    {
+      "name": "Request Templates",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List workflow templates of a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива RequestTemplate\", function () {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function check(prop, typeCheck) {\r",
+                      "        try {\r",
+                      "            typeCheck(item[prop]);\r",
+                      "        } catch (e) {\r",
+                      "            errors.push(`Свойство '${prop}': ${e.message}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"id\", v => pm.expect(v).to.be.a(\"number\"));\r",
+                      "    check(\"sourceID\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.be.a(\"string\");\r",
+                      "    });\r",
+                      "    check(\"subject\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"localized_subject\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"category\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"impact\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.be.a(\"string\");\r",
+                      "    });\r",
+                      "    check(\"created_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"updated_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "\r",
+                      "    check(\"service\", v => {\r",
+                      "        pm.expect(v).to.be.an(\"object\");\r",
+                      "        pm.expect(v).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(v).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(v).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(v).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(v.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(v.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(v.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(v.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(v.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "    });\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "e6adb1b0-f01f-4791-8fe0-8cc870222c5e",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/106/request_templates",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "106",
+                    "request_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-e6adb1b0-f01f-4791-8fe0-8cc870222c5e"
+            }
+          ],
+          "id": "2540f4a6-0f38-4e48-b1c8-af15ff2ca22a",
+          "uid": "32335283-2540f4a6-0f38-4e48-b1c8-af15ff2ca22a"
+        }
+      ],
+      "id": "c887bc7b-9ac6-48b0-b2c2-9fd08b6e6a75",
+      "uid": "32335283-c887bc7b-9ac6-48b0-b2c2-9fd08b6e6a75"
+    },
+    {
+      "name": "Risks",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List risks of a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива Risk\", function () {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function check(prop, typeCheck) {\r",
+                      "        try {\r",
+                      "            typeCheck(item[prop]);\r",
+                      "        } catch (e) {\r",
+                      "            errors.push(`Свойство '${prop}': ${e.message}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"id\", v => pm.expect(v).to.be.a(\"number\"));\r",
+                      "    check(\"sourceID\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.be.a(\"string\");\r",
+                      "    });\r",
+                      "    check(\"subject\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"severity\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"status\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"mitigation_target_at\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/);\r",
+                      "    });\r",
+                      "    check(\"closed_at\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/);\r",
+                      "    });\r",
+                      "    check(\"closure_reason\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.be.a(\"string\");\r",
+                      "    });\r",
+                      "    check(\"created_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"updated_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "dcbce18d-6da8-451a-b734-fdd827540efa",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/81/risks",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "81",
+                    "risks"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-dcbce18d-6da8-451a-b734-fdd827540efa"
+            }
+          ],
+          "id": "464c2844-e744-4f9b-be04-d26811916d58",
+          "uid": "32335283-464c2844-e744-4f9b-be04-d26811916d58"
+        }
+      ],
+      "id": "084156cd-479c-493f-a64d-7de25cd2fca6",
+      "uid": "32335283-084156cd-479c-493f-a64d-7de25cd2fca6"
+    },
+    {
+      "name": "Service Instances",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service instances of a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива ServiceInstance\", function () {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function check(prop, typeCheck) {\r",
+                      "        try {\r",
+                      "            typeCheck(item[prop]);\r",
+                      "        } catch (e) {\r",
+                      "            errors.push(`Свойство '${prop}': ${e.message}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"id\", v => pm.expect(v).to.be.a(\"number\"));\r",
+                      "    check(\"sourceID\", v => {\r",
+                      "        if (v !== null) pm.expect(v).to.be.a(\"string\");\r",
+                      "    });\r",
+                      "    check(\"name\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"status\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "\r",
+                      "    // Проверка service (без nodeID)\r",
+                      "    try {\r",
+                      "        pm.expect(item.service).to.be.an(\"object\");\r",
+                      "        pm.expect(item.service.id).to.be.a(\"number\");\r",
+                      "        pm.expect(item.service.name).to.be.a(\"string\");\r",
+                      "        pm.expect(item.service.localized_name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service.provider).to.be.an(\"object\");\r",
+                      "        pm.expect(item.service.provider.id).to.be.a(\"number\");\r",
+                      "        pm.expect(item.service.provider.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service.provider.account).to.be.an(\"object\");\r",
+                      "        pm.expect(item.service.provider.account.id).to.be.a(\"string\");\r",
+                      "        pm.expect(item.service.provider.account.name).to.be.a(\"string\");\r",
+                      "    } catch (e) {\r",
+                      "        errors.push(\"Ошибка валидации 'service': \" + e.message);\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверка support_team (без nodeID)\r",
+                      "    try {\r",
+                      "        pm.expect(item.support_team).to.be.an(\"object\");\r",
+                      "        pm.expect(item.support_team.id).to.be.a(\"number\");\r",
+                      "        pm.expect(item.support_team.name).to.be.a(\"string\");\r",
+                      "    } catch (e) {\r",
+                      "        errors.push(\"Ошибка валидации 'support_team': \" + e.message);\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"created_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"updated_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"localized_name\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "419c7512-449b-407d-86e4-8debac2dda09",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/81/service_instances",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "81",
+                    "service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-419c7512-449b-407d-86e4-8debac2dda09"
+            }
+          ],
+          "id": "afee2fbb-1c18-4566-bc83-5418c8024f82",
+          "uid": "32335283-afee2fbb-1c18-4566-bc83-5418c8024f82"
+        }
+      ],
+      "id": "474b05df-0021-45ca-a490-7c86b413e6c1",
+      "uid": "32335283-474b05df-0021-45ca-a490-7c86b413e6c1"
+    },
+    {
+      "name": "Service Level Agreements",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service level agreements of a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива SLA\", function () {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function check(prop, typeCheck) {\r",
+                      "        try {\r",
+                      "            typeCheck(item[prop]);\r",
+                      "        } catch (e) {\r",
+                      "            errors.push(`Свойство '${prop}': ${e.message}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"id\", v => pm.expect(v).to.be.a(\"number\"));\r",
+                      "    // sourceID игнорируем\r",
+                      "    check(\"name\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"status\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"created_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"updated_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "\r",
+                      "    // service_offering без nodeID\r",
+                      "    try {\r",
+                      "        pm.expect(item.service_offering).to.be.an(\"object\");\r",
+                      "        pm.expect(item.service_offering.id).to.be.a(\"number\");\r",
+                      "        pm.expect(item.service_offering.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        // service без nodeID\r",
+                      "        const svc = item.service_offering.service;\r",
+                      "        pm.expect(svc).to.be.an(\"object\");\r",
+                      "        pm.expect(svc.id).to.be.a(\"number\");\r",
+                      "        pm.expect(svc.name).to.be.a(\"string\");\r",
+                      "        pm.expect(svc.localized_name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        // provider без nodeID\r",
+                      "        const prov = svc.provider;\r",
+                      "        pm.expect(prov).to.be.an(\"object\");\r",
+                      "        pm.expect(prov.id).to.be.a(\"number\");\r",
+                      "        pm.expect(prov.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        const acc = prov.account;\r",
+                      "        pm.expect(acc).to.be.an(\"object\");\r",
+                      "        pm.expect(acc.id).to.be.a(\"string\");\r",
+                      "        pm.expect(acc.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        errors.push(\"Ошибка валидации 'service_offering': \" + e.message);\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2d3fbc67-8cb2-4ec5-9dbf-23146e23039e",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/81/slas",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "81",
+                    "slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2d3fbc67-8cb2-4ec5-9dbf-23146e23039e"
+            }
+          ],
+          "id": "9bab7026-2b06-4063-a516-7f4bf1c0980b",
+          "uid": "32335283-9bab7026-2b06-4063-a516-7f4bf1c0980b"
+        }
+      ],
+      "id": "bdd6d4a7-ab53-47f4-893a-a29058d27295",
+      "uid": "32335283-bdd6d4a7-ab53-47f4-893a-a29058d27295"
+    },
+    {
+      "name": "Service Offerings",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service offerings of a service",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры массива ServiceOffering\", () => {\r",
+                      "    pm.expect(pm.response.code).to.eql(200);\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function check(prop, typeCheck) {\r",
+                      "        try {\r",
+                      "            typeCheck(item[prop]);\r",
+                      "        } catch (e) {\r",
+                      "            errors.push(`Свойство '${prop}': ${e.message}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    check(\"id\", v => pm.expect(v).to.be.a(\"number\"));\r",
+                      "    // sourceID пропускаем\r",
+                      "    check(\"name\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"status\", v => pm.expect(v).to.be.a(\"string\"));\r",
+                      "    check(\"created_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "    check(\"updated_at\", v => pm.expect(v).to.match(/^\\d{4}-\\d{2}-\\d{2}T/));\r",
+                      "\r",
+                      "    try {\r",
+                      "        pm.expect(item.service).to.be.an(\"object\");\r",
+                      "        pm.expect(item.service.id).to.be.a(\"number\");\r",
+                      "        pm.expect(item.service.name).to.be.a(\"string\");\r",
+                      "        pm.expect(item.service.localized_name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        // provider без nodeID\r",
+                      "        const provider = item.service.provider;\r",
+                      "        pm.expect(provider).to.be.an(\"object\");\r",
+                      "        pm.expect(provider.id).to.be.a(\"number\");\r",
+                      "        pm.expect(provider.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        const account = provider.account;\r",
+                      "        pm.expect(account).to.be.an(\"object\");\r",
+                      "        pm.expect(account.id).to.be.a(\"string\");\r",
+                      "        pm.expect(account.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        errors.push(\"Ошибка валидации 'service.provider.account': \" + e.message);\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "309dd4ca-75bb-418c-b201-8c1c601fddc4",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}services/81/service_offerings",
+                  "host": [
+                    "{{url}}services"
+                  ],
+                  "path": [
+                    "81",
+                    "service_offerings"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-309dd4ca-75bb-418c-b201-8c1c601fddc4"
+            }
+          ],
+          "id": "05d47f9a-b6ff-480f-9fcf-71efa35dd78d",
+          "uid": "32335283-05d47f9a-b6ff-480f-9fcf-71efa35dd78d"
+        }
+      ],
+      "id": "71cc3a4c-0582-404c-a274-111012d20a0c",
+      "uid": "32335283-71cc3a4c-0582-404c-a274-111012d20a0c"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "a0b59823-51aa-418c-8323-fef2af93917e",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "1c448d25-7061-4dce-a2fe-eba9b4188b1d",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,915 @@
+{
+  "info": {
+    "_postman_id": "d9c7bd2d-2190-436c-bb0c-a09ce285f792",
+    "name": "09. Request Templates",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-08-04T11:29:51.000Z",
+    "createdAt": "2025-07-14T12:42:18.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-d9c7bd2d-2190-436c-bb0c-a09ce285f792"
+  },
+  "item": [
+    {
+      "name": "Request Templates",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List request templates",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта сущности (request_templates)\", function () {\r",
+                      "    const jsonData = pm.response.json(); // Define jsonData\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").with.length.greaterThan(0);\r",
+                      "    const item = jsonData[0];\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(item, null, 2));\r",
+                      "\r",
+                      "    const expectedTypes = {\r",
+                      "        id: \"number\",\r",
+                      "        sourceID: [\"string\", \"null\"],\r",
+                      "        subject: \"string\",\r",
+                      "        category: [\"string\", \"null\"],\r",
+                      "        impact: [\"string\", \"null\"],\r",
+                      "        service: [\"object\", \"null\"],\r",
+                      "        created_at: \"string\",\r",
+                      "        updated_at: \"string\",\r",
+                      "        localized_subject: \"string\",\r",
+                      "        nodeID: \"string\"\r",
+                      "    };\r",
+                      "\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    Object.keys(expectedTypes).forEach(function (key) {\r",
+                      "        const expected = expectedTypes[key];\r",
+                      "        const actualType = Array.isArray(item[key]) ? \"array\" : (item[key] === null ? \"null\" : typeof item[key]);\r",
+                      "\r",
+                      "        if (Array.isArray(expected)) {\r",
+                      "            if (!expected.includes(actualType)) {\r",
+                      "                errors.push(`Свойство '${key}' ожидалось быть ${expected.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            if (actualType !== expected) {\r",
+                      "                errors.push(`Свойство '${key}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "7f08af2b-2adf-424d-9e28-4e2256413f6d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}request_templates",
+                  "host": [
+                    "{{url}}request_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-7f08af2b-2adf-424d-9e28-4e2256413f6d"
+            },
+            {
+              "name": "Get a single request template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта RequestTemplate (fulfillment)\", function () {\r",
+                      "    const jsonData = pm.response.json(); // Define jsonData\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    const item = jsonData;\r",
+                      "\r",
+                      "    const expectedTypes = {\r",
+                      "        asset_selection: \"boolean\",\r",
+                      "        assign_after_workflow_completion: \"boolean\",\r",
+                      "        assign_to_self: \"boolean\",\r",
+                      "        attachments: \"array\",\r",
+                      "        category: \"string\",\r",
+                      "        ci: [\"object\", \"null\"],\r",
+                      "        completion_reason: [\"string\", \"null\"],\r",
+                      "        copy_subject_to_requests: \"boolean\",\r",
+                      "        created_at: \"string\",\r",
+                      "        desired_completion: [\"string\", \"null\"],\r",
+                      "        disabled: \"boolean\",\r",
+                      "        effort_class: [\"string\", \"null\"],\r",
+                      "        end_users: \"boolean\",\r",
+                      "        id: \"number\",\r",
+                      "        impact: [\"string\", \"null\"],\r",
+                      "        instructions: [\"string\", \"null\"],\r",
+                      "        keywords: [\"string\", \"null\"],\r",
+                      "        member: \"object\",\r",
+                      "        note: [\"string\", \"null\"],\r",
+                      "        planned_effort: [\"number\", \"null\"],\r",
+                      "        registration_hints: [\"string\", \"null\"],\r",
+                      "        resolution_target: [\"string\", \"null\"],\r",
+                      "        service: [\"object\", \"null\"],\r",
+                      "        source: \"string\",\r",
+                      "        sourceID: \"string\",\r",
+                      "        specialists: \"boolean\",\r",
+                      "        status: [\"string\", \"null\"],\r",
+                      "        subject: \"string\",\r",
+                      "        supplier: [\"object\", \"null\"],\r",
+                      "        support_hours: [\"string\", \"null\"],\r",
+                      "        team: \"object\",\r",
+                      "        time_zone: [\"string\", \"null\"],\r",
+                      "        times_applied: \"number\",\r",
+                      "        ui_extension: [\"string\", \"null\"],\r",
+                      "        updated_at: \"string\",\r",
+                      "        urgent: \"boolean\",\r",
+                      "        workflow_manager: [\"object\", \"null\"],\r",
+                      "        workflow_template: [\"object\", \"null\"],\r",
+                      "        localized_instructions: [\"string\", \"null\"],\r",
+                      "        localized_keywords: [\"string\", \"null\"],\r",
+                      "        localized_note: [\"string\", \"null\"],\r",
+                      "        localized_registration_hints: [\"string\", \"null\"],\r",
+                      "        localized_subject: \"string\",\r",
+                      "        nodeID: \"string\"\r",
+                      "    };\r",
+                      "\r",
+                      "    const nestedChecks = [\r",
+                      "        {\r",
+                      "            key: \"member\",\r",
+                      "            expected: {\r",
+                      "                id: \"number\",\r",
+                      "                name: \"string\",\r",
+                      "                account: \"object\",\r",
+                      "                nodeID: \"string\"\r",
+                      "            },\r",
+                      "            nested: [\r",
+                      "                {\r",
+                      "                    key: \"account\",\r",
+                      "                    expected: {\r",
+                      "                        id: \"string\",\r",
+                      "                        name: \"string\"\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            ]\r",
+                      "        },\r",
+                      "        {\r",
+                      "            key: \"team\",\r",
+                      "            expected: {\r",
+                      "                id: \"number\",\r",
+                      "                name: \"string\",\r",
+                      "                account: \"object\",\r",
+                      "                nodeID: \"string\"\r",
+                      "            },\r",
+                      "            nested: [\r",
+                      "                {\r",
+                      "                    key: \"account\",\r",
+                      "                    expected: {\r",
+                      "                        id: \"string\",\r",
+                      "                        name: \"string\"\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            ]\r",
+                      "        }\r",
+                      "    ];\r",
+                      "\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    Object.keys(expectedTypes).forEach(function (key) {\r",
+                      "        const expected = expectedTypes[key];\r",
+                      "        const actualType = Array.isArray(item[key]) ? \"array\" : (item[key] === null ? \"null\" : typeof item[key]);\r",
+                      "\r",
+                      "        if (Array.isArray(expected)) {\r",
+                      "            if (!expected.includes(actualType)) {\r",
+                      "                errors.push(`Свойство '${key}' ожидалось быть ${expected.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            if (actualType !== expected) {\r",
+                      "                errors.push(`Свойство '${key}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    nestedChecks.forEach(function (check) {\r",
+                      "        const obj = item[check.key];\r",
+                      "        if (typeof obj !== \"object\" || obj === null) {\r",
+                      "            errors.push(`Свойство '${check.key}' отсутствует или не является объектом`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "\r",
+                      "        Object.keys(check.expected).forEach(function (nestedKey) {\r",
+                      "            const expected = check.expected[nestedKey];\r",
+                      "            const value = obj[nestedKey];\r",
+                      "            const actualType = Array.isArray(value) ? \"array\" : (value === null ? \"null\" : typeof value);\r",
+                      "            if (actualType !== expected) {\r",
+                      "                errors.push(`Свойство '${check.key}.${nestedKey}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        if (check.nested) {\r",
+                      "            check.nested.forEach(function (deepCheck) {\r",
+                      "                const deepObj = obj[deepCheck.key];\r",
+                      "                if (typeof deepObj !== \"object\" || deepObj === null) {\r",
+                      "                    errors.push(`Свойство '${check.key}.${deepCheck.key}' отсутствует или не является объектом`);\r",
+                      "                    return;\r",
+                      "                }\r",
+                      "                Object.keys(deepCheck.expected).forEach(function (deepKey) {\r",
+                      "                    const expected = deepCheck.expected[deepKey];\r",
+                      "                    const value = deepObj[deepKey];\r",
+                      "                    const actualType = Array.isArray(value) ? \"array\" : (value === null ? \"null\" : typeof value);\r",
+                      "                    if (actualType !== expected) {\r",
+                      "                        errors.push(`Свойство '${check.key}.${deepCheck.key}.${deepKey}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "                    }\r",
+                      "                });\r",
+                      "            });\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ad992031-96f9-488e-b02a-33710e60ad44",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}request_templates/421",
+                  "host": [
+                    "{{url}}request_templates"
+                  ],
+                  "path": [
+                    "421"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ad992031-96f9-488e-b02a-33710e60ad44"
+            }
+          ],
+          "id": "8f1667a9-c09f-45d2-891b-6d772289bed3",
+          "uid": "32335283-8f1667a9-c09f-45d2-891b-6d772289bed3"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a request template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта RequestTemplate (backing up)\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.environment.set(\"request_template_id\", jsonData.id);\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const expectedTypes = {\r",
+                      "        asset_selection: \"boolean\",\r",
+                      "        assign_after_workflow_completion: \"boolean\",\r",
+                      "        assign_to_self: \"boolean\",\r",
+                      "        attachments: \"array\",\r",
+                      "        category: [\"string\", \"null\"],\r",
+                      "        ci: [\"object\", \"null\"],\r",
+                      "        completion_reason: [\"string\", \"null\"],\r",
+                      "        copy_subject_to_requests: \"boolean\",\r",
+                      "        created_at: \"string\",\r",
+                      "        desired_completion: [\"string\", \"null\"],\r",
+                      "        disabled: \"boolean\",\r",
+                      "        effort_class: [\"string\", \"null\"],\r",
+                      "        end_users: \"boolean\",\r",
+                      "        id: \"number\",\r",
+                      "        impact: [\"string\", \"null\"],\r",
+                      "        instructions: [\"string\", \"null\"],\r",
+                      "        keywords: [\"string\", \"null\"],\r",
+                      "        member: [\"object\", \"null\"],\r",
+                      "        note: [\"string\", \"null\"],\r",
+                      "        planned_effort: [\"string\", \"null\"],\r",
+                      "        registration_hints: [\"string\", \"null\"],\r",
+                      "        resolution_target: [\"string\", \"null\"],\r",
+                      "        service: [\"object\", \"null\"],\r",
+                      "        source: \"string\",\r",
+                      "        sourceID: [\"string\", \"null\"],\r",
+                      "        specialists: \"boolean\",\r",
+                      "        status: [\"string\", \"null\"],\r",
+                      "        subject: \"string\",\r",
+                      "        supplier: [\"string\", \"null\"],\r",
+                      "        support_hours: [\"string\", \"null\"],\r",
+                      "        team: [\"object\", \"null\"],\r",
+                      "        time_zone: [\"string\", \"null\"],\r",
+                      "        times_applied: \"number\",\r",
+                      "        ui_extension: [\"string\", \"null\"],\r",
+                      "        updated_at: \"string\",\r",
+                      "        urgent: \"boolean\",\r",
+                      "        workflow_manager: [\"object\", \"null\"],\r",
+                      "        workflow_template: [\"object\", \"null\"],\r",
+                      "        localized_instructions: [\"string\", \"null\"],\r",
+                      "        localized_keywords: [\"string\", \"null\"],\r",
+                      "        localized_note: [\"string\", \"null\"],\r",
+                      "        localized_registration_hints: [\"string\", \"null\"],\r",
+                      "        localized_subject: \"string\",\r",
+                      "        nodeID: \"string\",\r",
+                      "    };\r",
+                      "\r",
+                      "    let validationErrors = [];\r",
+                      "\r",
+                      "    for (let key in expectedTypes) {\r",
+                      "        let actualValue = item[key];\r",
+                      "        let actualType = Array.isArray(actualValue) ? \"array\" : (actualValue === null ? \"null\" : typeof actualValue);\r",
+                      "        let expected = expectedTypes[key];\r",
+                      "        if (Array.isArray(expected)) {\r",
+                      "            if (!expected.includes(actualType)) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            if (actualType !== expected) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    if (validationErrors.length) {\r",
+                      "        console.log(\"Ошибки валидации полей:\\n\" + JSON.stringify(validationErrors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(validationErrors.length, \"Ошибки валидации структуры\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "9e7ec4cf-5a15-4c0b-bf89-c2dd963adaf5",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"subject\": \"Шаблон Запроса {{$randomIngverb}}\",\r\n    \"service_id\": 106,\r\n    \"ci_id\": 2411,\r\n    \"workflow_manager_id\": 607,\r\n    \"status\": \"workflow_pending\",\r\n    \"workflow_template_id\": 108\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}request_templates",
+                  "host": [
+                    "{{url}}request_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-9e7ec4cf-5a15-4c0b-bf89-c2dd963adaf5"
+            }
+          ],
+          "id": "4f40fec0-8ae5-4dab-88d4-d8eec57b9e5c",
+          "uid": "32335283-4f40fec0-8ae5-4dab-88d4-d8eec57b9e5c"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a request template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта RequestTemplate (backing up)\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.environment.set(\"request_template_id\", jsonData.id);\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const expectedTypes = {\r",
+                      "        asset_selection: \"boolean\",\r",
+                      "        assign_after_workflow_completion: \"boolean\",\r",
+                      "        assign_to_self: \"boolean\",\r",
+                      "        attachments: \"array\",\r",
+                      "        category: [\"string\", \"null\"],\r",
+                      "        ci: [\"object\", \"null\"],\r",
+                      "        completion_reason: [\"string\", \"null\"],\r",
+                      "        copy_subject_to_requests: \"boolean\",\r",
+                      "        created_at: \"string\",\r",
+                      "        desired_completion: [\"string\", \"null\"],\r",
+                      "        disabled: \"boolean\",\r",
+                      "        effort_class: [\"string\", \"null\"],\r",
+                      "        end_users: \"boolean\",\r",
+                      "        id: \"number\",\r",
+                      "        impact: [\"string\", \"null\"],\r",
+                      "        instructions: [\"string\", \"null\"],\r",
+                      "        keywords: [\"string\", \"null\"],\r",
+                      "        member: [\"object\", \"null\"],\r",
+                      "        note: [\"string\", \"null\"],\r",
+                      "        planned_effort: [\"string\", \"null\"],\r",
+                      "        registration_hints: [\"string\", \"null\"],\r",
+                      "        resolution_target: [\"string\", \"null\"],\r",
+                      "        service: [\"object\", \"null\"],\r",
+                      "        source: \"string\",\r",
+                      "        sourceID: [\"string\", \"null\"],\r",
+                      "        specialists: \"boolean\",\r",
+                      "        status: [\"string\", \"null\"],\r",
+                      "        subject: \"string\",\r",
+                      "        supplier: [\"string\", \"null\"],\r",
+                      "        support_hours: [\"string\", \"null\"],\r",
+                      "        team: [\"object\", \"null\"],\r",
+                      "        time_zone: [\"string\", \"null\"],\r",
+                      "        times_applied: \"number\",\r",
+                      "        ui_extension: [\"string\", \"null\"],\r",
+                      "        updated_at: \"string\",\r",
+                      "        urgent: \"boolean\",\r",
+                      "        workflow_manager: [\"object\", \"null\"],\r",
+                      "        workflow_template: [\"object\", \"null\"],\r",
+                      "        localized_instructions: [\"string\", \"null\"],\r",
+                      "        localized_keywords: [\"string\", \"null\"],\r",
+                      "        localized_note: [\"string\", \"null\"],\r",
+                      "        localized_registration_hints: [\"string\", \"null\"],\r",
+                      "        localized_subject: \"string\",\r",
+                      "        nodeID: \"string\",\r",
+                      "    };\r",
+                      "\r",
+                      "    // Определения структур вложенных объектов\r",
+                      "    const nestedObjectsSchemas = {\r",
+                      "        ci: {\r",
+                      "            id: \"number\",\r",
+                      "            name: \"string\",\r",
+                      "            nodeID: \"string\"\r",
+                      "        },\r",
+                      "        member: {\r",
+                      "            id: \"number\",\r",
+                      "            name: \"string\",\r",
+                      "            nodeID: \"string\"\r",
+                      "        },\r",
+                      "        service: {\r",
+                      "            id: \"number\",\r",
+                      "            name: \"string\",\r",
+                      "            nodeID: \"string\"\r",
+                      "        },\r",
+                      "        team: {\r",
+                      "            id: \"number\",\r",
+                      "            name: \"string\",\r",
+                      "            nodeID: \"string\"\r",
+                      "        },\r",
+                      "        workflow_manager: {\r",
+                      "            id: \"number\",\r",
+                      "            name: \"string\",\r",
+                      "            nodeID: \"string\"\r",
+                      "        },\r",
+                      "        workflow_template: {\r",
+                      "            id: \"number\",\r",
+                      "            subject: \"string\",\r",
+                      "            nodeID: \"string\"\r",
+                      "        }\r",
+                      "    };\r",
+                      "\r",
+                      "    let validationErrors = [];\r",
+                      "\r",
+                      "    // Проверка основных полей\r",
+                      "    for (let key in expectedTypes) {\r",
+                      "        let actualValue = item[key];\r",
+                      "        let actualType = Array.isArray(actualValue) ? \"array\" : (actualValue === null ? \"null\" : typeof actualValue);\r",
+                      "        let expected = expectedTypes[key];\r",
+                      "        if (Array.isArray(expected)) {\r",
+                      "            if (!expected.includes(actualType)) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            if (actualType !== expected) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверка вложенных объектов\r",
+                      "    for (let nestedKey in nestedObjectsSchemas) {\r",
+                      "        if (item[nestedKey] !== null && typeof item[nestedKey] === \"object\") {\r",
+                      "            const nestedObj = item[nestedKey];\r",
+                      "            const nestedSchema = nestedObjectsSchemas[nestedKey];\r",
+                      "            \r",
+                      "            for (let prop in nestedSchema) {\r",
+                      "                if (!(prop in nestedObj)) {\r",
+                      "                    validationErrors.push(`Вложенный объект '${nestedKey}' должен содержать свойство '${prop}'`);\r",
+                      "                    continue;\r",
+                      "                }\r",
+                      "                \r",
+                      "                const actualType = typeof nestedObj[prop];\r",
+                      "                const expectedType = nestedSchema[prop];\r",
+                      "                if (actualType !== expectedType) {\r",
+                      "                    validationErrors.push(`Свойство '${nestedKey}.${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "                }\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    if (validationErrors.length) {\r",
+                      "        console.log(\"Ошибки валидации полей:\\n\" + JSON.stringify(validationErrors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(validationErrors.length, \"Ошибки валидации структуры\").to.eql(0);\r",
+                      "    pm.expect(jsonData.workflow_manager.id, \"ID менеджера\").to.eql(581);\r",
+                      "    pm.expect(jsonData.workflow_template.id, \"ID шаблона\").to.eql(79);\r",
+                      "    pm.expect(jsonData.service.id, \"ID Услуги\").to.eql(108);\r",
+                      "    pm.expect(jsonData.category, \"category\").to.eql('rfi');\r",
+                      "\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "8e7b0570-e910-4361-94f6-46c46627ff38",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"service_id\": 108,\r\n    \"workflow_manager_id\": 581,\r\n    \"status\": \"workflow_pending\",\r\n    \"workflow_template_id\": 79,\r\n    \"category\": \"rfi\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}request_templates/{{request_template_id}}",
+                  "host": [
+                    "{{url}}request_templates"
+                  ],
+                  "path": [
+                    "{{request_template_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-8e7b0570-e910-4361-94f6-46c46627ff38"
+            }
+          ],
+          "id": "664c9728-5328-45c0-9f5b-d92e8675ba1f",
+          "uid": "32335283-664c9728-5328-45c0-9f5b-d92e8675ba1f"
+        }
+      ],
+      "id": "9b04e88a-eb9f-4cbc-8286-169fe11173ff",
+      "uid": "32335283-9b04e88a-eb9f-4cbc-8286-169fe11173ff"
+    },
+    {
+      "name": "Automation Rules",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List automation rules of a request template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "51f4d3e8-6b5d-4ac2-a561-89326ff520f0",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}request_templates/{{request_template_id}}/automation_rules",
+                  "host": [
+                    "{{url}}request_templates"
+                  ],
+                  "path": [
+                    "{{request_template_id}}",
+                    "automation_rules"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-51f4d3e8-6b5d-4ac2-a561-89326ff520f0"
+            }
+          ],
+          "id": "ede93258-62e5-4704-a66b-198673fe5042",
+          "uid": "32335283-ede93258-62e5-4704-a66b-198673fe5042"
+        }
+      ],
+      "id": "2ec3a428-0865-4077-ab4f-8b952ba71773",
+      "uid": "32335283-2ec3a428-0865-4077-ab4f-8b952ba71773"
+    },
+    {
+      "name": "Requests",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List automation rules of a request template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта Request (RFC)\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    const item = jsonData[0]; // Проверяем первый элемент массива\r",
+                      "    const expectedTypes = {\r",
+                      "        id: \"number\",\r",
+                      "        sourceID: [\"string\", \"null\"],\r",
+                      "        subject: \"string\",\r",
+                      "        category: \"string\",\r",
+                      "        impact: [\"string\", \"null\"],\r",
+                      "        status: \"string\",\r",
+                      "        next_target_at: [\"string\", \"null\"],\r",
+                      "        completed_at: [\"string\", \"null\"],\r",
+                      "        team: [\"object\", \"null\"],\r",
+                      "        member: [\"object\", \"null\"],\r",
+                      "        grouped_into: [\"string\", \"null\"],\r",
+                      "        service_instance: [\"object\", \"null\"],\r",
+                      "        created_at: \"string\",\r",
+                      "        updated_at: \"string\",\r",
+                      "        nodeID: \"string\",\r",
+                      "    };\r",
+                      "\r",
+                      "    let validationErrors = [];\r",
+                      "\r",
+                      "    for (let key in expectedTypes) {\r",
+                      "        let actualValue = item[key];\r",
+                      "        let actualType = Array.isArray(actualValue) ? \"array\" : (actualValue === null ? \"null\" : typeof actualValue);\r",
+                      "        let expected = expectedTypes[key];\r",
+                      "        if (Array.isArray(expected)) {\r",
+                      "            if (!expected.includes(actualType)) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            if (actualType !== expected) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    if (validationErrors.length) {\r",
+                      "        console.log(\"Ошибки валидации полей:\\n\" + JSON.stringify(validationErrors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(validationErrors.length, \"Ошибки валидации структуры\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "611f0d30-b32e-4881-871d-958fd8bfc895",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}request_templates/181/requests",
+                  "host": [
+                    "{{url}}request_templates"
+                  ],
+                  "path": [
+                    "181",
+                    "requests"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-611f0d30-b32e-4881-871d-958fd8bfc895"
+            }
+          ],
+          "id": "9cf781ed-bcd3-40b2-949c-147dc3d7d3d1",
+          "uid": "32335283-9cf781ed-bcd3-40b2-949c-147dc3d7d3d1"
+        }
+      ],
+      "id": "87592292-fbb7-4144-a902-e8f616cdca3a",
+      "uid": "32335283-87592292-fbb7-4144-a902-e8f616cdca3a"
+    },
+    {
+      "name": "Reservation offerings",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List reservation offerings of a request template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры массива ReservationOffering\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "    pm.expect(jsonData.length).to.be.above(0);\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    pm.expect(item).to.be.an(\"object\");\r",
+                      "\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, expectedType, allowNull = false) {\r",
+                      "        if (!item.hasOwnProperty(prop)) {\r",
+                      "            errors.push(`Отсутствует свойство '${prop}'`);\r",
+                      "            return;\r",
+                      "        }\r",
+                      "        if (item[prop] === null && allowNull) return;\r",
+                      "        if (expectedType === \"date\") {\r",
+                      "            if (typeof item[prop] !== \"string\" || isNaN(Date.parse(item[prop]))) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть датой (ISO строка), а пришло '${item[prop]}'`);\r",
+                      "            }\r",
+                      "        } else if (typeof item[prop] !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть '${expectedType}', а пришло '${typeof item[prop]}'`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", \"number\");\r",
+                      "    checkType(\"sourceID\", \"string\", true);\r",
+                      "    checkType(\"name\", \"string\");\r",
+                      "    checkType(\"created_at\", \"date\");\r",
+                      "    checkType(\"updated_at\", \"date\");\r",
+                      "    checkType(\"nodeID\", \"string\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации ReservationOffering:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "7e4c5369-73d9-41a6-955d-14056773c086",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}request_templates/419/reservation_offerings",
+                  "host": [
+                    "{{url}}request_templates"
+                  ],
+                  "path": [
+                    "419",
+                    "reservation_offerings"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-7e4c5369-73d9-41a6-955d-14056773c086"
+            }
+          ],
+          "id": "a3396c4d-a5cb-417e-bbee-44ca42f897fa",
+          "uid": "32335283-a3396c4d-a5cb-417e-bbee-44ca42f897fa"
+        }
+      ],
+      "id": "f992f887-b25a-42de-8988-e9dde7009c2e",
+      "uid": "32335283-f992f887-b25a-42de-8988-e9dde7009c2e"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "7d2e8dfd-8230-4046-83ed-1db2c22afb2f",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "29e46ffa-7395-46e1-aa97-1c6e1e813d89",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

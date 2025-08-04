@@ -1,0 +1,1650 @@
+{
+  "info": {
+    "_postman_id": "27ccd571-628c-476b-bf5a-bb8f2fc9b6c1",
+    "name": "14. Service Offerings",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-30T16:58:10.000Z",
+    "createdAt": "2025-07-23T07:39:49.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-27ccd571-628c-476b-bf5a-bb8f2fc9b6c1"
+  },
+  "item": [
+    {
+      "name": "Service Offerings",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service offerings",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры ServiceOffering\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    pm.environment.set(\"service_offering_id_1\", jsonData[0].id);\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"status\", item.status, \"string\");\r",
+                      "\r",
+                      "    pm.expect(item).to.have.property(\"service\");\r",
+                      "    checkType(\"service.id\", item.service.id, \"number\");\r",
+                      "    checkType(\"service.name\", item.service.name, \"string\");\r",
+                      "    checkType(\"service.disabled\", item.service.disabled, \"boolean\");\r",
+                      "    checkType(\"service.localized_name\", item.service.localized_name, \"string\");\r",
+                      "    checkType(\"service.nodeID\", item.service.nodeID, \"string\");\r",
+                      "\r",
+                      "    pm.expect(item.service).to.have.property(\"provider\");\r",
+                      "    checkType(\"service.provider.id\", item.service.provider.id, \"number\");\r",
+                      "    checkType(\"service.provider.name\", item.service.provider.name, \"string\");\r",
+                      "    checkType(\"service.provider.nodeID\", item.service.provider.nodeID, \"string\");\r",
+                      "\r",
+                      "    pm.expect(item.service.provider).to.have.property(\"account\");\r",
+                      "    checkType(\"service.provider.account.id\", item.service.provider.account.id, \"string\");\r",
+                      "    checkType(\"service.provider.account.name\", item.service.provider.account.name, \"string\");\r",
+                      "\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "5a70e5ee-bd2e-49b7-98f9-88e50074d0e1",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-5a70e5ee-bd2e-49b7-98f9-88e50074d0e1"
+            },
+            {
+              "name": "Get a single service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры ServiceOffering (одиночный объект)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"status\", item.status, \"string\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"report_frequency\", item.report_frequency, \"string\");\r",
+                      "    checkType(\"review_frequency\", item.review_frequency, \"string\");\r",
+                      "\r",
+                      "    checkType(\"resolution_target_high\", item.resolution_target_high, \"number\", true);\r",
+                      "    checkType(\"resolution_target_medium\", item.resolution_target_medium, \"number\", true);\r",
+                      "    checkType(\"resolution_target_top\", item.resolution_target_top, \"number\", true);\r",
+                      "\r",
+                      "    checkType(\"response_target_high\", item.response_target_high, \"number\", true);\r",
+                      "    checkType(\"response_target_medium\", item.response_target_medium, \"number\", true);\r",
+                      "    checkType(\"response_target_top\", item.response_target_top, \"number\", true);\r",
+                      "\r",
+                      "    // service\r",
+                      "    pm.expect(item).to.have.property(\"service\");\r",
+                      "    const service = item.service;\r",
+                      "    checkType(\"service.id\", service.id, \"number\");\r",
+                      "    checkType(\"service.name\", service.name, \"string\");\r",
+                      "    checkType(\"service.localized_name\", service.localized_name, \"string\");\r",
+                      "\r",
+                      "    // provider\r",
+                      "    pm.expect(service).to.have.property(\"provider\");\r",
+                      "    const provider = service.provider;\r",
+                      "    checkType(\"provider.id\", provider.id, \"number\");\r",
+                      "    checkType(\"provider.name\", provider.name, \"string\");\r",
+                      "\r",
+                      "    // account\r",
+                      "    pm.expect(provider).to.have.property(\"account\");\r",
+                      "    const account = provider.account;\r",
+                      "    checkType(\"account.id\", account.id, \"string\");\r",
+                      "    checkType(\"account.name\", account.name, \"string\");\r",
+                      "\r",
+                      "    // service_hours\r",
+                      "    if (item.service_hours) {\r",
+                      "        checkType(\"service_hours.id\", item.service_hours.id, \"number\");\r",
+                      "        checkType(\"service_hours.name\", item.service_hours.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // support_hours_* (если есть)\r",
+                      "    const supportKeys = [\"support_hours_high\", \"support_hours_medium\", \"support_hours_top\"];\r",
+                      "    supportKeys.forEach(key => {\r",
+                      "        if (item[key]) {\r",
+                      "            checkType(`${key}.id`, item[key].id, \"number\");\r",
+                      "            checkType(`${key}.name`, item[key].name, \"string\");\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f0e4bf93-ccc3-4908-89c6-c00cb35aa0b9",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings/{{service_offering_id_1}}",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "{{service_offering_id_1}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f0e4bf93-ccc3-4908-89c6-c00cb35aa0b9"
+            }
+          ],
+          "id": "95e28d84-a50a-4666-9c18-40bbebe9afe4",
+          "uid": "32335283-95e28d84-a50a-4666-9c18-40bbebe9afe4"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры ServiceOffering (одиночный объект)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    pm.environment.set(\"service_offering_id\", jsonData.id);\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"status\", item.status, \"string\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"report_frequency\", item.report_frequency, \"string\");\r",
+                      "    checkType(\"review_frequency\", item.review_frequency, \"string\");\r",
+                      "\r",
+                      "    checkType(\"resolution_target_high\", item.resolution_target_high, \"number\", true);\r",
+                      "    checkType(\"resolution_target_medium\", item.resolution_target_medium, \"number\", true);\r",
+                      "    checkType(\"resolution_target_top\", item.resolution_target_top, \"number\", true);\r",
+                      "\r",
+                      "    checkType(\"response_target_high\", item.response_target_high, \"number\", true);\r",
+                      "    checkType(\"response_target_medium\", item.response_target_medium, \"number\", true);\r",
+                      "    checkType(\"response_target_top\", item.response_target_top, \"number\", true);\r",
+                      "\r",
+                      "    // service\r",
+                      "    pm.expect(item).to.have.property(\"service\");\r",
+                      "    const service = item.service;\r",
+                      "    checkType(\"service.id\", service.id, \"number\");\r",
+                      "    checkType(\"service.name\", service.name, \"string\");\r",
+                      "    checkType(\"service.localized_name\", service.localized_name, \"string\");\r",
+                      "\r",
+                      "    // provider\r",
+                      "    pm.expect(service).to.have.property(\"provider\");\r",
+                      "    const provider = service.provider;\r",
+                      "    checkType(\"provider.id\", provider.id, \"number\");\r",
+                      "    checkType(\"provider.name\", provider.name, \"string\");\r",
+                      "\r",
+                      "    // account\r",
+                      "    pm.expect(provider).to.have.property(\"account\");\r",
+                      "    const account = provider.account;\r",
+                      "    checkType(\"account.id\", account.id, \"string\");\r",
+                      "    checkType(\"account.name\", account.name, \"string\");\r",
+                      "\r",
+                      "    // service_hours\r",
+                      "    if (item.service_hours) {\r",
+                      "        checkType(\"service_hours.id\", item.service_hours.id, \"number\");\r",
+                      "        checkType(\"service_hours.name\", item.service_hours.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // support_hours_* (если есть)\r",
+                      "    const supportKeys = [\"support_hours_high\", \"support_hours_medium\", \"support_hours_top\"];\r",
+                      "    supportKeys.forEach(key => {\r",
+                      "        if (item[key]) {\r",
+                      "            checkType(`${key}.id`, item[key].id, \"number\");\r",
+                      "            checkType(`${key}.name`, item[key].name, \"string\");\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "b52d75c4-4d08-401a-98b4-3d96d2930ae2",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Sharepoint Standard for {{$randomCompanyName}}\",\r\n    \"resolution_target_high\": 480,\r\n    \"resolution_target_medium\": 1440,\r\n    \"resolution_target_top\": 240,\r\n    \"response_target_high\": 240,\r\n    \"response_target_medium\": 720,\r\n    \"response_target_top\": 120,\r\n    \"review_frequency\": \"no_commitment\",\r\n    \"service_id\": 81,\r\n    \"service_hours_id\": 104,\r\n    \"status\": \"Available\",\r\n    \"support_hours_high_id\": 104,\r\n    \"support_hours_medium_id\": 104,\r\n    \"support_hours_top_id\": 96,\r\n    \"time_zone\": \"Moscow\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-b52d75c4-4d08-401a-98b4-3d96d2930ae2"
+            }
+          ],
+          "id": "e28e0889-b7b0-4dae-a153-ba95d385587e",
+          "uid": "32335283-e28e0889-b7b0-4dae-a153-ba95d385587e"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры ServiceOffering (одиночный объект)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"status\", item.status, \"string\");\r",
+                      "    if (item.status !== \"temporarily_unavailable\") {\r",
+                      "        errors.push(`Свойство 'status' должно быть \"temporarily_unavailable\", но получено \"${item.status}\"`);\r",
+                      "    }\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"report_frequency\", item.report_frequency, \"string\");\r",
+                      "    checkType(\"review_frequency\", item.review_frequency, \"string\");\r",
+                      "\r",
+                      "    checkType(\"resolution_target_high\", item.resolution_target_high, \"number\", true);\r",
+                      "    checkType(\"resolution_target_medium\", item.resolution_target_medium, \"number\", true);\r",
+                      "    checkType(\"resolution_target_top\", item.resolution_target_top, \"number\", true);\r",
+                      "\r",
+                      "    checkType(\"response_target_high\", item.response_target_high, \"number\", true);\r",
+                      "    checkType(\"response_target_medium\", item.response_target_medium, \"number\", true);\r",
+                      "    checkType(\"response_target_top\", item.response_target_top, \"number\", true);\r",
+                      "\r",
+                      "    // service\r",
+                      "    pm.expect(item).to.have.property(\"service\");\r",
+                      "    const service = item.service;\r",
+                      "    checkType(\"service.id\", service.id, \"number\");\r",
+                      "    checkType(\"service.name\", service.name, \"string\");\r",
+                      "    checkType(\"service.localized_name\", service.localized_name, \"string\");\r",
+                      "    if (item.service.id !== 106) {\r",
+                      "        errors.push(`Свойство service.id должно быть равно 106, но получено \"${item.service.id}\"`);\r",
+                      "    }\r",
+                      "\r",
+                      "    // provider\r",
+                      "    pm.expect(service).to.have.property(\"provider\");\r",
+                      "    const provider = service.provider;\r",
+                      "    checkType(\"provider.id\", provider.id, \"number\");\r",
+                      "    checkType(\"provider.name\", provider.name, \"string\");\r",
+                      "\r",
+                      "    // account\r",
+                      "    pm.expect(provider).to.have.property(\"account\");\r",
+                      "    const account = provider.account;\r",
+                      "    checkType(\"account.id\", account.id, \"string\");\r",
+                      "    checkType(\"account.name\", account.name, \"string\");\r",
+                      "\r",
+                      "    // service_hours\r",
+                      "    if (item.service_hours) {\r",
+                      "        checkType(\"service_hours.id\", item.service_hours.id, \"number\");\r",
+                      "        checkType(\"service_hours.name\", item.service_hours.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // support_hours_* (если есть)\r",
+                      "    const supportKeys = [\"support_hours_high\", \"support_hours_medium\", \"support_hours_top\"];\r",
+                      "    supportKeys.forEach(key => {\r",
+                      "        if (item[key]) {\r",
+                      "            checkType(`${key}.id`, item[key].id, \"number\");\r",
+                      "            checkType(`${key}.name`, item[key].name, \"string\");\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "3c3d9103-68df-4d4b-b24a-deeb1d777872",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Sharepoint Standard for {{$randomCompanyName}}\",\r\n    \"resolution_target_high\": 480,\r\n    \"resolution_target_medium\": 1440,\r\n    \"resolution_target_top\": 240,\r\n    \"response_target_high\": 240,\r\n    \"response_target_medium\": 720,\r\n    \"response_target_top\": 120,\r\n    \"review_frequency\": \"no_commitment\",\r\n    \"service_id\": 106,\r\n    \"service_hours_id\": 104,\r\n    \"status\": \"temporarily_unavailable\",\r\n    \"support_hours_high_id\": 104,\r\n    \"support_hours_medium_id\": 104,\r\n    \"support_hours_top_id\": 96,\r\n    \"time_zone\": \"Moscow\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings/{{service_offering_id}}",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "{{service_offering_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-3c3d9103-68df-4d4b-b24a-deeb1d777872"
+            }
+          ],
+          "id": "d373848f-5a08-4098-8e1d-9264d2225fb4",
+          "uid": "32335283-d373848f-5a08-4098-8e1d-9264d2225fb4"
+        }
+      ],
+      "id": "e7543e24-4f50-4050-a33c-4e0bdaeee74a",
+      "uid": "32335283-e7543e24-4f50-4050-a33c-4e0bdaeee74a"
+    },
+    {
+      "name": "Effort Class Rates",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create an effort class",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "    pm.environment.set(\"effort_class_id\", pm.response.json().id);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "147b7009-a067-4b52-986f-4a9079c02db7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Effort class {{$randomInt}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}effort_classes",
+                  "host": [
+                    "{{url}}effort_classes"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-147b7009-a067-4b52-986f-4a9079c02db7"
+            },
+            {
+              "name": "Add a service offering to an effort class",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "73bee80b-bfbf-48e8-bdb8-de00d2d4e4cf",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}effort_classes/{{effort_class_id}}/service_offerings/113",
+                  "host": [
+                    "{{url}}effort_classes"
+                  ],
+                  "path": [
+                    "{{effort_class_id}}",
+                    "service_offerings",
+                    "113"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-73bee80b-bfbf-48e8-bdb8-de00d2d4e4cf"
+            },
+            {
+              "name": "Add an effort class rate to a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    pm.environment.set(\"effort_class_rateIDs_id\", pm.response.json().id);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "477c2845-7247-4ad7-8d20-f66f36577e17",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"effort_class_id\": \"{{effort_class_id}}\",\r\n    \"rate\": 2,\r\n    \"rate_currency\": \"rub\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings/113/effort_class_rates",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "effort_class_rates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-477c2845-7247-4ad7-8d20-f66f36577e17"
+            }
+          ],
+          "id": "ff878b27-508d-45a2-8ce9-4cb2746ae93b",
+          "uid": "32335283-ff878b27-508d-45a2-8ce9-4cb2746ae93b"
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List effort class rates of a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Проверка структуры EffortClassRate (массив)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    pm.expect(Array.isArray(jsonData), \"Ответ должен быть массивом\").to.be.true;\r",
+                      "    pm.expect(jsonData.length, \"Массив не должен быть пустым\").to.be.above(0);\r",
+                      "\r",
+                      "    const item = jsonData[0]; // проверяем только первый элемент\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"rate\", item.rate, \"string\");\r",
+                      "    checkType(\"rate_currency\", item.rate_currency, \"string\");\r",
+                      "\r",
+                      "    // effort_class\r",
+                      "    pm.expect(item).to.have.property(\"effort_class\");\r",
+                      "    const ec = item.effort_class;\r",
+                      "    checkType(\"effort_class.id\", ec.id, \"number\");\r",
+                      "    checkType(\"effort_class.name\", ec.name, \"string\");\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ebbb13ce-70c0-4928-be00-98b9f370bd89",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"effort_class_id\": \"{{effort_class_id}}\",\r\n    \"rate\": 2,\r\n    \"rate_currency\": \"rub\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings/113/effort_class_rates",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "effort_class_rates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ebbb13ce-70c0-4928-be00-98b9f370bd89"
+            }
+          ],
+          "id": "7383bcd5-a356-4592-b221-74dba2e14b61",
+          "uid": "32335283-7383bcd5-a356-4592-b221-74dba2e14b61"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update an effort class rate of a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры EffortClassRate (объект)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    // Проверяем что ответ - объект\r",
+                      "    pm.expect(jsonData).to.be.an('object');\r",
+                      "\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверка основных свойств\r",
+                      "    checkType(\"id\", jsonData.id, \"number\");\r",
+                      "    checkType(\"rate\", jsonData.rate, \"string\");\r",
+                      "    checkType(\"rate_currency\", jsonData.rate_currency, \"string\");\r",
+                      "\r",
+                      "    // Проверка конкретных значений\r",
+                      "    if (jsonData.rate !== \"4.0\") {  // Обратите внимание на строку\r",
+                      "        errors.push(`Свойство rate должно быть равно \"4\", но получено \"${jsonData.rate}\"`);\r",
+                      "    }\r",
+                      "    if (jsonData.rate_currency !== 'usd') {\r",
+                      "        errors.push(`Свойство rate_currency должно быть равно 'usd', но получено \"${jsonData.rate_currency}\"`);\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверка effort_class\r",
+                      "    pm.expect(jsonData).to.have.property(\"effort_class\");\r",
+                      "    const ec = jsonData.effort_class;\r",
+                      "    checkType(\"effort_class.id\", ec.id, \"number\");\r",
+                      "    checkType(\"effort_class.name\", ec.name, \"string\");\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(jsonData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2864a3c9-e344-4d1e-bd05-59f596a50e91",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"effort_class_id\": \"{{effort_class_id}}\",\r\n    \"rate\": 4,\r\n    \"rate_currency\": \"usd\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings/113/effort_class_rates/{{effort_class_rateIDs_id}}",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "effort_class_rates",
+                    "{{effort_class_rateIDs_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2864a3c9-e344-4d1e-bd05-59f596a50e91"
+            }
+          ],
+          "id": "8c62fef1-3a39-40d1-b3bf-7d9836ea55ea",
+          "uid": "32335283-8c62fef1-3a39-40d1-b3bf-7d9836ea55ea"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove an effort class rate from a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "8eeee3fa-4fa0-4f85-bee7-2e8b27fd0e97",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings/113/effort_class_rates/{{effort_class_rateIDs_id}}",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "effort_class_rates",
+                    "{{effort_class_rateIDs_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-8eeee3fa-4fa0-4f85-bee7-2e8b27fd0e97"
+            },
+            {
+              "name": "List effort class rates of a service offering -1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры EffortClassRate (массив)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    pm.expect(Array.isArray(jsonData), \"Ответ должен быть массивом\").to.be.true;\r",
+                      "    pm.expect(jsonData.length, \"Массив должен быть пустым после удаления запросом ранее\").to.eq(0);\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "fa770cae-c9f8-466c-89ad-cae785068bb6",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"effort_class_id\": \"{{effort_class_id}}\",\r\n    \"rate\": 2,\r\n    \"rate_currency\": \"rub\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings/113/effort_class_rates",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "effort_class_rates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-fa770cae-c9f8-466c-89ad-cae785068bb6"
+            }
+          ],
+          "id": "a509209f-7a6b-4643-9a3f-99849030fc8c",
+          "uid": "32335283-a509209f-7a6b-4643-9a3f-99849030fc8c"
+        }
+      ],
+      "id": "2b48ad0f-c13e-49ef-a433-682e0660c88e",
+      "uid": "32335283-2b48ad0f-c13e-49ef-a433-682e0660c88e"
+    },
+    {
+      "name": "Service Level Agreements",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service level agreements of a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "    let sla = jsonData[0];\r",
+                      "\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(sla, null, 2));\r",
+                      "\r",
+                      "    pm.test(\"Проверка структуры SLA\", function () {\r",
+                      "        pm.expect(sla).to.be.an(\"object\");\r",
+                      "\r",
+                      "        const errors = [];\r",
+                      "\r",
+                      "        function checkType(path, expectedType, value) {\r",
+                      "            if (expectedType === \"nullable_string\") {\r",
+                      "                if (value !== null && typeof value !== \"string\") {\r",
+                      "                    errors.push(`Свойство '${path}' ожидалось быть string или null, а пришло ${typeof value}`);\r",
+                      "                }\r",
+                      "            } else if (typeof value !== expectedType) {\r",
+                      "                errors.push(`Свойство '${path}' ожидалось быть ${expectedType}, а пришло ${typeof value}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "\r",
+                      "        checkType(\"id\", \"number\", sla.id);\r",
+                      "        checkType(\"sourceID\", \"nullable_string\", sla.sourceID);\r",
+                      "        checkType(\"name\", \"string\", sla.name);\r",
+                      "        checkType(\"status\", \"string\", sla.status);\r",
+                      "        checkType(\"created_at\", \"string\", sla.created_at);\r",
+                      "        checkType(\"updated_at\", \"string\", sla.updated_at);\r",
+                      "        checkType(\"nodeID\", \"string\", sla.nodeID);\r",
+                      "\r",
+                      "        const offering = sla.service_offering;\r",
+                      "        if (!offering || typeof offering !== \"object\") {\r",
+                      "            errors.push(\"Отсутствует объект 'service_offering' или он не объект\");\r",
+                      "        } else {\r",
+                      "            checkType(\"service_offering.id\", \"number\", offering.id);\r",
+                      "            checkType(\"service_offering.name\", \"string\", offering.name);\r",
+                      "            checkType(\"service_offering.nodeID\", \"string\", offering.nodeID);\r",
+                      "\r",
+                      "            const service = offering.service;\r",
+                      "            if (!service || typeof service !== \"object\") {\r",
+                      "                errors.push(\"Отсутствует объект 'service_offering.service' или он не объект\");\r",
+                      "            } else {\r",
+                      "                checkType(\"service_offering.service.id\", \"number\", service.id);\r",
+                      "                checkType(\"service_offering.service.name\", \"string\", service.name);\r",
+                      "                checkType(\"service_offering.service.localized_name\", \"string\", service.localized_name);\r",
+                      "                checkType(\"service_offering.service.nodeID\", \"string\", service.nodeID);\r",
+                      "\r",
+                      "                const provider = service.provider;\r",
+                      "                if (!provider || typeof provider !== \"object\") {\r",
+                      "                    errors.push(\"Отсутствует объект 'service.provider' или он не объект\");\r",
+                      "                } else {\r",
+                      "                    checkType(\"service_offering.service.provider.id\", \"number\", provider.id);\r",
+                      "                    checkType(\"service_offering.service.provider.name\", \"string\", provider.name);\r",
+                      "                    checkType(\"service_offering.service.provider.nodeID\", \"string\", provider.nodeID);\r",
+                      "\r",
+                      "                    const account = provider.account;\r",
+                      "                    if (!account || typeof account !== \"object\") {\r",
+                      "                        errors.push(\"Отсутствует объект 'provider.account' или он не объект\");\r",
+                      "                    } else {\r",
+                      "                        checkType(\"provider.account.id\", \"string\", account.id);\r",
+                      "                        checkType(\"provider.account.name\", \"string\", account.name);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            }\r",
+                      "        }\r",
+                      "\r",
+                      "        if (errors.length > 0) {\r",
+                      "            console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "            console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(sla, null, 2));\r",
+                      "        }\r",
+                      "\r",
+                      "        pm.expect(errors.length, \"Ошибки валидации структуры\").to.equal(0);\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "42bad1cc-f0c0-4196-b172-ef3c710e9256",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings/113/slas",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-42bad1cc-f0c0-4196-b172-ef3c710e9256"
+            }
+          ],
+          "id": "5038ae21-3001-4200-beae-567a11cf939e",
+          "uid": "32335283-5038ae21-3001-4200-beae-567a11cf939e"
+        }
+      ],
+      "id": "7c582bf6-c80c-432c-861f-43ea84e78232",
+      "uid": "32335283-7c582bf6-c80c-432c-861f-43ea84e78232"
+    },
+    {
+      "name": "Standard Service Requests",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all standard service requests of a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "let jsonData = pm.response.json();\r",
+                      "let sla = jsonData[0];\r",
+                      "\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(sla, null, 2));\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры стандартного SLA-запроса\", function () {\r",
+                      "    pm.expect(sla).to.be.an(\"object\");\r",
+                      "\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(path, expectedType, value) {\r",
+                      "        if (expectedType === \"nullable_string\") {\r",
+                      "            if (value !== null && typeof value !== \"string\") {\r",
+                      "                errors.push(`Свойство '${path}' ожидалось быть string или null, а пришло ${typeof value}`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"nullable_number\") {\r",
+                      "            if (value !== null && typeof value !== \"number\") {\r",
+                      "                errors.push(`Свойство '${path}' ожидалось быть number или null, а пришло ${typeof value}`);\r",
+                      "            }\r",
+                      "        } else if (typeof value !== expectedType) {\r",
+                      "            errors.push(`Свойство '${path}' ожидалось быть ${expectedType}, а пришло ${typeof value}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", \"number\", sla.id);\r",
+                      "    checkType(\"charge_type\", \"nullable_string\", sla.charge_type);\r",
+                      "    checkType(\"rate\", \"nullable_number\", sla.rate);\r",
+                      "    checkType(\"rate_currency\", \"nullable_string\", sla.rate_currency);\r",
+                      "    checkType(\"created_at\", \"string\", sla.created_at);\r",
+                      "    checkType(\"updated_at\", \"string\", sla.updated_at);\r",
+                      "    checkType(\"resolution_target\", \"number\", sla.resolution_target);\r",
+                      "    checkType(\"resolution_target_best_effort\", \"boolean\", sla.resolution_target_best_effort);\r",
+                      "    checkType(\"resolution_target_in_days\", \"nullable_number\", sla.resolution_target_in_days);\r",
+                      "    checkType(\"resolution_target_notification_scheme\", \"nullable_string\", sla.resolution_target_notification_scheme);\r",
+                      "    checkType(\"response_target\", \"number\", sla.response_target);\r",
+                      "    checkType(\"response_target_best_effort\", \"boolean\", sla.response_target_best_effort);\r",
+                      "    checkType(\"response_target_in_days\", \"nullable_number\", sla.response_target_in_days);\r",
+                      "    checkType(\"response_target_notification_scheme\", \"nullable_string\", sla.response_target_notification_scheme);\r",
+                      "    checkType(\"sla_notification_scheme\", \"nullable_string\", sla.sla_notification_scheme);\r",
+                      "    checkType(\"nodeID\", \"string\", sla.nodeID);\r",
+                      "\r",
+                      "    const template = sla.request_template;\r",
+                      "    if (!template || typeof template !== \"object\") {\r",
+                      "        errors.push(\"Отсутствует объект 'request_template' или он не объект\");\r",
+                      "    } else {\r",
+                      "        checkType(\"request_template.id\", \"number\", template.id);\r",
+                      "        checkType(\"request_template.subject\", \"string\", template.subject);\r",
+                      "        checkType(\"request_template.localized_subject\", \"string\", template.localized_subject);\r",
+                      "        checkType(\"request_template.sourceID\", \"string\", template.sourceID);\r",
+                      "        checkType(\"request_template.nodeID\", \"string\", template.nodeID);\r",
+                      "    }\r",
+                      "\r",
+                      "    const supportHours = sla.support_hours;\r",
+                      "    if (!supportHours || typeof supportHours !== \"object\") {\r",
+                      "        errors.push(\"Отсутствует объект 'support_hours' или он не объект\");\r",
+                      "    } else {\r",
+                      "        checkType(\"support_hours.id\", \"number\", supportHours.id);\r",
+                      "        checkType(\"support_hours.name\", \"string\", supportHours.name);\r",
+                      "        checkType(\"support_hours.nodeID\", \"string\", supportHours.nodeID);\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(sla, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Ошибки валидации структуры\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "37af3b4d-d0f1-45b3-9549-5a8f4c2897ca",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings/167/standard_service_requests",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "167",
+                    "standard_service_requests"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-37af3b4d-d0f1-45b3-9549-5a8f4c2897ca"
+            }
+          ],
+          "id": "30d88a3c-919b-4770-9b4a-91146d6fde8f",
+          "uid": "32335283-30d88a3c-919b-4770-9b4a-91146d6fde8f"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a request template Copy",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта RequestTemplate (backing up)\", function () {\r",
+                      "    let jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "    pm.environment.set(\"request_template_id\", jsonData.id);\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const expectedTypes = {\r",
+                      "        asset_selection: \"boolean\",\r",
+                      "        assign_after_workflow_completion: \"boolean\",\r",
+                      "        assign_to_self: \"boolean\",\r",
+                      "        attachments: \"array\",\r",
+                      "        category: [\"string\", \"null\"],\r",
+                      "        ci: [\"object\", \"null\"],\r",
+                      "        completion_reason: [\"string\", \"null\"],\r",
+                      "        copy_subject_to_requests: \"boolean\",\r",
+                      "        created_at: \"string\",\r",
+                      "        desired_completion: [\"string\", \"null\"],\r",
+                      "        disabled: \"boolean\",\r",
+                      "        effort_class: [\"string\", \"null\"],\r",
+                      "        end_users: \"boolean\",\r",
+                      "        id: \"number\",\r",
+                      "        impact: [\"string\", \"null\"],\r",
+                      "        instructions: [\"string\", \"null\"],\r",
+                      "        keywords: [\"string\", \"null\"],\r",
+                      "        member: [\"object\", \"null\"],\r",
+                      "        note: [\"string\", \"null\"],\r",
+                      "        planned_effort: [\"string\", \"null\"],\r",
+                      "        registration_hints: [\"string\", \"null\"],\r",
+                      "        resolution_target: [\"string\", \"null\"],\r",
+                      "        service: [\"object\", \"null\"],\r",
+                      "        source: \"string\",\r",
+                      "        sourceID: [\"string\", \"null\"],\r",
+                      "        specialists: \"boolean\",\r",
+                      "        status: [\"string\", \"null\"],\r",
+                      "        subject: \"string\",\r",
+                      "        supplier: [\"string\", \"null\"],\r",
+                      "        support_hours: [\"string\", \"null\"],\r",
+                      "        team: [\"object\", \"null\"],\r",
+                      "        time_zone: [\"string\", \"null\"],\r",
+                      "        times_applied: \"number\",\r",
+                      "        ui_extension: [\"string\", \"null\"],\r",
+                      "        updated_at: \"string\",\r",
+                      "        urgent: \"boolean\",\r",
+                      "        workflow_manager: [\"object\", \"null\"],\r",
+                      "        workflow_template: [\"object\", \"null\"],\r",
+                      "        localized_instructions: [\"string\", \"null\"],\r",
+                      "        localized_keywords: [\"string\", \"null\"],\r",
+                      "        localized_note: [\"string\", \"null\"],\r",
+                      "        localized_registration_hints: [\"string\", \"null\"],\r",
+                      "        localized_subject: \"string\",\r",
+                      "        nodeID: \"string\",\r",
+                      "    };\r",
+                      "\r",
+                      "    let validationErrors = [];\r",
+                      "\r",
+                      "    for (let key in expectedTypes) {\r",
+                      "        let actualValue = item[key];\r",
+                      "        let actualType = Array.isArray(actualValue) ? \"array\" : (actualValue === null ? \"null\" : typeof actualValue);\r",
+                      "        let expected = expectedTypes[key];\r",
+                      "        if (Array.isArray(expected)) {\r",
+                      "            if (!expected.includes(actualType)) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            if (actualType !== expected) {\r",
+                      "                validationErrors.push(`Свойство '${key}' ожидалось быть ${expected}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    if (validationErrors.length) {\r",
+                      "        console.log(\"Ошибки валидации полей:\\n\" + JSON.stringify(validationErrors, null, 2));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(validationErrors.length, \"Ошибки валидации структуры\").to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ef287236-a44d-4b38-a0fe-dd544366aa6d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"subject\": \"Шаблон Запроса {{$randomIngverb}}\",\r\n    \"service_id\": 81,\r\n    \"ci_id\": 2411,\r\n    \"workflow_manager_id\": 607,\r\n    \"status\": \"workflow_pending\",\r\n    \"workflow_template_id\": 108\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}request_templates",
+                  "host": [
+                    "{{url}}request_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ef287236-a44d-4b38-a0fe-dd544366aa6d"
+            },
+            {
+              "name": "Add a standard service request to a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры StandardServiceRequest (одиночный объект)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    pm.environment.set(\"standard_service_requests_id\", jsonData.id);\r",
+                      "\r",
+                      "    const item = jsonData;\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"charge_type\", item.charge_type, \"string\", true);\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"rate\", item.rate, \"string\", true);\r",
+                      "    checkType(\"rate_currency\", item.rate_currency, \"string\", true);\r",
+                      "    checkType(\"resolution_target\", item.resolution_target, \"number\", true);\r",
+                      "    checkType(\"resolution_target_best_effort\", item.resolution_target_best_effort, \"boolean\");\r",
+                      "    checkType(\"resolution_target_in_days\", item.resolution_target_in_days, \"number\", true);\r",
+                      "    checkType(\"resolution_target_notification_scheme\", item.resolution_target_notification_scheme, \"string\", true);\r",
+                      "    checkType(\"response_target\", item.response_target, \"number\", true);\r",
+                      "    checkType(\"response_target_best_effort\", item.response_target_best_effort, \"boolean\");\r",
+                      "    checkType(\"response_target_in_days\", item.response_target_in_days, \"number\", true);\r",
+                      "    checkType(\"response_target_notification_scheme\", item.response_target_notification_scheme, \"string\", true);\r",
+                      "   \r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\"); // по твоим настройкам можно убрать\r",
+                      "\r",
+                      "    // request_template\r",
+                      "    pm.expect(item).to.have.property(\"request_template\");\r",
+                      "    const rt = item.request_template;\r",
+                      "    checkType(\"request_template.id\", rt.id, \"number\");\r",
+                      "    checkType(\"request_template.subject\", rt.subject, \"string\");\r",
+                      "    checkType(\"request_template.localized_subject\", rt.localized_subject, \"string\");\r",
+                      "\r",
+                      "    if (rt.id !== pm.environment.get(\"request_template_id\")) {\r",
+                      "        errors.push(`Свойство request_template.id должно быть равно 346, но получено \"${rt.id}\"`);\r",
+                      "    }\r",
+                      "\r",
+                      "    // support_hours\r",
+                      "    if (item.support_hours) {\r",
+                      "        checkType(\"support_hours.id\", item.support_hours.id, \"number\");\r",
+                      "        checkType(\"support_hours.name\", item.support_hours.name, \"string\");\r",
+                      "        checkType(\"support_hours.nodeID\", item.support_hours.nodeID, \"string\"); // по твоим настройкам — можно исключить\r",
+                      "    }\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "    pm.response.to.have.status(200); // можно заменить на 201, если объект создается\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "79b762f4-a9a7-4696-937f-dc9359f828c9",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"request_template\": {{request_template_id}}\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_offerings/113/standard_service_requests",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "standard_service_requests"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-79b762f4-a9a7-4696-937f-dc9359f828c9"
+            }
+          ],
+          "id": "9cc092df-f144-4e99-8881-268e2704ff87",
+          "uid": "32335283-9cc092df-f144-4e99-8881-268e2704ff87"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a standard service request from a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "40ccaa24-d588-4cf9-b0cb-73f3707809b7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings/113/standard_service_requests/{{standard_service_requests_id}}",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "standard_service_requests",
+                    "{{standard_service_requests_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-40ccaa24-d588-4cf9-b0cb-73f3707809b7"
+            }
+          ],
+          "id": "01e5147b-284d-4407-960e-1d528a01dc85",
+          "uid": "32335283-01e5147b-284d-4407-960e-1d528a01dc85"
+        }
+      ],
+      "id": "0f8d4833-893f-4cf6-98d3-b9852f7eb2dc",
+      "uid": "32335283-0f8d4833-893f-4cf6-98d3-b9852f7eb2dc"
+    },
+    {
+      "name": "Audit Entries",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List audit entries of a service offering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "var responseJSON = pm.response.json();\r",
+                      "// Test to check if the response array is not empty and the first object has an id\r",
+                      "pm.test(\"Response array is not empty and first object has id\", function () {\r",
+                      "    pm.expect(responseJSON).to.be.an('array').that.is.not.empty;\r",
+                      "    pm.expect(responseJSON[0]).to.have.property('id');\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "9ce1b727-e960-4b42-b5b9-a7e61ae0fbe9",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_offerings/113/audit/",
+                  "host": [
+                    "{{url}}service_offerings"
+                  ],
+                  "path": [
+                    "113",
+                    "audit",
+                    ""
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-9ce1b727-e960-4b42-b5b9-a7e61ae0fbe9"
+            }
+          ],
+          "id": "eb0bb33f-c3d7-4d64-a42e-75c854a1c86f",
+          "uid": "32335283-eb0bb33f-c3d7-4d64-a42e-75c854a1c86f"
+        }
+      ],
+      "id": "ea7e5e22-a71d-4e2b-ae54-4c6248da92a2",
+      "uid": "32335283-ea7e5e22-a71d-4e2b-ae54-4c6248da92a2"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "2cc555e8-0c16-4246-84a8-98c705417d77",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "b6a844a2-5362-494f-afe6-e1060034d61f",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

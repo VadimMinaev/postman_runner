@@ -1,0 +1,3339 @@
+{
+  "info": {
+    "_postman_id": "87d000e1-388f-446f-954b-5a3d4aead9c4",
+    "name": "03. Cis",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-21T07:58:10.000Z",
+    "createdAt": "2025-06-25T10:03:16.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-87d000e1-388f-446f-954b-5a3d4aead9c4"
+  },
+  "item": [
+    {
+      "name": "CI",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get list cis",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка массива CI (первый элемент)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "        const item = jsonData[0];\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"sourceID\");\r",
+                      "        pm.expect(item).to.have.property(\"software\").that.is.a(\"boolean\");\r",
+                      "        pm.expect(item).to.have.property(\"label\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"rule_set\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"product\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.product).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.product).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.product).to.have.property(\"category\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.product).to.have.property(\"brand\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        const provider = item.service.provider;\r",
+                      "        pm.expect(provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "d03b9323-f3a9-46f1-a697-0a7743dced7a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis",
+                  "host": [
+                    "{{url}}cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-d03b9323-f3a9-46f1-a697-0a7743dced7a"
+            },
+            {
+              "name": "1.2 get cis/id created in the current account",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка наличия всех свойств первого уровня\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Определяем ожидаемые свойства первого уровня\r",
+                      "    const expectedProperties = [\r",
+                      "        \"alternate_names\",\r",
+                      "        \"assetID\",\r",
+                      "        \"attachments\",\r",
+                      "        \"ci_type\",\r",
+                      "        \"created_at\",\r",
+                      "        \"custom_fields\",\r",
+                      "        \"end_of_support_date\",\r",
+                      "        \"financial_owner\",\r",
+                      "        \"id\",\r",
+                      "        \"in_use_since\",\r",
+                      "        \"label\",\r",
+                      "        \"last_seen_at\",\r",
+                      "        \"license_expiry_date\",\r",
+                      "        \"license_type\",\r",
+                      "        \"location\",\r",
+                      "        \"name\",\r",
+                      "        \"nr_of_cores\",\r",
+                      "        \"nr_of_licenses\",\r",
+                      "        \"nr_of_processors\",\r",
+                      "        \"operating_system\",\r",
+                      "        \"picture_uri\",\r",
+                      "        \"product\",\r",
+                      "        \"ram_amount\",\r",
+                      "        \"recurrence\",\r",
+                      "        \"remarks\",\r",
+                      "        \"rule_set\",\r",
+                      "        \"serial_nr\",\r",
+                      "        \"service\",\r",
+                      "        \"site\",\r",
+                      "        \"site_license\",\r",
+                      "        \"software\",\r",
+                      "        \"source\",\r",
+                      "        \"sourceID\",\r",
+                      "        \"status\",\r",
+                      "        \"supplier\",\r",
+                      "        \"support_team\",\r",
+                      "        \"systemID\",\r",
+                      "        \"temporary_license\",\r",
+                      "        \"updated_at\",\r",
+                      "        \"warranty_expiry_date\",\r",
+                      "        \"workflow_manager\",\r",
+                      "        \"workflow_template\",\r",
+                      "        \"nodeID\"\r",
+                      "    ];\r",
+                      "\r",
+                      "    // Проверяем наличие каждого свойства\r",
+                      "    let allPropertiesPresent = true;\r",
+                      "\r",
+                      "    expectedProperties.forEach(property => {\r",
+                      "        if (!response.hasOwnProperty(property)) {\r",
+                      "            console.error(`Ошибка: Свойство \"${property}\" отсутствует в ответе сервера`);\r",
+                      "            allPropertiesPresent = false;\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Выводим общий результат проверки\r",
+                      "    if (allPropertiesPresent) {\r",
+                      "        console.log(\"Все свойства первого уровня присутствуют в ответе сервера\");\r",
+                      "        pm.test(\"Все свойства первого уровня присутствуют\", function () {\r",
+                      "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                      "        });\r",
+                      "    } else {\r",
+                      "        pm.test(\"Не все свойства первого уровня присутствуют\", function () {\r",
+                      "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                      "        });\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "feeb8138-109c-4a3a-a592-1e15df239697",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2479",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2479"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-feeb8138-109c-4a3a-a592-1e15df239697"
+            },
+            {
+              "name": "1.3 get cis/id transferred through a trust",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка наличия всех свойств первого уровня\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Определяем ожидаемые свойства первого уровня\r",
+                      "    const expectedProperties = [\r",
+                      "        \"alternate_names\",\r",
+                      "        \"assetID\",\r",
+                      "        \"attachments\",\r",
+                      "        \"ci_type\",\r",
+                      "        \"created_at\",\r",
+                      "        \"custom_fields\",\r",
+                      "        \"end_of_support_date\",\r",
+                      "        \"financial_owner\",\r",
+                      "        \"id\",\r",
+                      "        \"in_use_since\",\r",
+                      "        \"label\",\r",
+                      "        \"last_seen_at\",\r",
+                      "        \"license_expiry_date\",\r",
+                      "        \"license_type\",\r",
+                      "        \"location\",\r",
+                      "        \"name\",\r",
+                      "        \"nr_of_cores\",\r",
+                      "        \"nr_of_licenses\",\r",
+                      "        \"nr_of_processors\",\r",
+                      "        \"operating_system\",\r",
+                      "        \"picture_uri\",\r",
+                      "        \"product\",\r",
+                      "        \"ram_amount\",\r",
+                      "        \"recurrence\",\r",
+                      "        \"remarks\",\r",
+                      "        \"rule_set\",\r",
+                      "        \"serial_nr\",\r",
+                      "        \"service\",\r",
+                      "        \"site\",\r",
+                      "        \"site_license\",\r",
+                      "        \"software\",\r",
+                      "        \"source\",\r",
+                      "        \"sourceID\",\r",
+                      "        \"status\",\r",
+                      "        \"supplier\",\r",
+                      "        \"support_team\",\r",
+                      "        \"systemID\",\r",
+                      "        \"temporary_license\",\r",
+                      "        \"updated_at\",\r",
+                      "        \"warranty_expiry_date\",\r",
+                      "        \"workflow_manager\",\r",
+                      "        \"workflow_template\",\r",
+                      "        \"nodeID\", \r",
+                      "        \"account\", \r",
+                      "    ];\r",
+                      "\r",
+                      "    // Проверяем наличие каждого свойства\r",
+                      "    let allPropertiesPresent = true;\r",
+                      "\r",
+                      "    expectedProperties.forEach(property => {\r",
+                      "        if (!response.hasOwnProperty(property)) {\r",
+                      "            console.error(`Ошибка: Свойство \"${property}\" отсутствует в ответе сервера`);\r",
+                      "            allPropertiesPresent = false;\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Выводим общий результат проверки\r",
+                      "    if (allPropertiesPresent) {\r",
+                      "        console.log(\"Все свойства первого уровня присутствуют в ответе сервера\");\r",
+                      "        pm.test(\"Все свойства первого уровня присутствуют\", function () {\r",
+                      "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                      "        });\r",
+                      "    } else {\r",
+                      "        pm.test(\"Не все свойства первого уровня присутствуют\", function () {\r",
+                      "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                      "        });\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "dd835507-e9e9-473e-9622-3af67f31e23d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/1347",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "1347"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-dd835507-e9e9-473e-9622-3af67f31e23d"
+            },
+            {
+              "name": "1.4 get list cis, Filtering",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка ответа сервера\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    const data = pm.response.json();\r",
+                      "    \r",
+                      "    console.log(\"Начало теста: Проверка ответа сервера\");\r",
+                      "    \r",
+                      "    try {\r",
+                      "        pm.expect(data).to.be.an(\"array\");\r",
+                      "        console.log(\"Проверка типа данных (массив) пройдена успешно\");\r",
+                      "    } catch (e) {\r",
+                      "        console.error(\"Ошибка при проверке типа данных:\", e.message);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "    \r",
+                      "    try {\r",
+                      "        pm.expect(data.length, 'Длина массива должна быть 1').to.eq(1);\r",
+                      "        console.log(\"Проверка длины массива пройдена успешно\");\r",
+                      "    } catch (e) {\r",
+                      "        console.error(\"Ошибка при проверке длины массива:\", e.message);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "    \r",
+                      "    try {\r",
+                      "        pm.expect(data[0].name).to.eq('WinZip 12.1');\r",
+                      "        console.log(\"Проверка значения name пройдена успешно\");\r",
+                      "    } catch (e) {\r",
+                      "        console.error(\"Ошибка при проверке значения name:\", e.message);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "    \r",
+                      "    console.log(\"Все проверки теста выполнены\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "96045c38-b8f8-44dc-98a0-d48b703a241d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis?name=WinZip 12.1",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "WinZip 12.1"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-96045c38-b8f8-44dc-98a0-d48b703a241d"
+            }
+          ],
+          "id": "8d473f10-bf43-41ce-aaa9-d8814b0e400b",
+          "uid": "32335283-8d473f10-bf43-41ce-aaa9-d8814b0e400b"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Preparation",
+              "item": [
+                {
+                  "name": "get Product",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                        "exec": [
+                          "pm.test(\"Проверка ответа сервера\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "    const data = pm.response.json();\r",
+                          "    pm.expect(data).to.be.an(\"array\");\r",
+                          "    pm.expect(data.length).to.above(0);\r",
+                          "    pm.environment.set(\"product_pro_product_dc_id\", data[0].id);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "id": "56968d95-8b11-43bf-9039-ae0bbaafc754",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "X-4me-account",
+                        "value": "dc",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{url}}products?name=Блейд-сервер HP Integrity BL860c",
+                      "host": [
+                        "{{url}}products"
+                      ],
+                      "query": [
+                        {
+                          "key": "name",
+                          "value": "Блейд-сервер HP Integrity BL860c"
+                        }
+                      ]
+                    }
+                  },
+                  "response": [],
+                  "uid": "32335283-56968d95-8b11-43bf-9039-ae0bbaafc754"
+                }
+              ],
+              "id": "63ebd5fc-bc8e-4d9b-9d42-88d57265b7f0",
+              "uid": "32335283-63ebd5fc-bc8e-4d9b-9d42-88d57265b7f0"
+            },
+            {
+              "name": "Create CI",
+              "item": [
+                {
+                  "name": "1.1 create ci",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                        "exec": [
+                          "pm.test(\"Проверка ответа сервера\", function () {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "    const data = pm.response.json();\r",
+                          "    pm.expect(data).to.be.an(\"object\");\r",
+                          "    pm.environment.set(\"ci_pro_product_dc_id\", data.id);\r",
+                          "\r",
+                          "    pm.expect(data.product.id, 'ID продукта').to.eq(pm.environment.get(\"product_pro_product_dc_id\"));\r",
+                          "    pm.expect(data.status, 'status').to.eq('removed');\r",
+                          "\r",
+                          "    // Определяем ожидаемые свойства первого уровня\r",
+                          "    const expectedProperties = [\r",
+                          "        \"alternate_names\",\r",
+                          "        \"assetID\",\r",
+                          "        \"attachments\",\r",
+                          "        \"ci_type\",\r",
+                          "        \"created_at\",\r",
+                          "        \"custom_fields\",\r",
+                          "        \"end_of_support_date\",\r",
+                          "        \"financial_owner\",\r",
+                          "        \"id\",\r",
+                          "        \"in_use_since\",\r",
+                          "        \"label\",\r",
+                          "        \"last_seen_at\",\r",
+                          "        \"license_expiry_date\",\r",
+                          "        \"license_type\",\r",
+                          "        \"location\",\r",
+                          "        \"name\",\r",
+                          "        \"nr_of_cores\",\r",
+                          "        \"nr_of_licenses\",\r",
+                          "        \"nr_of_processors\",\r",
+                          "        \"operating_system\",\r",
+                          "        \"picture_uri\",\r",
+                          "        \"product\",\r",
+                          "        \"ram_amount\",\r",
+                          "        \"recurrence\",\r",
+                          "        \"remarks\",\r",
+                          "        \"rule_set\",\r",
+                          "        \"serial_nr\",\r",
+                          "        \"service\",\r",
+                          "        \"site\",\r",
+                          "        \"site_license\",\r",
+                          "        \"software\",\r",
+                          "        \"source\",\r",
+                          "        \"sourceID\",\r",
+                          "        \"status\",\r",
+                          "        \"supplier\",\r",
+                          "        \"support_team\",\r",
+                          "        \"systemID\",\r",
+                          "        \"temporary_license\",\r",
+                          "        \"updated_at\",\r",
+                          "        \"warranty_expiry_date\",\r",
+                          "        \"workflow_manager\",\r",
+                          "        \"workflow_template\",\r",
+                          "        \"nodeID\"\r",
+                          "    ];\r",
+                          "\r",
+                          "    // Проверяем наличие каждого свойства\r",
+                          "    let allPropertiesPresent = true;\r",
+                          "\r",
+                          "    expectedProperties.forEach(property => {\r",
+                          "        if (!data.hasOwnProperty(property)) {\r",
+                          "            console.error(`Ошибка: Свойство \"${property}\" отсутствует в ответе сервера`);\r",
+                          "            allPropertiesPresent = false;\r",
+                          "        }\r",
+                          "    });\r",
+                          "\r",
+                          "    // Выводим общий результат проверки\r",
+                          "    if (allPropertiesPresent) {\r",
+                          "        console.log(\"Все свойства первого уровня присутствуют в ответе сервера\");\r",
+                          "        pm.test(\"Все свойства первого уровня присутствуют\", function () {\r",
+                          "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                          "        });\r",
+                          "    } else {\r",
+                          "        pm.test(\"Не все свойства первого уровня присутствуют\", function () {\r",
+                          "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                          "        });\r",
+                          "    }\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "id": "16a6919e-7f59-4f75-8a86-9f5456057c11",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "X-4me-account",
+                        "value": "dc",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n   \"product_id\": \"{{product_pro_product_dc_id}}\",\r\n   \"status\": \"removed\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}cis",
+                      "host": [
+                        "{{url}}cis"
+                      ]
+                    }
+                  },
+                  "response": [],
+                  "uid": "32335283-16a6919e-7f59-4f75-8a86-9f5456057c11"
+                }
+              ],
+              "id": "48e2b714-229c-46d0-869d-1eaa57838421",
+              "uid": "32335283-48e2b714-229c-46d0-869d-1eaa57838421"
+            }
+          ],
+          "id": "f165425d-e169-44aa-a4c9-fc8bfb0adc0f",
+          "uid": "32335283-f165425d-e169-44aa-a4c9-fc8bfb0adc0f"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "1.1 update ci",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка ответа сервера\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    const data = pm.response.json();\r",
+                      "    pm.expect(data).to.be.an(\"object\");\r",
+                      "\r",
+                      "    pm.expect(data.product.id, 'ID продукта').to.eq(pm.environment.get(\"product_pro_product_dc_id\"));\r",
+                      "    pm.expect(data.status, 'status').to.eq('in_production');\r",
+                      "\r",
+                      "    // Определяем ожидаемые свойства первого уровня\r",
+                      "    const expectedProperties = [\r",
+                      "        \"alternate_names\",\r",
+                      "        \"assetID\",\r",
+                      "        \"attachments\",\r",
+                      "        \"ci_type\",\r",
+                      "        \"created_at\",\r",
+                      "        \"custom_fields\",\r",
+                      "        \"end_of_support_date\",\r",
+                      "        \"financial_owner\",\r",
+                      "        \"id\",\r",
+                      "        \"in_use_since\",\r",
+                      "        \"label\",\r",
+                      "        \"last_seen_at\",\r",
+                      "        \"license_expiry_date\",\r",
+                      "        \"license_type\",\r",
+                      "        \"location\",\r",
+                      "        \"name\",\r",
+                      "        \"nr_of_cores\",\r",
+                      "        \"nr_of_licenses\",\r",
+                      "        \"nr_of_processors\",\r",
+                      "        \"operating_system\",\r",
+                      "        \"picture_uri\",\r",
+                      "        \"product\",\r",
+                      "        \"ram_amount\",\r",
+                      "        \"recurrence\",\r",
+                      "        \"remarks\",\r",
+                      "        \"rule_set\",\r",
+                      "        \"serial_nr\",\r",
+                      "        \"service\",\r",
+                      "        \"site\",\r",
+                      "        \"site_license\",\r",
+                      "        \"software\",\r",
+                      "        \"source\",\r",
+                      "        \"sourceID\",\r",
+                      "        \"status\",\r",
+                      "        \"supplier\",\r",
+                      "        \"support_team\",\r",
+                      "        \"systemID\",\r",
+                      "        \"temporary_license\",\r",
+                      "        \"updated_at\",\r",
+                      "        \"warranty_expiry_date\",\r",
+                      "        \"workflow_manager\",\r",
+                      "        \"workflow_template\",\r",
+                      "        \"nodeID\"\r",
+                      "    ];\r",
+                      "\r",
+                      "    // Проверяем наличие каждого свойства\r",
+                      "    let allPropertiesPresent = true;\r",
+                      "\r",
+                      "    expectedProperties.forEach(property => {\r",
+                      "        if (!data.hasOwnProperty(property)) {\r",
+                      "            console.error(`Ошибка: Свойство \"${property}\" отсутствует в ответе сервера`);\r",
+                      "            allPropertiesPresent = false;\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Выводим общий результат проверки\r",
+                      "    if (allPropertiesPresent) {\r",
+                      "        console.log(\"Все свойства первого уровня присутствуют в ответе сервера\");\r",
+                      "        pm.test(\"Все свойства первого уровня присутствуют\", function () {\r",
+                      "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                      "        });\r",
+                      "    } else {\r",
+                      "        pm.test(\"Не все свойства первого уровня присутствуют\", function () {\r",
+                      "            pm.expect(allPropertiesPresent).to.be.true;\r",
+                      "        });\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "1efd4ede-6e01-4c06-ba3c-eea38a00b6e8",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"status\": \"in_production\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}cis/{{ci_pro_product_dc_id}}",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "{{ci_pro_product_dc_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-1efd4ede-6e01-4c06-ba3c-eea38a00b6e8"
+            }
+          ],
+          "id": "71c7bb57-2ca2-4ed6-8319-a54d0e80a03b",
+          "uid": "32335283-71c7bb57-2ca2-4ed6-8319-a54d0e80a03b"
+        }
+      ],
+      "id": "9d366ac4-efe8-4809-acf7-956877eccaec",
+      "uid": "32335283-9d366ac4-efe8-4809-acf7-956877eccaec"
+    },
+    {
+      "name": "CI relations (ci-ci)",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI relations for ci id :2482",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys('id', 'ci', 'relation_type');\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля relation_type\r",
+                      "        if (item.hasOwnProperty('relation_type')) {\r",
+                      "            pm.test(`${itemPrefix} relation_type is correct`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.relation_type).to.be.a('string');\r",
+                      "                    pm.expect(item.relation_type).to.eql('parent');\r",
+                      "                    console.log(`${itemPrefix}: Поле relation_type корректно (тип string, значение 'parent')`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле relation_type некорректно:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле relation_type`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля ci\r",
+                      "        if (item.hasOwnProperty('ci')) {\r",
+                      "            pm.test(`${itemPrefix} ci has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.ci).to.be.an('object');\r",
+                      "                    pm.expect(item.ci).to.include.keys('name', 'label', 'id');\r",
+                      "                    console.log(`${itemPrefix}: Поле ci имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.ci.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.ci.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте ci отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.ci.hasOwnProperty('label')) {\r",
+                      "                        pm.expect(item.ci.label).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте ci отсутствует поле label`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.ci.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.ci.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте ci отсутствует поле id`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля ci некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле ci`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "116d7e73-cd26-4b3a-8d97-39cc2661f7d5",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2482/ci_relations",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2482",
+                    "ci_relations"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-116d7e73-cd26-4b3a-8d97-39cc2661f7d5"
+            }
+          ],
+          "id": "41d040f9-231d-4b4b-aced-7ca00fc2f57d",
+          "uid": "32335283-41d040f9-231d-4b4b-aced-7ca00fc2f57d"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "1.2 create CI relations for ci id :2482",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка структуры ответа и определенности свойств\r",
+                      "pm.test(\"Response has correct structure and all properties are defined\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.environment.set(\"connect_id\", response.id);\r",
+                      "\r",
+                      "    // Проверка корневых свойств\r",
+                      "    pm.expect(response).to.have.property('id').that.is.a('number').and.to.not.be.undefined;\r",
+                      "    pm.expect(response).to.have.property('nodeID').that.is.a('string').and.to.not.be.undefined;\r",
+                      "    pm.expect(response).to.have.property('relation_type').that.is.a('string').and.to.not.be.undefined;\r",
+                      "\r",
+                      "    // Проверка вложенного объекта ci\r",
+                      "    pm.expect(response).to.have.property('ci').that.is.an('object').and.to.not.be.undefined;\r",
+                      "\r",
+                      "    const ci = response.ci;\r",
+                      "    if (ci) {\r",
+                      "        pm.expect(ci).to.have.property('id').that.is.a('number').and.to.not.be.undefined;\r",
+                      "        pm.expect(ci).to.have.property('label').that.is.a('string').and.to.not.be.undefined;\r",
+                      "        pm.expect(ci).to.have.property('name').that.is.a('string').and.to.not.be.undefined;\r",
+                      "        pm.expect(ci).to.have.property('nodeID').that.is.a('string').and.to.not.be.undefined;\r",
+                      "    }\r",
+                      "});\r",
+                      "\r",
+                      "// Дополнительная проверка на отсутствие лишних свойств\r",
+                      "pm.test(\"Response doesn't have unexpected properties\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    const expectedProperties = ['id', 'nodeID', 'ci', 'relation_type'];\r",
+                      "    const ciExpectedProperties = ['id', 'label', 'name', 'nodeID'];\r",
+                      "\r",
+                      "    // Проверка корневых свойств\r",
+                      "    Object.keys(response).forEach(function (property) {\r",
+                      "        pm.expect(expectedProperties).to.include(property);\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверка свойств объекта ci\r",
+                      "    if (response.ci) {\r",
+                      "        Object.keys(response.ci).forEach(function (property) {\r",
+                      "            pm.expect(ciExpectedProperties).to.include(property);\r",
+                      "        });\r",
+                      "    }\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "a28c524a-bf54-4363-8396-20bc7c8fd96e",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"related_ci_id\": {{ci_pro_product_dc_id}},\r\n    \"relation_type\": \"parent\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}cis/2482/ci_relations",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2482",
+                    "ci_relations"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-a28c524a-bf54-4363-8396-20bc7c8fd96e"
+            }
+          ],
+          "id": "35c9aed0-91cd-466e-b2e0-53fececba0c7",
+          "uid": "32335283-35c9aed0-91cd-466e-b2e0-53fececba0c7"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "1.3 update CI relations for ci id :2482",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.expect(response.ci.id).to.eq(pm.environment.get(\"ci_pro_product_dc_id\"));\r",
+                      "    pm.expect(response.relation_type, 'relation_type').to.eq('child');\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "9c401311-4c4a-49a5-be51-af0d5a9774b0",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"relation_type\": \"child\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}cis/2482/ci_relations/{{connect_id}}",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2482",
+                    "ci_relations",
+                    "{{connect_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-9c401311-4c4a-49a5-be51-af0d5a9774b0"
+            }
+          ],
+          "id": "2df4f25c-884a-4498-b2a8-f0fa3d165dbe",
+          "uid": "32335283-2df4f25c-884a-4498-b2a8-f0fa3d165dbe"
+        }
+      ],
+      "id": "4714c061-97f7-4786-a63a-6e954817ec9b",
+      "uid": "32335283-4714c061-97f7-4786-a63a-6e954817ec9b"
+    },
+    {
+      "name": "CI - Contracts",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI contracts for ci id :2479",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys('id', 'name', 'status', 'category', 'created_at', 'updated_at', 'nodeID');\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля name\r",
+                      "        if (item.hasOwnProperty('name')) {\r",
+                      "            pm.test(`${itemPrefix} name has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.name).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле name имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле name имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле name`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля supplier\r",
+                      "        if (item.hasOwnProperty('supplier')) {\r",
+                      "            pm.test(`${itemPrefix} supplier has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.supplier).to.be.an('object');\r",
+                      "                    pm.expect(item.supplier).to.include.keys('name', 'nodeID', 'id');\r",
+                      "                    console.log(`${itemPrefix}: Поле supplier имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.supplier.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.supplier.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте supplier отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.supplier.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.supplier.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте supplier отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.supplier.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.supplier.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте supplier отсутствует поле id`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля supplier некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле supplier`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "96ac543d-ae6d-4dba-be5c-25f168f65967",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2479/contracts",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2479",
+                    "contracts"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-96ac543d-ae6d-4dba-be5c-25f168f65967"
+            }
+          ],
+          "id": "b47df6b7-4f77-4131-b408-ade0a4e0971e",
+          "uid": "32335283-b47df6b7-4f77-4131-b408-ade0a4e0971e"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "1.2 create CI:2479-contract:300",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "363f8e3d-93d7-4eb5-80da-60ce026c4cbf",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2479/contracts/300",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2479",
+                    "contracts",
+                    "300"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-363f8e3d-93d7-4eb5-80da-60ce026c4cbf"
+            },
+            {
+              "name": "1.3 get CI:2479-contract:300",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const responseData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что responseData является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Ищем объект с id = 300\r",
+                      "    const objectWithId300 = responseData.find(item => item.id === 300);\r",
+                      "\r",
+                      "    // Проверяем, что такой объект существует\r",
+                      "    pm.test(\"Object with id 300 exists in the array\", function () {\r",
+                      "        pm.expect(objectWithId300).to.not.be.undefined;\r",
+                      "\r",
+                      "        // Дополнительная проверка, что объект действительно содержит id = 300\r",
+                      "        if (objectWithId300) {\r",
+                      "            pm.expect(objectWithId300.id).to.equal(300);\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Выводим сообщение в консоль для отладки\r",
+                      "    console.log(\"Object with id 300:\", objectWithId300);\r",
+                      "});\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys('id', 'name', 'status', 'category', 'created_at', 'updated_at', 'nodeID');\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля name\r",
+                      "        if (item.hasOwnProperty('name')) {\r",
+                      "            pm.test(`${itemPrefix} name has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.name).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле name имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле name имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле name`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля supplier\r",
+                      "        if (item.hasOwnProperty('supplier')) {\r",
+                      "            pm.test(`${itemPrefix} supplier has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.supplier).to.be.an('object');\r",
+                      "                    pm.expect(item.supplier).to.include.keys('name', 'nodeID', 'id');\r",
+                      "                    console.log(`${itemPrefix}: Поле supplier имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.supplier.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.supplier.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте supplier отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.supplier.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.supplier.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте supplier отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.supplier.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.supplier.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте supplier отсутствует поле id`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля supplier некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле supplier`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "c278ecad-3093-4b15-8a8c-4575b29a4532",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2479/contracts?id=300",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2479",
+                    "contracts"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "300"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-c278ecad-3093-4b15-8a8c-4575b29a4532"
+            }
+          ],
+          "id": "87170b70-b171-417a-a81d-73dd27c43bf8",
+          "uid": "32335283-87170b70-b171-417a-a81d-73dd27c43bf8"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "1.4 delete  CI:2479-contract:300",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "    console.log(\"Статус код ответа: 204 - Успешно\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "1788ae08-9b94-46a6-9703-f077299412be",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"relation_type\": \"child\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}cis/2479/contracts/300",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2479",
+                    "contracts",
+                    "300"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-1788ae08-9b94-46a6-9703-f077299412be"
+            },
+            {
+              "name": "1.5 get CI:2479-contract:300",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const responseData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что responseData является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const isArray = Array.isArray(responseData);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"Ошибка: Ответ не является массивом. Тип данных:\", typeof responseData);\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Ищем объект с id = 300\r",
+                      "    const objectWithId300 = responseData.find(item => item.id === 300);\r",
+                      "\r",
+                      "    // Выводим информацию о найденном объекте (для отладки)\r",
+                      "    console.log(\"Результат поиска объекта с id=300:\", objectWithId300 ? \"Найден\" : \"Не найден\");\r",
+                      "\r",
+                      "    // Проверяем, что такого объекта НЕТ в массиве\r",
+                      "    pm.test(\"Object with id 300 does not exist in the array\", function () {\r",
+                      "        if (objectWithId300) {\r",
+                      "            console.error(\"Тест провален: Объект с id=300 найден в массиве. Содержимое объекта:\",\r",
+                      "                JSON.stringify(objectWithId300, null, 2));\r",
+                      "            console.error(\"Полный ответ:\", JSON.stringify(responseData, null, 2));\r",
+                      "        }\r",
+                      "        pm.expect(objectWithId300).to.be.undefined;\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "62fc9cb1-d5e1-4ac8-9b30-5af528ac8cbc",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2479/contracts",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2479",
+                    "contracts"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-62fc9cb1-d5e1-4ac8-9b30-5af528ac8cbc"
+            }
+          ],
+          "id": "d298031a-ac41-4012-9cec-dccdc7c16241",
+          "uid": "32335283-d298031a-ac41-4012-9cec-dccdc7c16241"
+        }
+      ],
+      "id": "5f4247de-21c3-4d80-ac6d-0b3116942218",
+      "uid": "32335283-5f4247de-21c3-4d80-ac6d-0b3116942218"
+    },
+    {
+      "name": "CI - Problems",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI Problems for ci id :2495",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys('id', 'subject', 'impact', 'status', 'known_error', 'analysis_target_at', 'solved_at', 'team', 'member', 'service', 'created_at', 'updated_at', 'nodeID');\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля subject\r",
+                      "        if (item.hasOwnProperty('subject')) {\r",
+                      "            pm.test(`${itemPrefix} subject has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.subject).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле subject имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле subject имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле subject`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля team\r",
+                      "        if (item.hasOwnProperty('team')) {\r",
+                      "            pm.test(`${itemPrefix} team has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.team).to.be.an('object');\r",
+                      "                    pm.expect(item.team).to.include.keys('name', 'nodeID', 'id');\r",
+                      "                    console.log(`${itemPrefix}: Поле team имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.team.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.team.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.team.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле id`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля team некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле team`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "    \r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "d699cf64-9abc-4418-a5c7-199864911982",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2495/problems",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2495",
+                    "problems"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-d699cf64-9abc-4418-a5c7-199864911982"
+            }
+          ],
+          "id": "ac34badd-3cd5-4c49-a6a6-9ac5fbb94b4b",
+          "uid": "32335283-ac34badd-3cd5-4c49-a6a6-9ac5fbb94b4b"
+        }
+      ],
+      "id": "f538a60e-fcbd-4afd-9672-f75b63f1f995",
+      "uid": "32335283-f538a60e-fcbd-4afd-9672-f75b63f1f995"
+    },
+    {
+      "name": "CI - Requests",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI Requests for ci id :2495",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys(\r",
+                      "                    'id', 'subject', 'category', 'impact', 'status', \r",
+                      "                    'next_target_at', 'completed_at', 'team', 'member', \r",
+                      "                    'service_instance', 'created_at', 'updated_at', 'nodeID'\r",
+                      "                );\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля subject\r",
+                      "        if (item.hasOwnProperty('subject')) {\r",
+                      "            pm.test(`${itemPrefix} subject has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.subject).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле subject имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле subject имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле subject`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля team\r",
+                      "        if (item.hasOwnProperty('team')) {\r",
+                      "            pm.test(`${itemPrefix} team has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.team).to.be.an('object');\r",
+                      "                    pm.expect(item.team).to.include.keys('id', 'name', 'account', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле team имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей team\r",
+                      "                    if (item.team.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.team.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.team.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('account')) {\r",
+                      "                        pm.expect(item.team.account).to.be.an('object');\r",
+                      "                        pm.expect(item.team.account).to.include.keys('id', 'name');\r",
+                      "                        pm.expect(item.team.account.id).to.be.a('string');\r",
+                      "                        pm.expect(item.team.account.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле account`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.team.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля team некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле team`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля member\r",
+                      "        if (item.hasOwnProperty('member')) {\r",
+                      "            pm.test(`${itemPrefix} member has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.member).to.be.an('object');\r",
+                      "                    pm.expect(item.member).to.include.keys('id', 'name', 'account', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле member имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей member\r",
+                      "                    if (item.member.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.member.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.member.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.member.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.member.hasOwnProperty('account')) {\r",
+                      "                        pm.expect(item.member.account).to.be.an('object');\r",
+                      "                        pm.expect(item.member.account).to.include.keys('id', 'name');\r",
+                      "                        pm.expect(item.member.account.id).to.be.a('string');\r",
+                      "                        pm.expect(item.member.account.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле account`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.member.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.member.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля member некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле member`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля service_instance\r",
+                      "        if (item.hasOwnProperty('service_instance')) {\r",
+                      "            pm.test(`${itemPrefix} service_instance has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.service_instance).to.be.an('object');\r",
+                      "                    pm.expect(item.service_instance).to.include.keys('id', 'name', 'localized_name', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле service_instance имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.service_instance.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.service_instance.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service_instance отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.service_instance.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.service_instance.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service_instance отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.service_instance.hasOwnProperty('localized_name')) {\r",
+                      "                        pm.expect(item.service_instance.localized_name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service_instance отсутствует поле localized_name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.service_instance.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.service_instance.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service_instance отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля service_instance некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле service_instance`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "40999646-c88b-47ba-85d3-a82c7f998c27",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2495/requests",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2495",
+                    "requests"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-40999646-c88b-47ba-85d3-a82c7f998c27"
+            }
+          ],
+          "id": "8eacb5ae-b160-456d-93e6-ce3e4742d5e5",
+          "uid": "32335283-8eacb5ae-b160-456d-93e6-ce3e4742d5e5"
+        }
+      ],
+      "id": "f9a7e1e9-82b6-440d-80cd-da25d527703f",
+      "uid": "32335283-f9a7e1e9-82b6-440d-80cd-da25d527703f"
+    },
+    {
+      "name": "CI - Service Instances",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI-service_instances for ci id :2356",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys('id', 'name', 'status', 'service', 'support_team', 'created_at', 'updated_at', 'localized_name', 'nodeID');\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля name\r",
+                      "        if (item.hasOwnProperty('name')) {\r",
+                      "            pm.test(`${itemPrefix} name has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.name).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле name имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле name имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле name`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля service\r",
+                      "        if (item.hasOwnProperty('service')) {\r",
+                      "            pm.test(`${itemPrefix} service has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.service).to.be.an('object');\r",
+                      "                    pm.expect(item.service).to.include.keys('id', 'name', 'localized_name', 'nodeID', 'provider');\r",
+                      "                    console.log(`${itemPrefix}: Поле service имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей service\r",
+                      "                    if (item.service.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.service.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.service.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.service.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.service.hasOwnProperty('provider')) {\r",
+                      "                        pm.test(`${itemPrefix} service.provider has correct structure`, function () {\r",
+                      "                            pm.expect(item.service.provider).to.be.an('object');\r",
+                      "                            pm.expect(item.service.provider).to.include.keys('id', 'name', 'account', 'nodeID');\r",
+                      "\r",
+                      "                            // Проверка вложенных полей provider\r",
+                      "                            if (item.service.provider.hasOwnProperty('account')) {\r",
+                      "                                pm.test(`${itemPrefix} service.provider.account has correct structure`, function () {\r",
+                      "                                    pm.expect(item.service.provider.account).to.be.an('object');\r",
+                      "                                    pm.expect(item.service.provider.account).to.include.keys('id', 'name');\r",
+                      "                                    pm.expect(item.service.provider.account.id).to.be.a('string');\r",
+                      "                                    pm.expect(item.service.provider.account.name).to.be.a('string');\r",
+                      "                                });\r",
+                      "                            } else {\r",
+                      "                                console.error(`ОШИБКА: ${itemPrefix} в объекте service.provider отсутствует поле account`);\r",
+                      "                            }\r",
+                      "                        });\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте service отсутствует поле provider`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля service некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле service`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля support_team\r",
+                      "        if (item.hasOwnProperty('support_team')) {\r",
+                      "            pm.test(`${itemPrefix} support_team has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.support_team).to.be.an('object');\r",
+                      "                    pm.expect(item.support_team).to.include.keys('id', 'name', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле support_team имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.support_team.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.support_team.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте support_team отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.support_team.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.support_team.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте support_team отсутствует поле name`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля support_team некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле support_team`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "50380f96-edf4-4f97-a17b-8ac037d95b97",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2356/service_instances",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2356",
+                    "service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-50380f96-edf4-4f97-a17b-8ac037d95b97"
+            }
+          ],
+          "id": "43fd42fa-f6c3-4b90-87c0-5fa87cda2df0",
+          "uid": "32335283-43fd42fa-f6c3-4b90-87c0-5fa87cda2df0"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "1.2 delete CI:2356-si:293",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "    console.log(\"Статус код ответа: 204 - Успешно\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "671696f0-334c-4ae2-8bdc-eeb686d62544",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2356/service_instances/293",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2356",
+                    "service_instances",
+                    "293"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-671696f0-334c-4ae2-8bdc-eeb686d62544"
+            },
+            {
+              "name": "1.3 get CI:2356-service_instances",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const responseData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что responseData является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const isArray = Array.isArray(responseData);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"Ошибка: Ответ не является массивом. Тип данных:\", typeof responseData);\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Ищем объект с id = 293\r",
+                      "    const objectWithId293 = responseData.find(item => item.id === 293);\r",
+                      "\r",
+                      "    // Выводим информацию о найденном объекте (для отладки)\r",
+                      "    console.log(\"Результат поиска объекта с id=293:\", objectWithId293 ? \"Найден\" : \"Не найден\");\r",
+                      "\r",
+                      "    // Проверяем, что такого объекта НЕТ в массиве\r",
+                      "    pm.test(\"Object with id 293 does not exist in the array\", function () {\r",
+                      "        if (objectWithId293) {\r",
+                      "            console.error(\"Тест провален: Объект с id=293 найден в массиве. Содержимое объекта:\",\r",
+                      "                JSON.stringify(objectWithId293, null, 2));\r",
+                      "            console.error(\"Полный ответ:\", JSON.stringify(responseData, null, 2));\r",
+                      "        }\r",
+                      "        pm.expect(objectWithId293).to.be.undefined;\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "31feae3a-4d1a-432a-bbee-433f087a7e3e",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2356/service_instances",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2356",
+                    "service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-31feae3a-4d1a-432a-bbee-433f087a7e3e"
+            }
+          ],
+          "id": "63bb65b4-4358-4a61-9bfc-423ff0e201b0",
+          "uid": "32335283-63bb65b4-4358-4a61-9bfc-423ff0e201b0"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "1.4 create CI:2356-si:293",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "5f04c997-3d20-4f2a-b4d9-ee85858a3dbb",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2356/service_instances/293",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2356",
+                    "service_instances",
+                    "293"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-5f04c997-3d20-4f2a-b4d9-ee85858a3dbb"
+            },
+            {
+              "name": "1.5 get CI:2356-si:293",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const responseData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что responseData является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Ищем объект с id = 293\r",
+                      "    const objectWithId293 = responseData.find(item => item.id === 293);\r",
+                      "\r",
+                      "    // Проверяем, что такой объект существует\r",
+                      "    pm.test(\"Object with id 293 exists in the array\", function () {\r",
+                      "        pm.expect(objectWithId293).to.not.be.undefined;\r",
+                      "\r",
+                      "        // Дополнительная проверка, что объект действительно содержит id = 293\r",
+                      "        if (objectWithId293) {\r",
+                      "            pm.expect(objectWithId293.id).to.equal(293);\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Выводим сообщение в консоль для отладки\r",
+                      "    console.log(\"Object with id 293:\", objectWithId293);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "517390cc-f335-41bd-ba61-97d73fd083b3",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2356/service_instances?id=293",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2356",
+                    "service_instances"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "293"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-517390cc-f335-41bd-ba61-97d73fd083b3"
+            }
+          ],
+          "id": "60e438b2-dfba-498f-aae2-1b9819f1e9e7",
+          "uid": "32335283-60e438b2-dfba-498f-aae2-1b9819f1e9e7"
+        }
+      ],
+      "id": "eb95415f-71da-4e21-9781-bac65f5388e0",
+      "uid": "32335283-eb95415f-71da-4e21-9781-bac65f5388e0"
+    },
+    {
+      "name": "CI - Tasks",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI Tasks for ci id :2495",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys(\r",
+                      "                    'id', 'sourceID', 'subject', 'phase', 'impact', \r",
+                      "                    'category', 'status', 'team', 'member', \r",
+                      "                    'completion_target_at', 'finished_at', \r",
+                      "                    'created_at', 'updated_at', 'nodeID'\r",
+                      "                );\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля sourceID\r",
+                      "        if (item.hasOwnProperty('sourceID')) {\r",
+                      "            pm.test(`${itemPrefix} sourceID has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.sourceID).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле sourceID имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле sourceID имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле sourceID`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля subject\r",
+                      "        if (item.hasOwnProperty('subject')) {\r",
+                      "            pm.test(`${itemPrefix} subject has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.subject).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле subject имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле subject имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле subject`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля phase\r",
+                      "        if (item.hasOwnProperty('phase')) {\r",
+                      "            pm.test(`${itemPrefix} phase has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.phase).to.be.an('object');\r",
+                      "                    pm.expect(item.phase).to.include.keys(\r",
+                      "                        'completed_at', 'created_at', 'id', 'name', \r",
+                      "                        'position', 'started_at', 'status', 'updated_at', 'nodeID'\r",
+                      "                    );\r",
+                      "                    console.log(`${itemPrefix}: Поле phase имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей phase\r",
+                      "                    if (item.phase.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.phase.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте phase отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.phase.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.phase.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте phase отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.phase.hasOwnProperty('status')) {\r",
+                      "                        pm.expect(item.phase.status).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте phase отсутствует поле status`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.phase.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.phase.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте phase отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля phase некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле phase`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля team\r",
+                      "        if (item.hasOwnProperty('team')) {\r",
+                      "            pm.test(`${itemPrefix} team has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.team).to.be.an('object');\r",
+                      "                    pm.expect(item.team).to.include.keys('id', 'name', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле team имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей team\r",
+                      "                    if (item.team.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.team.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.team.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.team.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.team.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте team отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля team некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле team`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля member\r",
+                      "        if (item.hasOwnProperty('member')) {\r",
+                      "            pm.test(`${itemPrefix} member has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.member).to.be.an('object');\r",
+                      "                    pm.expect(item.member).to.include.keys('id', 'name', 'account', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле member имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей member\r",
+                      "                    if (item.member.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.member.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.member.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.member.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.member.hasOwnProperty('account')) {\r",
+                      "                        pm.expect(item.member.account).to.be.an('object');\r",
+                      "                        pm.expect(item.member.account).to.include.keys('id', 'name');\r",
+                      "                        pm.expect(item.member.account.id).to.be.a('string');\r",
+                      "                        pm.expect(item.member.account.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле account`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.member.hasOwnProperty('nodeID')) {\r",
+                      "                        pm.expect(item.member.nodeID).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте member отсутствует поле nodeID`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля member некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле member`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка временных полей\r",
+                      "        const dateFields = ['created_at', 'updated_at', 'finished_at', 'completion_target_at'];\r",
+                      "        dateFields.forEach(field => {\r",
+                      "            if (item.hasOwnProperty(field)) {\r",
+                      "                pm.test(`${itemPrefix} ${field} has correct format or is null`, function () {\r",
+                      "                    try {\r",
+                      "                        if (item[field] !== null) {\r",
+                      "                            pm.expect(item[field]).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}$/);\r",
+                      "                            console.log(`${itemPrefix}: Поле ${field} имеет корректный формат даты`);\r",
+                      "                        } else {\r",
+                      "                            console.log(`${itemPrefix}: Поле ${field} имеет значение null (допустимо)`);\r",
+                      "                        }\r",
+                      "                    } catch (e) {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} поле ${field} имеет некорректный формат:`, e.message);\r",
+                      "                        throw e;\r",
+                      "                    }\r",
+                      "                });\r",
+                      "            } else {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствует поле ${field}`);\r",
+                      "            }\r",
+                      "        });\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "d8185319-ac46-42e3-84b5-5019e6d742d2",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2495/tasks",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2495",
+                    "tasks"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-d8185319-ac46-42e3-84b5-5019e6d742d2"
+            }
+          ],
+          "id": "f3bf45fc-cc51-42a8-8cad-a74989c3dd0f",
+          "uid": "32335283-f3bf45fc-cc51-42a8-8cad-a74989c3dd0f"
+        }
+      ],
+      "id": "7fe862c0-ccef-4a51-a1a5-2ff12c78545a",
+      "uid": "32335283-7fe862c0-ccef-4a51-a1a5-2ff12c78545a"
+    },
+    {
+      "name": "CI - Users",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "1.1 get CI-users for ci id :2084",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    console.log(\"Статус код ответа: 200 - Успешно\");\r",
+                      "\r",
+                      "    // Проверяем что ответ является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const response = pm.response.json();\r",
+                      "        const isArray = Array.isArray(response);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"ОШИБКА: Ответ не является массивом\");\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем что массив не пустой\r",
+                      "    pm.test(\"Response is not empty\", function () {\r",
+                      "        const isEmpty = response.length === 0;\r",
+                      "        if (isEmpty) {\r",
+                      "            console.error(\"ОШИБКА: Получен пустой массив в ответе\");\r",
+                      "        }\r",
+                      "        pm.expect(response).to.not.be.empty;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверяем структуру только первого элемента\r",
+                      "    if (response.length > 0) {\r",
+                      "        const item = response[0];\r",
+                      "        const itemPrefix = \"Первый элемент\";\r",
+                      "\r",
+                      "        // Проверяем наличие обязательных полей\r",
+                      "        pm.test(`${itemPrefix} has required properties`, function () {\r",
+                      "            try {\r",
+                      "                pm.expect(item).to.include.keys('id', 'primary_email', 'name', 'organization', 'site', 'created_at', 'updated_at', 'account', 'nodeID');\r",
+                      "                console.log(`${itemPrefix}: Все обязательные поля присутствуют`);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствуют обязательные поля:`, e.message);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "\r",
+                      "        // Проверка поля id\r",
+                      "        if (item.hasOwnProperty('id')) {\r",
+                      "            pm.test(`${itemPrefix} id has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.id).to.be.a('number');\r",
+                      "                    console.log(`${itemPrefix}: Поле id имеет корректный тип (number)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле id имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле id`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля name\r",
+                      "        if (item.hasOwnProperty('name')) {\r",
+                      "            pm.test(`${itemPrefix} name has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.name).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле name имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле name имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле name`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля primary_email\r",
+                      "        if (item.hasOwnProperty('primary_email')) {\r",
+                      "            pm.test(`${itemPrefix} primary_email has correct type`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.primary_email).to.be.a('string');\r",
+                      "                    console.log(`${itemPrefix}: Поле primary_email имеет корректный тип (string)`);\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} поле primary_email имеет некорректный тип:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле primary_email`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля organization\r",
+                      "        if (item.hasOwnProperty('organization')) {\r",
+                      "            pm.test(`${itemPrefix} organization has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.organization).to.be.an('object');\r",
+                      "                    pm.expect(item.organization).to.include.keys('id', 'name', 'account', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле organization имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей organization\r",
+                      "                    if (item.organization.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.organization.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте organization отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.organization.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.organization.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте organization отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    // Проверка account внутри organization\r",
+                      "                    if (item.organization.hasOwnProperty('account')) {\r",
+                      "                        pm.test(`${itemPrefix} organization.account has correct structure`, function () {\r",
+                      "                            pm.expect(item.organization.account).to.be.an('object');\r",
+                      "                            pm.expect(item.organization.account).to.include.keys('id', 'name');\r",
+                      "                            pm.expect(item.organization.account.id).to.be.a('string');\r",
+                      "                            pm.expect(item.organization.account.name).to.be.a('string');\r",
+                      "                        });\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте organization отсутствует поле account`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля organization некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле organization`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля site\r",
+                      "        if (item.hasOwnProperty('site')) {\r",
+                      "            pm.test(`${itemPrefix} site has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.site).to.be.an('object');\r",
+                      "                    pm.expect(item.site).to.include.keys('id', 'name', 'account', 'nodeID');\r",
+                      "                    console.log(`${itemPrefix}: Поле site имеет корректную структуру`);\r",
+                      "\r",
+                      "                    // Проверка вложенных полей site\r",
+                      "                    if (item.site.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.site.id).to.be.a('number');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте site отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.site.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.site.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте site отсутствует поле name`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    // Проверка account внутри site\r",
+                      "                    if (item.site.hasOwnProperty('account')) {\r",
+                      "                        pm.test(`${itemPrefix} site.account has correct structure`, function () {\r",
+                      "                            pm.expect(item.site.account).to.be.an('object');\r",
+                      "                            pm.expect(item.site.account).to.include.keys('id', 'name');\r",
+                      "                            pm.expect(item.site.account.id).to.be.a('string');\r",
+                      "                            pm.expect(item.site.account.name).to.be.a('string');\r",
+                      "                        });\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте site отсутствует поле account`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля site некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле site`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка поля account\r",
+                      "        if (item.hasOwnProperty('account')) {\r",
+                      "            pm.test(`${itemPrefix} account has correct structure`, function () {\r",
+                      "                try {\r",
+                      "                    pm.expect(item.account).to.be.an('object');\r",
+                      "                    pm.expect(item.account).to.include.keys('id', 'name');\r",
+                      "                    console.log(`${itemPrefix}: Поле account имеет корректную структуру`);\r",
+                      "\r",
+                      "                    if (item.account.hasOwnProperty('id')) {\r",
+                      "                        pm.expect(item.account.id).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте account отсутствует поле id`);\r",
+                      "                    }\r",
+                      "\r",
+                      "                    if (item.account.hasOwnProperty('name')) {\r",
+                      "                        pm.expect(item.account.name).to.be.a('string');\r",
+                      "                    } else {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} в объекте account отсутствует поле name`);\r",
+                      "                    }\r",
+                      "                } catch (e) {\r",
+                      "                    console.error(`ОШИБКА: ${itemPrefix} структура поля account некорректна:`, e.message);\r",
+                      "                    throw e;\r",
+                      "                }\r",
+                      "            });\r",
+                      "        } else {\r",
+                      "            console.error(`ОШИБКА: ${itemPrefix} отсутствует поле account`);\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверка полей дат\r",
+                      "        ['created_at', 'updated_at'].forEach(field => {\r",
+                      "            if (item.hasOwnProperty(field)) {\r",
+                      "                pm.test(`${itemPrefix} ${field} has correct format`, function () {\r",
+                      "                    try {\r",
+                      "                        pm.expect(item[field]).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}$/);\r",
+                      "                        console.log(`${itemPrefix}: Поле ${field} имеет корректный формат даты`);\r",
+                      "                    } catch (e) {\r",
+                      "                        console.error(`ОШИБКА: ${itemPrefix} поле ${field} имеет некорректный формат даты:`, e.message);\r",
+                      "                        throw e;\r",
+                      "                    }\r",
+                      "                });\r",
+                      "            } else {\r",
+                      "                console.error(`ОШИБКА: ${itemPrefix} отсутствует поле ${field}`);\r",
+                      "            }\r",
+                      "        });\r",
+                      "    } else {\r",
+                      "        console.error(\"ПРЕДУПРЕЖДЕНИЕ: Массив пуст, проверка элементов невозможна\");\r",
+                      "    }\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2271bbe4-fbf9-4361-8776-404e998aa4df",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2084/users",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2084",
+                    "users"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2271bbe4-fbf9-4361-8776-404e998aa4df"
+            }
+          ],
+          "id": "3890c0b3-cc78-4f59-b1df-d55e7fc88889",
+          "uid": "32335283-3890c0b3-cc78-4f59-b1df-d55e7fc88889"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "1.2 delete CI:2082-user:726",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "    console.log(\"Статус код ответа: 204 - Успешно\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "52e803c8-45b9-46ed-a20c-abab919db783",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2084/users/726",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2084",
+                    "users",
+                    "726"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-52e803c8-45b9-46ed-a20c-abab919db783"
+            },
+            {
+              "name": "1.3 get CI:2084-users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const responseData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что responseData является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        const isArray = Array.isArray(responseData);\r",
+                      "        if (!isArray) {\r",
+                      "            console.error(\"Ошибка: Ответ не является массивом. Тип данных:\", typeof responseData);\r",
+                      "        }\r",
+                      "        pm.expect(isArray).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Ищем объект с id = 726\r",
+                      "    const objectWithId726 = responseData.find(item => item.id === 726);\r",
+                      "\r",
+                      "    // Выводим информацию о найденном объекте (для отладки)\r",
+                      "    console.log(\"Результат поиска объекта с id=726:\", objectWithId726 ? \"Найден\" : \"Не найден\");\r",
+                      "\r",
+                      "    // Проверяем, что такого объекта НЕТ в массиве\r",
+                      "    pm.test(\"Object with id 726 does not exist in the array\", function () {\r",
+                      "        if (objectWithId726) {\r",
+                      "            console.error(\"Тест провален: Объект с id=726 найден в массиве. Содержимое объекта:\",\r",
+                      "                JSON.stringify(objectWithId726, null, 2));\r",
+                      "            console.error(\"Полный ответ:\", JSON.stringify(responseData, null, 2));\r",
+                      "        }\r",
+                      "        pm.expect(objectWithId726).to.be.undefined;\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "843b05ec-623a-4df9-bcaf-b5b2062ec61f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2084/users",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2084",
+                    "users"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-843b05ec-623a-4df9-bcaf-b5b2062ec61f"
+            }
+          ],
+          "id": "29ca1965-269d-4c05-93a0-70b21b71a2e7",
+          "uid": "32335283-29ca1965-269d-4c05-93a0-70b21b71a2e7"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "1.4 create CI:2084-user:726",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "bcdc683a-ae71-4c9f-b027-89c6c8746248",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2084/users/726",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2084",
+                    "users",
+                    "726"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-bcdc683a-ae71-4c9f-b027-89c6c8746248"
+            },
+            {
+              "name": "1.5 get CI:2084-users:726",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const responseData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что responseData является массивом\r",
+                      "    pm.test(\"Response is an array\", function () {\r",
+                      "        pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "    });\r",
+                      "\r",
+                      "    // Ищем объект с id = 726\r",
+                      "    const objectWithId726 = responseData.find(item => item.id === 726);\r",
+                      "\r",
+                      "    // Проверяем, что такой объект существует\r",
+                      "    pm.test(\"Object with id 726 exists in the array\", function () {\r",
+                      "        pm.expect(objectWithId726).to.not.be.undefined;\r",
+                      "\r",
+                      "        // Дополнительная проверка, что объект действительно содержит id = 726\r",
+                      "        if (objectWithId726) {\r",
+                      "            pm.expect(objectWithId726.id).to.equal(726);\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Выводим сообщение в консоль для отладки\r",
+                      "    console.log(\"Object with id 726:\", objectWithId726);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "131a2e47-67f8-4eb2-a8ce-dd36475e2d01",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}cis/2084/users?id=726",
+                  "host": [
+                    "{{url}}cis"
+                  ],
+                  "path": [
+                    "2084",
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "726"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-131a2e47-67f8-4eb2-a8ce-dd36475e2d01"
+            }
+          ],
+          "id": "15e3baf8-ddee-42ec-85f0-8920f553599b",
+          "uid": "32335283-15e3baf8-ddee-42ec-85f0-8920f553599b"
+        }
+      ],
+      "id": "503ff15a-775c-467d-ac01-bf320570741a",
+      "uid": "32335283-503ff15a-775c-467d-ac01-bf320570741a"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "7f4112af-f84b-4c3a-9013-b36b123d310c",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "b0cf2851-b5b0-479a-b696-18388c6f064a",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

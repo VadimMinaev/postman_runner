@@ -1,0 +1,1005 @@
+{
+  "info": {
+    "_postman_id": "609f7d03-bfc7-4d45-ab2b-c839e07d1abf",
+    "name": "21. Contracts",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-28T11:07:04.000Z",
+    "createdAt": "2025-07-28T10:19:06.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-609f7d03-bfc7-4d45-ab2b-c839e07d1abf"
+  },
+  "item": [
+    {
+      "name": "Contracts",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List contracts",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа\r",
+                      "pm.test(\"Проверка структуры контрактов (первый объект массива)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    // Если ответ — массив, берем первый элемент\r",
+                      "    if (Array.isArray(jsonData) && jsonData.length > 0) {\r",
+                      "        const item = jsonData[0];\r",
+                      "        const errors = [];\r",
+                      "\r",
+                      "        // Функция для проверки типов\r",
+                      "        function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "            if (nullable && value === null) return;\r",
+                      "\r",
+                      "            const actualType = typeof value;\r",
+                      "\r",
+                      "            if (expectedType === \"object\") {\r",
+                      "                if (value !== null) {\r",
+                      "                    if (typeof value !== \"object\" || value === null) {\r",
+                      "                        errors.push(`Свойство '${prop}' ожидалось быть объектом, а пришло ${actualType}`);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            } else if (expectedType === \"array\") {\r",
+                      "                if (!Array.isArray(value)) {\r",
+                      "                    errors.push(`Свойство '${prop}' ожидалось быть массивом, а пришло ${actualType}`);\r",
+                      "                }\r",
+                      "            } else if (actualType !== expectedType) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "\r",
+                      "        // Проверяем основные свойства\r",
+                      "        checkType(\"id\", item.id, \"number\");\r",
+                      "        checkType(\"name\", item.name, \"string\");\r",
+                      "        checkType(\"status\", item.status, \"string\");\r",
+                      "        checkType(\"category\", item.category, \"string\");\r",
+                      "        checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "        checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "        checkType(\"supplier\", item.supplier, \"object\", true);\r",
+                      "\r",
+                      "        // Проверяем вложенный объект supplier\r",
+                      "        if (item.supplier) {\r",
+                      "            checkType(\"supplier.id\", item.supplier.id, \"number\");\r",
+                      "            checkType(\"supplier.name\", item.supplier.name, \"string\");\r",
+                      "        }\r",
+                      "\r",
+                      "        // Логирование ошибок\r",
+                      "        if (errors.length > 0) {\r",
+                      "            console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "            errors.forEach((error, index) => {\r",
+                      "                console.error(`${index + 1}. ${error}`);\r",
+                      "            });\r",
+                      "\r",
+                      "            console.log(\"\\nДанные ответа:\\n\");\r",
+                      "            console.log(JSON.stringify(item, null, 2));\r",
+                      "        }\r",
+                      "\r",
+                      "        pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "    } else {\r",
+                      "        console.error(\"Ответ не является массивом или пустой массив\");\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "79ba3168-cdfe-4f3c-9bc1-9237974a9519",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts",
+                  "host": [
+                    "{{url}}contracts"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-79ba3168-cdfe-4f3c-9bc1-9237974a9519"
+            },
+            {
+              "name": "Get a single contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Fixed syntax error with mismatched brackets\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа\r",
+                      "pm.test(\"Проверка структуры контракта\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "\r",
+                      "        const actualType = typeof value;\r",
+                      "\r",
+                      "        if (expectedType === \"object\") {\r",
+                      "            if (value !== null) {\r",
+                      "                if (typeof value !== \"object\" || value === null) {\r",
+                      "                    errors.push(`Свойство '${prop}' ожидалось быть объектом, а пришло ${actualType}`);\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть массивом, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем основные свойства\r",
+                      "    checkType(\"id\", jsonData.id, \"number\");\r",
+                      "    checkType(\"name\", jsonData.name, \"string\");\r",
+                      "    checkType(\"category\", jsonData.category, \"string\");\r",
+                      "    checkType(\"status\", jsonData.status, \"string\");\r",
+                      "    checkType(\"time_zone\", jsonData.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", jsonData.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", jsonData.updated_at, \"string\");\r",
+                      "    checkType(\"start_date\", jsonData.start_date, \"string\");\r",
+                      "    checkType(\"remarks\", jsonData.remarks, \"string\");\r",
+                      "    checkType(\"attachments\", jsonData.attachments, \"array\");\r",
+                      "\r",
+                      "    // Проверяем nullable поля\r",
+                      "    checkType(\"custom_fields\", jsonData.custom_fields, \"object\", true);\r",
+                      "    checkType(\"source\", jsonData.source, \"string\", true);\r",
+                      "    checkType(\"sourceID\", jsonData.sourceID, \"string\", true);\r",
+                      "    checkType(\"expiry_date\", jsonData.expiry_date, \"string\", true);\r",
+                      "    checkType(\"notice_date\", jsonData.notice_date, \"string\", true);\r",
+                      "    checkType(\"supplier_contact\", jsonData.supplier_contact, \"object\", true);\r",
+                      "    checkType(\"ui_extension\", jsonData.ui_extension, \"object\", true);\r",
+                      "\r",
+                      "    // Проверяем вложенные объекты\r",
+                      "    checkType(\"customer\", jsonData.customer, \"object\", true);\r",
+                      "    if (jsonData.customer) {\r",
+                      "        checkType(\"customer.id\", jsonData.customer.id, \"number\");\r",
+                      "        checkType(\"customer.name\", jsonData.customer.name, \"string\");\r",
+                      "        checkType(\"customer.account\", jsonData.customer.account, \"object\", true);\r",
+                      "        if (jsonData.customer.account) {\r",
+                      "            checkType(\"customer.account.id\", jsonData.customer.account.id, \"string\");\r",
+                      "            checkType(\"customer.account.name\", jsonData.customer.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"customer_rep\", jsonData.customer_rep, \"object\", true);\r",
+                      "    if (jsonData.customer_rep) {\r",
+                      "        checkType(\"customer_rep.id\", jsonData.customer_rep.id, \"number\");\r",
+                      "        checkType(\"customer_rep.name\", jsonData.customer_rep.name, \"string\");\r",
+                      "        checkType(\"customer_rep.account\", jsonData.customer_rep.account, \"object\", true);\r",
+                      "        if (jsonData.customer_rep.account) {\r",
+                      "            checkType(\"customer_rep.account.id\", jsonData.customer_rep.account.id, \"string\");\r",
+                      "            checkType(\"customer_rep.account.name\", jsonData.customer_rep.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"supplier\", jsonData.supplier, \"object\", true);\r",
+                      "    if (jsonData.supplier) {\r",
+                      "        checkType(\"supplier.id\", jsonData.supplier.id, \"number\");\r",
+                      "        checkType(\"supplier.name\", jsonData.supplier.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // Логирование ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "\r",
+                      "        console.log(\"\\nДанные ответа:\\n\");\r",
+                      "        console.log(JSON.stringify(jsonData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "1401d5cd-5b88-4bc3-8707-4875230c28ad",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts/300",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "300"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-1401d5cd-5b88-4bc3-8707-4875230c28ad"
+            }
+          ],
+          "id": "1b8c2876-341b-42a8-9575-a3d4a7e52a81",
+          "uid": "32335283-1b8c2876-341b-42a8-9575-a3d4a7e52a81"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа\r",
+                      "pm.test(\"Проверка структуры контракта\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    pm.environment.set(\"contract_id\", jsonData.id);\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "\r",
+                      "        const actualType = typeof value;\r",
+                      "\r",
+                      "        if (expectedType === \"object\") {\r",
+                      "            if (value !== null) {\r",
+                      "                if (typeof value !== \"object\" || value === null) {\r",
+                      "                    errors.push(`Свойство '${prop}' ожидалось быть объектом, а пришло ${actualType}`);\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть массивом, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем основные свойства\r",
+                      "    checkType(\"id\", jsonData.id, \"number\");\r",
+                      "    checkType(\"name\", jsonData.name, \"string\");\r",
+                      "    checkType(\"category\", jsonData.category, \"string\");\r",
+                      "    checkType(\"status\", jsonData.status, \"string\");\r",
+                      "    checkType(\"time_zone\", jsonData.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", jsonData.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", jsonData.updated_at, \"string\");\r",
+                      "    checkType(\"start_date\", jsonData.start_date, \"string\");\r",
+                      "    checkType(\"remarks\", jsonData.remarks, \"string\");\r",
+                      "    checkType(\"attachments\", jsonData.attachments, \"array\");\r",
+                      "\r",
+                      "    // Проверяем nullable поля\r",
+                      "    checkType(\"custom_fields\", jsonData.custom_fields, \"object\", true);\r",
+                      "    checkType(\"source\", jsonData.source, \"string\", true);\r",
+                      "    checkType(\"sourceID\", jsonData.sourceID, \"string\", true);\r",
+                      "    checkType(\"expiry_date\", jsonData.expiry_date, \"string\", true);\r",
+                      "    checkType(\"notice_date\", jsonData.notice_date, \"string\", true);\r",
+                      "    checkType(\"supplier_contact\", jsonData.supplier_contact, \"object\", true);\r",
+                      "    checkType(\"ui_extension\", jsonData.ui_extension, \"object\", true);\r",
+                      "\r",
+                      "    // Проверяем вложенные объекты\r",
+                      "    checkType(\"customer\", jsonData.customer, \"object\", true);\r",
+                      "    if (jsonData.customer) {\r",
+                      "        checkType(\"customer.id\", jsonData.customer.id, \"number\");\r",
+                      "        checkType(\"customer.name\", jsonData.customer.name, \"string\");\r",
+                      "        checkType(\"customer.account\", jsonData.customer.account, \"object\", true);\r",
+                      "        if (jsonData.customer.account) {\r",
+                      "            checkType(\"customer.account.id\", jsonData.customer.account.id, \"string\");\r",
+                      "            checkType(\"customer.account.name\", jsonData.customer.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"customer_rep\", jsonData.customer_rep, \"object\", true);\r",
+                      "    if (jsonData.customer_rep) {\r",
+                      "        checkType(\"customer_rep.id\", jsonData.customer_rep.id, \"number\");\r",
+                      "        checkType(\"customer_rep.name\", jsonData.customer_rep.name, \"string\");\r",
+                      "        checkType(\"customer_rep.account\", jsonData.customer_rep.account, \"object\", true);\r",
+                      "        if (jsonData.customer_rep.account) {\r",
+                      "            checkType(\"customer_rep.account.id\", jsonData.customer_rep.account.id, \"string\");\r",
+                      "            checkType(\"customer_rep.account.name\", jsonData.customer_rep.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"supplier\", jsonData.supplier, \"object\", true);\r",
+                      "    if (jsonData.supplier) {\r",
+                      "        checkType(\"supplier.id\", jsonData.supplier.id, \"number\");\r",
+                      "        checkType(\"supplier.name\", jsonData.supplier.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // Логирование ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "\r",
+                      "        console.log(\"\\nДанные ответа:\\n\");\r",
+                      "        console.log(JSON.stringify(jsonData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "3f2a4b7e-39c1-41db-8212-9b0e9ce98c70",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"category\": \"support_and_maintenance_contract\",\r\n    \"customer_id\": 18,\r\n    \"customer_rep_id\": 812,\r\n    \"name\": \"0012PQ-MSAS-{{$randomInt}}{{$randomInt}}{{$randomInt}} - Соглашение о поддержке и обслуживании Microsoft Software Assurance\",\r\n    \"remarks\": \"Круглосуточная поддержка по решению проблем:\\n\\n* Поддержка 24 часа в сутки, 7 дней в неделю. Вы получаете круглосуточную телефонную поддержку по критически важным для бизнеса вопросам. Количество доступных телефонных инцидентов зависит от ваших инвестиций в Software Assurance.\\n* Расширенное покрытие поддержки продукта. Вы получаете телефонную поддержку для всех серверов Microsoft, операционных систем Microsoft Windows и продуктов и редакций системы Microsoft Office, даже если конкретная лицензия, требующая поддержки, не имеет покрытия Software Assurance.\\n* Неограниченная онлайн-поддержка. Вы получаете веб-поддержку в рабочее время для всех серверных продуктов Standard и Enterprise edition, на которые распространяется покрытие Software Assurance.\\n\\nПрава на новые версии:\\n\\n* Доступ к новым версиям программного обеспечения, выпущенным в течение срока действия покрытия Software Assurance, без дополнительной оплаты.\\n* Если новая версия продукта Microsoft (например, любая программа в системе Microsoft Office) выпущена в течение срока действия покрытия, лицензии будут автоматически обновлены до новой версии. Нет необходимости проходить традиционный процесс закупки.\\n\\nПлата: Для настольного программного обеспечения: 29% от стоимости лицензии в год.\\nДля серверного программного обеспечения: 25% от стоимости лицензии в год.\\nУведомление не требуется.\\nЕсли ежегодная плата за поддержку и обслуживание не оплачена, контракт на поддержку не продлевается.\",\r\n    \"start_date\": \"2025-07-04\",\r\n    \"status\": \"active\",\r\n    \"supplier_id\": 134,\r\n    \"time_zone\": \"Minsk\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}contracts",
+                  "host": [
+                    "{{url}}contracts"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-3f2a4b7e-39c1-41db-8212-9b0e9ce98c70"
+            }
+          ],
+          "id": "99f1c577-c989-43bd-a9e1-0949e1e4725c",
+          "uid": "32335283-99f1c577-c989-43bd-a9e1-0949e1e4725c"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, path = \"\", optional = false) {\r",
+                      "    const fullPath = path ? `${path}.${field}` : field;\r",
+                      "    const value = obj[field];\r",
+                      "\r",
+                      "    if (value === undefined || value === null) {\r",
+                      "        if (!optional) {\r",
+                      "            errors.push(`Свойство '${fullPath}' обязательно, но отсутствует или равно null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "\r",
+                      "    const actualType = typeof value;\r",
+                      "    if (type === \"array\") {\r",
+                      "        if (!Array.isArray(value)) {\r",
+                      "            errors.push(`Свойство '${fullPath}' ожидалось как массив, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    } else if (actualType !== type) {\r",
+                      "        errors.push(`Свойство '${fullPath}' ожидалось быть ${type}, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Основные поля контракта\r",
+                      "checkField(jsonData, \"id\", \"number\");\r",
+                      "checkField(jsonData, \"name\", \"string\");\r",
+                      "checkField(jsonData, \"category\", \"string\");\r",
+                      "checkField(jsonData, \"status\", \"string\");\r",
+                      "checkField(jsonData, \"remarks\", \"string\");\r",
+                      "checkField(jsonData, \"source\", \"string\", \"\", true); // может быть null\r",
+                      "checkField(jsonData, \"time_zone\", \"string\");\r",
+                      "checkField(jsonData, \"start_date\", \"string\");\r",
+                      "checkField(jsonData, \"created_at\", \"string\");\r",
+                      "checkField(jsonData, \"updated_at\", \"string\");\r",
+                      "checkField(jsonData, \"nodeID\", \"string\");\r",
+                      "checkField(jsonData, \"attachments\", \"array\");\r",
+                      "checkField(jsonData, \"custom_fields\", \"object\", \"\", true);\r",
+                      "checkField(jsonData, \"expiry_date\", \"string\", \"\", true);\r",
+                      "checkField(jsonData, \"notice_date\", \"string\", \"\", true);\r",
+                      "checkField(jsonData, \"ui_extension\", \"object\", \"\", true);\r",
+                      "// sourceID — не проверяем\r",
+                      "\r",
+                      "// customer\r",
+                      "if (jsonData.customer) {\r",
+                      "    checkField(jsonData.customer, \"id\", \"number\", \"customer\");\r",
+                      "    checkField(jsonData.customer, \"name\", \"string\", \"customer\");\r",
+                      "    checkField(jsonData.customer, \"nodeID\", \"string\", \"customer\");\r",
+                      "\r",
+                      "    if (jsonData.customer.account) {\r",
+                      "        checkField(jsonData.customer.account, \"id\", \"string\", \"customer.account\");\r",
+                      "        checkField(jsonData.customer.account, \"name\", \"string\", \"customer.account\");\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'customer.account' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "} else {\r",
+                      "    errors.push(\"Свойство 'customer' обязательно, но отсутствует\");\r",
+                      "}\r",
+                      "\r",
+                      "// customer_rep\r",
+                      "if (jsonData.customer_rep) {\r",
+                      "    checkField(jsonData.customer_rep, \"id\", \"number\", \"customer_rep\");\r",
+                      "    checkField(jsonData.customer_rep, \"name\", \"string\", \"customer_rep\");\r",
+                      "    checkField(jsonData.customer_rep, \"nodeID\", \"string\", \"customer_rep\");\r",
+                      "\r",
+                      "    if (jsonData.customer_rep.account) {\r",
+                      "        checkField(jsonData.customer_rep.account, \"id\", \"string\", \"customer_rep.account\");\r",
+                      "        checkField(jsonData.customer_rep.account, \"name\", \"string\", \"customer_rep.account\");\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'customer_rep.account' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "} else {\r",
+                      "    errors.push(\"Свойство 'customer_rep' обязательно, но отсутствует\");\r",
+                      "}\r",
+                      "\r",
+                      "// supplier\r",
+                      "if (jsonData.supplier) {\r",
+                      "    checkField(jsonData.supplier, \"id\", \"number\", \"supplier\");\r",
+                      "    checkField(jsonData.supplier, \"name\", \"string\", \"supplier\");\r",
+                      "    checkField(jsonData.supplier, \"nodeID\", \"string\", \"supplier\");\r",
+                      "} else {\r",
+                      "    errors.push(\"Свойство 'supplier' обязательно, но отсутствует\");\r",
+                      "}\r",
+                      "\r",
+                      "// supplier_contact\r",
+                      "if (jsonData.supplier_contact) {\r",
+                      "    checkField(jsonData.supplier_contact, \"id\", \"number\", \"supplier_contact\");\r",
+                      "    checkField(jsonData.supplier_contact, \"name\", \"string\", \"supplier_contact\");\r",
+                      "    checkField(jsonData.supplier_contact, \"nodeID\", \"string\", \"supplier_contact\");\r",
+                      "\r",
+                      "    if (jsonData.supplier_contact.account) {\r",
+                      "        checkField(jsonData.supplier_contact.account, \"id\", \"string\", \"supplier_contact.account\");\r",
+                      "        checkField(jsonData.supplier_contact.account, \"name\", \"string\", \"supplier_contact.account\");\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'supplier_contact.account' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "} else {\r",
+                      "    errors.push(\"Свойство 'supplier_contact' обязательно, но отсутствует\");\r",
+                      "}\r",
+                      "\r",
+                      "// Финальный вывод\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "}\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "cabfa53f-ea42-48c3-ae61-48bcc60bb236",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"supplier_contact_id\": 1042\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}contracts/{{contract_id}}",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "{{contract_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-cabfa53f-ea42-48c3-ae61-48bcc60bb236"
+            }
+          ],
+          "id": "cc0285be-2ac9-432f-9b78-32798e048b87",
+          "uid": "32335283-cc0285be-2ac9-432f-9b78-32798e048b87"
+        }
+      ],
+      "id": "f981acd0-7e4f-4578-974a-01d27e346e3e",
+      "uid": "32335283-f981acd0-7e4f-4578-974a-01d27e346e3e"
+    },
+    {
+      "name": "Configuration Items",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all configuration items of a contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, path = \"\", optional = false) {\r",
+                      "    const fullPath = path ? `${path}.${field}` : field;\r",
+                      "    const value = obj[field];\r",
+                      "\r",
+                      "    if (value === undefined || value === null) {\r",
+                      "        if (!optional) {\r",
+                      "            errors.push(`Свойство '${fullPath}' обязательно, но отсутствует или равно null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "\r",
+                      "    const actualType = typeof value;\r",
+                      "    if (type === \"array\") {\r",
+                      "        if (!Array.isArray(value)) {\r",
+                      "            errors.push(`Свойство '${fullPath}' ожидалось как массив, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    } else if (actualType !== type) {\r",
+                      "        errors.push(`Свойство '${fullPath}' ожидалось быть ${type}, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "if (!Array.isArray(jsonData) || jsonData.length === 0) {\r",
+                      "    errors.push(\"Ожидался непустой массив CI\");\r",
+                      "} else {\r",
+                      "    const item = jsonData[0];\r",
+                      "\r",
+                      "    // Простые поля\r",
+                      "    checkField(item, \"id\", \"number\");\r",
+                      "    checkField(item, \"software\", \"boolean\");\r",
+                      "    checkField(item, \"label\", \"string\");\r",
+                      "    checkField(item, \"name\", \"string\");\r",
+                      "    checkField(item, \"status\", \"string\");\r",
+                      "    checkField(item, \"rule_set\", \"string\");\r",
+                      "    checkField(item, \"created_at\", \"string\");\r",
+                      "    checkField(item, \"updated_at\", \"string\");\r",
+                      "    checkField(item, \"nodeID\", \"string\");\r",
+                      "    // sourceID — не проверяем\r",
+                      "\r",
+                      "    // product\r",
+                      "    if (item.product) {\r",
+                      "        checkField(item.product, \"id\", \"number\", \"product\");\r",
+                      "        checkField(item.product, \"name\", \"string\", \"product\");\r",
+                      "        checkField(item.product, \"category\", \"string\", \"product\");\r",
+                      "        checkField(item.product, \"nodeID\", \"string\", \"product\");\r",
+                      "        checkField(item.product, \"brand\", \"string\", \"product\", true);\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'product' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // support_team\r",
+                      "    if (item.support_team) {\r",
+                      "        checkField(item.support_team, \"id\", \"number\", \"support_team\");\r",
+                      "        checkField(item.support_team, \"name\", \"string\", \"support_team\");\r",
+                      "        checkField(item.support_team, \"nodeID\", \"string\", \"support_team\");\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'support_team' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // service\r",
+                      "    if (item.service) {\r",
+                      "        checkField(item.service, \"id\", \"number\", \"service\");\r",
+                      "        checkField(item.service, \"name\", \"string\", \"service\");\r",
+                      "        checkField(item.service, \"localized_name\", \"string\", \"service\", true);\r",
+                      "        checkField(item.service, \"nodeID\", \"string\", \"service\");\r",
+                      "\r",
+                      "        if (item.service.provider) {\r",
+                      "            checkField(item.service.provider, \"id\", \"number\", \"service.provider\");\r",
+                      "            checkField(item.service.provider, \"name\", \"string\", \"service.provider\");\r",
+                      "            checkField(item.service.provider, \"nodeID\", \"string\", \"service.provider\");\r",
+                      "\r",
+                      "            if (item.service.provider.account) {\r",
+                      "                checkField(item.service.provider.account, \"id\", \"string\", \"service.provider.account\");\r",
+                      "                checkField(item.service.provider.account, \"name\", \"string\", \"service.provider.account\");\r",
+                      "            } else {\r",
+                      "                errors.push(\"Свойство 'service.provider.account' обязательно, но отсутствует\");\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            errors.push(\"Свойство 'service.provider' обязательно, но отсутствует\");\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'service' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData[0], null, 2));\r",
+                      "}\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "aeb244d9-0f1a-435a-a8e8-268dae4de591",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts/300/cis",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "300",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-aeb244d9-0f1a-435a-a8e8-268dae4de591"
+            }
+          ],
+          "id": "f6cb0b78-7a69-4787-81aa-34d24153e911",
+          "uid": "32335283-f6cb0b78-7a69-4787-81aa-34d24153e911"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a configuration item to a contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2b05f1a1-8d19-4ca7-99e0-6a2442c40bce",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts/300/cis/2482",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "300",
+                    "cis",
+                    "2482"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2b05f1a1-8d19-4ca7-99e0-6a2442c40bce"
+            },
+            {
+              "name": "Check \"Add a configuration item to a contract\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "// Получаем ответ от сервера\r",
+                      "pm.test(\"Проверка наличия объекта с id=2482 в массиве\", () => {\r",
+                      "    // Преобразуем ответ в JSON\r",
+                      "    const responseJson = pm.response.json();\r",
+                      "    \r",
+                      "    // Проверяем, что ответ содержит массив\r",
+                      "    pm.expect(responseJson).to.be.an('array');\r",
+                      "    \r",
+                      "    // Находим объект с нужным id\r",
+                      "    const foundItem = responseJson.find(item => item.id === 2482);\r",
+                      "    \r",
+                      "    // Проверяем, что объект найден\r",
+                      "    pm.expect(foundItem).to.exist;\r",
+                      "    \r",
+                      "    // Дополнительно можно проверить структуру найденного объекта\r",
+                      "    pm.expect(foundItem).to.have.property('id');\r",
+                      "    pm.expect(foundItem.id).to.equal(2482);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "48231b80-5303-4815-9cf6-4b85b1b05d1a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts/300/cis",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "300",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-48231b80-5303-4815-9cf6-4b85b1b05d1a"
+            }
+          ],
+          "id": "dd29d372-b5d6-4bf1-ba74-bc8a150a423d",
+          "uid": "32335283-dd29d372-b5d6-4bf1-ba74-bc8a150a423d"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a configuration item from a contract",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "4d0c6f1c-3bba-4377-b9e9-9c8c0c159526",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts/300/cis/2482",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "300",
+                    "cis",
+                    "2482"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-4d0c6f1c-3bba-4377-b9e9-9c8c0c159526"
+            },
+            {
+              "name": "Check \"Remove a configuration item from a contract\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка отсутствия объекта с id=2482 в массиве\r",
+                      "pm.test(\"Проверка отсутствия объекта с id=2482 в массиве\", () => {\r",
+                      "    // Преобразуем ответ в JSON\r",
+                      "    const responseJson = pm.response.json();\r",
+                      "    \r",
+                      "    // Проверяем, что ответ содержит массив\r",
+                      "    pm.expect(responseJson).to.be.an('array');\r",
+                      "    \r",
+                      "    // Проверяем отсутствие объекта с нужным id\r",
+                      "    const foundItem = responseJson.find(item => item.id === 2482);\r",
+                      "    \r",
+                      "    // Проверяем, что объект НЕ найден\r",
+                      "    pm.expect(foundItem).to.be.undefined;\r",
+                      "    \r",
+                      "    // Альтернативный способ проверки через length\r",
+                      "    const filteredArray = responseJson.filter(item => item.id === 2482);\r",
+                      "    pm.expect(filteredArray.length).to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "cbe11195-0272-4789-86d5-fa3a4ae1014c",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}contracts/300/cis",
+                  "host": [
+                    "{{url}}contracts"
+                  ],
+                  "path": [
+                    "300",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-cbe11195-0272-4789-86d5-fa3a4ae1014c"
+            }
+          ],
+          "id": "19903b53-9236-412d-a5f7-8197e9038375",
+          "uid": "32335283-19903b53-9236-412d-a5f7-8197e9038375"
+        }
+      ],
+      "id": "6604abf1-f1fa-44db-b583-2c91c9f39c3a",
+      "uid": "32335283-6604abf1-f1fa-44db-b583-2c91c9f39c3a"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "519edd2f-f6ff-454b-82a1-e0ff854eb965",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "38dc580d-a3f9-4ace-a6eb-53968362e5e0",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

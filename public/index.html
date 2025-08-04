@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧑‍💻Postman Runner ©️vadmin</title>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #03197a 0%, #0694a7 100%);
+      --secondary-gradient: linear-gradient(45deg, #39598c, #1d4ed8);
+      --success-gradient: linear-gradient(45deg, #10b981, #059669);
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --text-primary: #760000;
+      --text-secondary: #f1f5f9;
+      --text-muted: rgba(19, 16, 183, 0.7);
+      --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --border-radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Dark theme variables */
+    [data-theme="dark"] {
+      --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      --secondary-gradient: linear-gradient(45deg, #2d3748, #1a202c);
+      --success-gradient: linear-gradient(45deg, #38a169, #2f855a);
+      --glass-bg: rgba(0, 0, 0, 0.3);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--primary-gradient);
+      min-height: 100vh;
+      color: var(--text-primary);
+      padding: 20px;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--glass-border);
+      animation: slideIn 0.6s ease-out;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 8px;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .theme-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: var(--glass-bg);
+      border-radius: 25px;
+      border: 2px solid var(--glass-border);
+      cursor: pointer;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .theme-switch::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(45deg, #fbbf24, #f59e0b);
+      border-radius: 50%;
+      transition: var(--transition);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="dark"] .theme-switch::before {
+      transform: translateX(30px);
+      background: linear-gradient(45deg, #6366f1, #8b5cf6);
+    }
+
+    .theme-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      transition: var(--transition);
+    }
+
+    .sun-icon {
+      left: 6px;
+      opacity: 1;
+    }
+
+    .moon-icon {
+      right: 6px;
+      opacity: 0.3;
+    }
+
+    [data-theme="dark"] .sun-icon {
+      opacity: 0.3;
+    }
+
+    [data-theme="dark"] .moon-icon {
+      opacity: 1;
+    }
+
+    /* Config toggle button */
+    .config-toggle {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      padding: 12px;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .config-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .config-icon {
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .config-toggle:hover .config-icon {
+      transform: rotate(90deg);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 30px;
+      width: 200px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      transition: var(--transition);
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(45deg, #ffffff, #f0f9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      border: 1px solid var(--glass-border);
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    [data-theme="dark"] .glass-card:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Config collapsible */
+    .config-collapsible {
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 24px;
+    }
+
+    .config-collapsible.collapsed {
+      max-height: 0;
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    .config-collapsible.expanded {
+      max-height: 500px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    .status-connected { background: #10b981; }
+    .status-disconnected { background: #ef4444; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    [data-theme="dark"] .form-input, [data-theme="dark"] .form-select {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #60a5fa;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+      transform: scale(1.02);
+    }
+
+    [data-theme="dark"] .form-input:focus, [data-theme="dark"] .form-select:focus {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn {
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: var(--secondary-gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      font-size: 18px;
+      padding: 18px 36px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #1d4ed8, #1e40af);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(45deg, #6b7280, #4b5563);
+      color: white;
+      box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(45deg, #4b5563, #374151);
+      box-shadow: 0 8px 25px rgba(107, 114, 128, 0.6);
+    }
+
+    .btn-success {
+      background: var(--success-gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(45deg, #059669, #047857);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    [data-theme="dark"] .card:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .card-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: #60a5fa;
+      cursor: pointer;
+      transform: scale(1.2);
+    }
+
+    .card-text {
+      flex: 1;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .card-icon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+
+    .output {
+      margin-top: 24px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      color: #22c55e;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      white-space: pre-wrap;
+      font-size: 14px;
+      border: 1px solid var(--glass-border);
+      min-height: 80px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    [data-theme="dark"] .output {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .output:empty::before {
+      content: '💻 Вывод команд будет отображаться здесь...';
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .switcher {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .switcher .form-label {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .switcher .form-select {
+      min-width: 200px;
+    }
+
+    .loading {
+      position: relative;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid var(--text-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      transform: translateY(-50%);
+    }
+
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 12px 20px;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #60a5fa;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 24px;
+        margin: 10px;
+      }
+
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+      }
+
+      .config-toggle {
+        top: 70px;
+        right: 10px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        margin-right: 0;
+        width: 100%;
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .switcher {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .stats-bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--glass-bg);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--glass-border);
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <div class="theme-toggle">
+    <div class="theme-switch" onclick="toggleTheme()">
+      <span class="theme-icon sun-icon">☀️</span>
+      <span class="theme-icon moon-icon">🌙</span>
+    </div>
+  </div>
+
+  <!-- Config Toggle Button -->
+  <div class="config-toggle" onclick="toggleConfig()">
+    <span class="config-icon">⚙️</span>
+  </div>
+
+  <div class="container">
+    <img class="logo" src="Service_Logo_full_.svg" alt="Logo">
+    <h1 class="title">🚀 Postman Runner</h1>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="collectionsCount">0</div>
+        <div class="stat-label">Коллекций</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="environmentsCount">0</div>
+        <div class="stat-label">Окружений</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="selectedCount">0</div>
+        <div class="stat-label">Выбрано</div>
+      </div>
+    </div>
+
+    <!-- Collapsible Configuration Section -->
+    <div class="config-collapsible collapsed" id="configCollapsible">
+      <div class="form-grid">
+        <div class="glass-card">
+          <div class="form-group">
+            <label class="form-label">
+              <span class="status-indicator status-disconnected" id="apiStatus"></span>
+              🔑 Postman API Key
+            </label>
+            <input 
+              type="password" 
+              class="form-input"
+              id="apiKey"
+              placeholder="Введите ваш API ключ..."
+              oninput="updateStatus()"
+            />
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="form-group">
+            <label class="form-label">
+              <span class="status-indicator status-disconnected" id="workspaceStatus"></span>
+              🏢 Workspace ID
+            </label>
+            <input 
+              type="text" 
+              class="form-input"
+              id="workspaceId"
+              placeholder="Введите ID рабочего пространства..."
+              oninput="updateStatus()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="switcher">
+          <label class="form-label">⚙️ Режим работы:</label>
+          <select class="form-select" id="modeSelect">
+            <option value="api">🌐 API Mode</option>
+            <option value="local">💻 Local Mode</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="form-row">
+          <button class="btn btn-secondary" id="saveConfigBtn" onclick="saveConfig()">
+            💾 Сохранить конфиг
+          </button>
+          <button class="btn btn-secondary" id="refreshBtn" onclick="refresh()">
+            🔄 Обновить данные
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="section-header">
+        <span class="section-title">📋 Коллекции</span>
+        <button class="btn btn-success" id="selectAllBtn" onclick="toggleSelectAll()">
+          ✅ Выбрать все
+        </button>
+      </div>
+      <div class="cards" id="collectionsContainer"></div>
+    </div>
+
+    <div class="glass-card">
+      <div class="form-group">
+        <label class="section-title">🌍 Окружение</label>
+        <select class="form-select" id="environmentSelect">
+          <option value="">🚫 (без окружения)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">
+        <input type="checkbox" id="parallelSwitch" checked style="transform: scale(1.5); margin-right: 10px;">
+         Запускать коллекции параллельно
+      </label>
+    </div>
+
+
+    <button class="btn btn-primary" id="runBtn" onclick="runCollections()">
+      ▶️ Запустить тестирование
+    </button>
+
+    <pre class="output" id="output"></pre>
+  </div>
+
+  <script>
+    // Global variables
+    let collections = [];
+    let environments = [];
+    let selectedCollections = [];
+    let selectedAll = false;
+    let isLoading = false;
+    let theme = 'light';
+    let showConfig = false;
+
+    // DOM elements
+    const apiKeyEl = document.getElementById('apiKey');
+    const workspaceIdEl = document.getElementById('workspaceId');
+    const modeSelectEl = document.getElementById('modeSelect');
+    const environmentSelectEl = document.getElementById('environmentSelect');
+    const outputEl = document.getElementById('output');
+    const collectionsContainer = document.getElementById('collectionsContainer');
+    const apiStatusEl = document.getElementById('apiStatus');
+    const workspaceStatusEl = document.getElementById('workspaceStatus');
+    const collectionsCountEl = document.getElementById('collectionsCount');
+    const environmentsCountEl = document.getElementById('environmentsCount');
+    const selectedCountEl = document.getElementById('selectedCount');
+    const configCollapsible = document.getElementById('configCollapsible');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const saveConfigBtn = document.getElementById('saveConfigBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const runBtn = document.getElementById('runBtn');
+
+    // Initialize app
+    function init() {
+      loadTheme();
+      loadConfigVisibility();
+      loadConfig();
+      loadData();
+    }
+
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      theme = savedTheme;
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    function loadConfigVisibility() {
+      const savedConfigVisibility = localStorage.getItem('showConfig') === 'true';
+      showConfig = savedConfigVisibility;
+      updateConfigVisibility();
+    }
+
+    function toggleTheme() {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      
+      // Add a subtle animation effect
+      document.body.style.transition = 'all 0.3s ease';
+      setTimeout(() => {
+        document.body.style.transition = '';
+      }, 300);
+    }
+
+    function toggleConfig() {
+      showConfig = !showConfig;
+      localStorage.setItem('showConfig', showConfig.toString());
+      updateConfigVisibility();
+    }
+
+    function updateConfigVisibility() {
+      if (showConfig) {
+        configCollapsible.classList.remove('collapsed');
+        configCollapsible.classList.add('expanded');
+      } else {
+        configCollapsible.classList.remove('expanded');
+        configCollapsible.classList.add('collapsed');
+      }
+    }
+
+    function updateStatus() {
+      const hasApiKey = apiKeyEl.value.trim().length > 0;
+      const hasWorkspace = workspaceIdEl.value.trim().length > 0;
+      
+      apiStatusEl.className = `status-indicator ${hasApiKey ? 'status-connected' : 'status-disconnected'}`;
+      workspaceStatusEl.className = `status-indicator ${hasWorkspace ? 'status-connected' : 'status-disconnected'}`;
+      
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      selectedCountEl.textContent = selectedCollections.length;
+    }
+
+    function setLoading(button, loading) {
+      if (loading) {
+        button.classList.add('loading');
+        button.disabled = true;
+      } else {
+        button.classList.remove('loading');
+        button.disabled = false;
+      }
+    }
+
+    async function loadConfig() {
+      try {
+        const res = await fetch('/config');
+        const data = await res.json();
+        apiKeyEl.value = data.apiKey || '';
+        workspaceIdEl.value = data.workspaceId || '';
+        modeSelectEl.value = data.useApiMode ? 'api' : 'local';
+        updateStatus();
+      } catch (err) {
+        outputEl.textContent = '⚠️ Ошибка загрузки конфигурации';
+      }
+    }
+
+    async function saveConfig() {
+      setLoading(saveConfigBtn, true);
+      try {
+        await fetch('/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            apiKey: apiKeyEl.value,
+            workspaceId: workspaceIdEl.value,
+            useApi: modeSelectEl.value === 'api'
+          })
+        });
+        outputEl.textContent = '✅ Конфигурация успешно сохранена';
+        await loadData();
+      } catch (err) {
+        outputEl.textContent = '⚠️ Ошибка сохранения конфигурации';
+      } finally {
+        setLoading(saveConfigBtn, false);
+      }
+    }
+
+    async function loadData() {
+      try {
+        outputEl.textContent = '🔄 Загрузка данных...';
+        const [coll, env] = await Promise.all([
+          fetch('/collections').then(r => r.json()),
+          fetch('/environments').then(r => r.json())
+        ]);
+        collections = coll;
+        environments = env;
+        
+        // Update stats
+        collectionsCountEl.textContent = coll.length;
+        environmentsCountEl.textContent = env.length;
+        
+        // Update collections display
+        renderCollections();
+        renderEnvironments();
+        
+        outputEl.textContent = `✅ Загружено ${coll.length} коллекций и ${env.length} окружений`;
+        updateSelectedCount();
+      } catch (err) {
+        outputEl.textContent = '⚠️ Ошибка загрузки данных';
+      }
+    }
+
+    function renderCollections() {
+      collectionsContainer.innerHTML = '';
+      collections.forEach((collection, index) => {
+        const card = document.createElement('label');
+        card.className = 'card';
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.innerHTML = `
+          <span class="card-icon">📄</span>
+          <input 
+            type="checkbox"
+            class="card-checkbox"
+            data-collection="${collection.name}"
+            onchange="toggleCollection('${collection.name}')"
+          />
+          <span class="card-text">
+            ${collection.name.replace(/\.json$/, '')}
+          </span>
+        `;
+        collectionsContainer.appendChild(card);
+      });
+    }
+
+    function renderEnvironments() {
+      environmentSelectEl.innerHTML = '<option value="">🚫 (без окружения)</option>';
+      environments.forEach((env) => {
+        const option = document.createElement('option');
+        option.value = env.name;
+        option.textContent = `🌍 ${env.name}`;
+        environmentSelectEl.appendChild(option);
+      });
+    }
+
+    async function refresh() {
+      setLoading(refreshBtn, true);
+      try {
+        outputEl.textContent = '🔄 Обновление данных...';
+        const res = await fetch('/refresh', { method: 'POST' });
+        const json = await res.json();
+        if (json.updated) {
+          await loadData();
+          outputEl.textContent = '✅ Данные успешно обновлены!';
+        } else {
+          outputEl.textContent = '⚠️ Ошибка обновления данных';
+        }
+      } catch (err) {
+        outputEl.textContent = '❌ Ошибка соединения при обновлении';
+      } finally {
+        setLoading(refreshBtn, false);
+      }
+    }
+
+    function toggleSelectAll() {
+      selectedAll = !selectedAll;
+      if (selectedAll) {
+        selectedCollections = collections.map(c => c.name);
+      } else {
+        selectedCollections = [];
+      }
+      
+      // Update checkboxes
+      const checkboxes = document.querySelectorAll('.card-checkbox');
+      checkboxes.forEach((checkbox, index) => {
+        setTimeout(() => {
+          checkbox.checked = selectedAll;
+        }, index * 50);
+      });
+      
+      selectAllBtn.textContent = selectedAll ? '❌ Снять все' : '✅ Выбрать все';
+      updateSelectedCount();
+    }
+
+    function toggleCollection(collectionName) {
+      if (selectedCollections.includes(collectionName)) {
+        selectedCollections = selectedCollections.filter(name => name !== collectionName);
+      } else {
+        selectedCollections.push(collectionName);
+      }
+      updateSelectedCount();
+    }
+
+    async function runCollections() {
+      const selectedItems = selectedCollections.map(name => {
+        const collection = collections.find(c => c.name === name);
+        return { name: collection?.name || name, uid: collection?.uid || '' };
+      });
+
+      const selectedEnvironment = environmentSelectEl.value;
+      const environment = selectedEnvironment 
+        ? environments.find(e => e.name === selectedEnvironment) 
+        : null;
+      
+      if (!selectedItems.length) {
+        outputEl.textContent = '❗ Выберите хотя бы одну коллекцию для запуска';
+        return;
+      }
+
+      setLoading(runBtn, true);
+      outputEl.textContent = `⏳ Запуск ${selectedItems.length} коллекций...\n${selectedEnvironment ? `🌍 Окружение: ${selectedEnvironment}` : '🚫 Без окружения'}`;
+
+      try {
+        const res = await fetch('/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            files: selectedItems,
+            environment: environment || null,
+            parallel: document.getElementById('parallelSwitch').checked
+          })
+
+        });
+
+        const result = await res.json();
+        outputEl.textContent = res.ok 
+          ? `✅ Тестирование завершено успешно!\n🎯 Allure отчёт откроется автоматически\n📊 Обработано коллекций: ${selectedItems.length}` 
+          : `❌ Ошибка выполнения:\n${result.error}`;
+      } catch (err) {
+        outputEl.textContent = '❌ Ошибка соединения с сервером';
+      } finally {
+        setLoading(runBtn, false);
+      }
+    }
+
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

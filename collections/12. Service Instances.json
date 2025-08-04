@@ -1,0 +1,1204 @@
+{
+  "info": {
+    "_postman_id": "e81dc074-73a5-4d0e-8b2e-2b2527c816a9",
+    "name": "12. Service Instances",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-30T17:11:40.000Z",
+    "createdAt": "2025-07-21T06:56:33.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-e81dc074-73a5-4d0e-8b2e-2b2527c816a9"
+  },
+  "item": [
+    {
+      "name": "Service Instances",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service instances",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объектов ServiceInstance (список)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "        if (jsonData.length > 0) {\r",
+                      "            const instance = jsonData[0];\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "            pm.expect(Date.parse(instance.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "            pm.expect(Date.parse(instance.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        }\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "c0106d7d-287d-444b-a221-5ac73e2c3047",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances",
+                  "host": [
+                    "{{url}}service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-c0106d7d-287d-444b-a221-5ac73e2c3047"
+            },
+            {
+              "name": "Predefined Filters",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f1755465-5656-4f18-9cdb-47d9c84adff4",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/inactive",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "inactive"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f1755465-5656-4f18-9cdb-47d9c84adff4"
+            },
+            {
+              "name": "Get a single service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта ServiceInstance (один)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    try {\r",
+                      "        const instance = jsonData;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(instance.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(instance.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "4dcc77f7-da5b-4e74-b618-3d02076499da",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-4dcc77f7-da5b-4e74-b618-3d02076499da"
+            }
+          ],
+          "id": "bc00c486-a3f7-4503-b146-85a63a43bb36",
+          "uid": "32335283-bc00c486-a3f7-4503-b146-85a63a43bb36"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "    pm.environment.set(\"service_instance_id\", pm.response.json().id);\r",
+                      "});\r",
+                      "pm.test(\"Проверка структуры объекта ServiceInstance (один)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    try {\r",
+                      "        const instance = jsonData;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(instance.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(instance.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "9daba2f0-198b-44c0-ac98-e14acc06eb94",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"1С Базовая для Беларусь ИТ Dev {{$randomCity}}\",\r\n    \"picture_uri\": \"https://demo.r-service.tech/storage/instances/rrtsm_devtest2/avatars/189/services/000/000/106/d61616795233a4641934fdb1e5b6757c/original/6be3a201c4b08ea4.svg\",\r\n    \"service_id\": 106,\r\n    \"status\": \"in_production\",\r\n    \"support_team_id\": 42\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_instances",
+                  "host": [
+                    "{{url}}service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-9daba2f0-198b-44c0-ac98-e14acc06eb94"
+            }
+          ],
+          "id": "223e233a-6c52-40d8-9042-681ec1077b8a",
+          "uid": "32335283-223e233a-6c52-40d8-9042-681ec1077b8a"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта ServiceInstance (один)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    try {\r",
+                      "        const instance = jsonData;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(instance.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(instance.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(instance).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "        pm.expect(instance.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(instance.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(instance.first_line_team.id, 'first_line_team.id').to.eq(42);\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "bdfab3ee-40b4-4579-bf8a-fa59a174e26f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"first_line_team_id\": 42\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}service_instances/{{service_instance_id}}",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "{{service_instance_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-bdfab3ee-40b4-4579-bf8a-fa59a174e26f"
+            }
+          ],
+          "id": "8f7a44bf-42d8-4acc-9928-53e9b84759b8",
+          "uid": "32335283-8f7a44bf-42d8-4acc-9928-53e9b84759b8"
+        }
+      ],
+      "id": "e2161e15-912a-473e-a068-00e300f27d64",
+      "uid": "32335283-e2161e15-912a-473e-a068-00e300f27d64"
+    },
+    {
+      "name": "Audit Entries",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List audit entries of a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта AuditLine (первый в списке)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    try {\r",
+                      "        const item = jsonData[0];\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"action\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(item.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"created_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.created_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.created_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"user\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.user).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.user).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.user.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.user.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.user).to.have.property(\"display_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"changes\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.changes).to.have.property(\"cis\").that.is.an(\"array\");\r",
+                      "\r",
+                      "        // Проверяем первую пару в массиве cis (добавленные/удалённые CI)\r",
+                      "        pm.expect(item.changes.cis.length).to.be.above(0);\r",
+                      "        pm.expect(item.changes.cis[0]).to.be.an(\"array\");\r",
+                      "\r",
+                      "        if (item.changes.cis[0].length > 0) {\r",
+                      "            const ci = item.changes.cis[0][0];\r",
+                      "            pm.expect(ci).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(ci).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(ci).to.have.property(\"display_name\").that.is.a(\"string\");\r",
+                      "        }\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ee6c073f-a5ee-46ae-8e3f-6f61b9bd5a36",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/audit",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "audit"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ee6c073f-a5ee-46ae-8e3f-6f61b9bd5a36"
+            }
+          ],
+          "id": "366d8d45-c9ec-4a10-9453-482cf462b9ac",
+          "uid": "32335283-366d8d45-c9ec-4a10-9453-482cf462b9ac"
+        }
+      ],
+      "id": "6200aa41-9e3c-46bc-aff7-48ffa9f46e4a",
+      "uid": "32335283-6200aa41-9e3c-46bc-aff7-48ffa9f46e4a"
+    },
+    {
+      "name": "Child Service Instances",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List child service instances of a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объектов ServiceInstance (child_service_instances)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "        if (jsonData.length > 0) {\r",
+                      "            const instance = jsonData[0];\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "            pm.expect(Date.parse(instance.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "            pm.expect(Date.parse(instance.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        }\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "3910b1ff-3aad-49c4-b6cd-85603bbef963",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/child_service_instances",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "child_service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-3910b1ff-3aad-49c4-b6cd-85603bbef963"
+            }
+          ],
+          "id": "29c46249-e6a3-4b97-b059-c7fdaeecd88b",
+          "uid": "32335283-29c46249-e6a3-4b97-b059-c7fdaeecd88b"
+        }
+      ],
+      "id": "01803ee8-c4e3-41c7-acd7-3298586da6e9",
+      "uid": "32335283-01803ee8-c4e3-41c7-acd7-3298586da6e9"
+    },
+    {
+      "name": "Configuration Items",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all configuration items of a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта ConfigurationItem (первый в списке)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    try {\r",
+                      "        const item = jsonData[0];\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"label\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"software\").that.is.a(\"boolean\");\r",
+                      "        pm.expect(item).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"rule_set\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(item.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(item.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"product\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.product).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.product).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.product).to.have.property(\"category\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.product).to.have.property(\"brand\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ae8e6011-318d-45ca-ba06-f1714e30d02a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/cis",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ae8e6011-318d-45ca-ba06-f1714e30d02a"
+            }
+          ],
+          "id": "55abd6ca-015c-4cf8-9f9c-73fbb4592ec5",
+          "uid": "32335283-55abd6ca-015c-4cf8-9f9c-73fbb4592ec5"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a configuration item to a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "83ccccb1-be23-4c67-b9da-0e0b884f43d3",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/cis/2356",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "cis",
+                    "2356"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-83ccccb1-be23-4c67-b9da-0e0b884f43d3"
+            },
+            {
+              "name": "Check \"Add a configuration item to a service instance\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверяем, что в ответе есть объект с id 2356\r",
+                      "pm.test(`Проверить наличие объекта с id: 2356 в массиве`, function() {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = 2356; \r",
+                      "\r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "    \r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId); // == вместо === на случай, если переменная строка\r",
+                      "    \r",
+                      "    if (!foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} не найден в массиве ответа`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "        console.log(\"Ожидаемый ID:\", targetId);\r",
+                      "    }\r",
+                      "    \r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} должен присутствовать в ответе`).to.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "5763bf71-e2ef-463c-b2b0-9cacd50713e1",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/cis",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-5763bf71-e2ef-463c-b2b0-9cacd50713e1"
+            }
+          ],
+          "id": "28cd6754-7195-4fc7-aa6f-74b1dbf219d2",
+          "uid": "32335283-28cd6754-7195-4fc7-aa6f-74b1dbf219d2"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a configuration item from a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "bc9507a7-2aaf-46c2-876b-4a4e3e720c60",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/cis/2356",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "cis",
+                    "2356"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-bc9507a7-2aaf-46c2-876b-4a4e3e720c60"
+            },
+            {
+              "name": "Check \"Remove a configuration item from a service instance\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверяем, что в ответе нет объекта с id 2356 после удаления\r",
+                      "pm.test(`Проверить отсутствие объекта с id: 2356 в массиве`, function () {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = 2356;\r",
+                      "\r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "\r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId);\r",
+                      "\r",
+                      "    if (foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} неожиданно найден в ответе. Проверяем, что в ответе нет объекта с id 2356 после удаления`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(foundObject, null, 2));\r",
+                      "        console.log(\"Полный ответ:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} не должен присутствовать в ответе`).to.not.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ebac67f7-9491-478c-81b0-05f761a6c6dc",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/cis",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ebac67f7-9491-478c-81b0-05f761a6c6dc"
+            }
+          ],
+          "id": "b50c69ab-75be-4c6b-9256-73e3a815964e",
+          "uid": "32335283-b50c69ab-75be-4c6b-9256-73e3a815964e"
+        }
+      ],
+      "id": "e2078e42-d99d-4d6b-8237-a3c1154861fb",
+      "uid": "32335283-e2078e42-d99d-4d6b-8237-a3c1154861fb"
+    },
+    {
+      "name": "Parent Service Instances",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List parent service instances of a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объектов ServiceInstance (parent_service_instances)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "        if (jsonData.length > 0) {\r",
+                      "            const instance = jsonData[0];\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "            pm.expect(Date.parse(instance.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "            pm.expect(Date.parse(instance.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "            pm.expect(instance.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "            pm.expect(instance).to.have.property(\"support_team\").that.is.an(\"object\");\r",
+                      "            pm.expect(instance.support_team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "            pm.expect(instance.support_team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        }\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "c61e2168-db28-478f-bf9b-3937d939696f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/parent_service_instances",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "parent_service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-c61e2168-db28-478f-bf9b-3937d939696f"
+            }
+          ],
+          "id": "a84e6b35-c7f2-4920-976c-8cdd414f455d",
+          "uid": "32335283-a84e6b35-c7f2-4920-976c-8cdd414f455d"
+        }
+      ],
+      "id": "27a45757-319e-42ec-8747-36f5a6ebe9db",
+      "uid": "32335283-27a45757-319e-42ec-8747-36f5a6ebe9db"
+    },
+    {
+      "name": "Service Level Agreements",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List service level agreements of a service instance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта ServiceLevelAgreement (первый в списке)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    try {\r",
+                      "        const item = jsonData[0];\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(item.created_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(Date.parse(item.updated_at)).to.not.be.NaN;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"service_offering\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service_offering).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service_offering).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service_offering).to.have.property(\"service\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service_offering.service).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service_offering.service).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service_offering.service).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service_offering.service).to.have.property(\"provider\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service_offering.service.provider).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service_offering.service.provider).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item.service_offering.service.provider).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service_offering.service.provider.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service_offering.service.provider.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "8f1697b0-47c8-4af5-b058-ad32ea00773d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}service_instances/248/slas",
+                  "host": [
+                    "{{url}}service_instances"
+                  ],
+                  "path": [
+                    "248",
+                    "slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-8f1697b0-47c8-4af5-b058-ad32ea00773d"
+            }
+          ],
+          "id": "a4e94d52-a205-4a70-abb7-a59a3f35f40e",
+          "uid": "32335283-a4e94d52-a205-4a70-abb7-a59a3f35f40e"
+        }
+      ],
+      "id": "0b98f3a9-ea88-4966-ac79-f985eb19b876",
+      "uid": "32335283-0b98f3a9-ea88-4966-ac79-f985eb19b876"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "1c004a0d-ebb9-4e12-b2d0-ea29780eaca9",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "3f852f18-3fed-45eb-8617-948377e61539",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,947 @@
+{
+  "info": {
+    "_postman_id": "c06f4612-fd46-46be-9f12-4eea258f8e32",
+    "name": "16. Teams",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-25T06:23:01.000Z",
+    "createdAt": "2025-07-23T13:30:35.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-c06f4612-fd46-46be-9f12-4eea258f8e32"
+  },
+  "item": [
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List teams",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры Team (первый объект массива)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData[0];\r",
+                      "    pm.environment.set(\"team_id_1\", item.id);\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "410ccdfb-6d20-49ea-9517-caf82d5c9955",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams",
+                  "host": [
+                    "{{url}}teams"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-410ccdfb-6d20-49ea-9517-caf82d5c9955"
+            },
+            {
+              "name": "Get a single team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры Team по ID\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData; // Это объект, не массив\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${typeof value}`);\r",
+                      "            }\r",
+                      "        } else if (typeof value !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${typeof value}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"remarks\", item.remarks, \"string\");\r",
+                      "    checkType(\"disabled\", item.disabled, \"boolean\");\r",
+                      "    checkType(\"auto_assign\", item.auto_assign, \"boolean\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"source\", item.source, \"object\", true);\r",
+                      "    checkType(\"agile_board\", item.agile_board, \"object\", true);\r",
+                      "    checkType(\"scrum_workspace\", item.scrum_workspace, \"object\", true);\r",
+                      "    checkType(\"ui_extension\", item.ui_extension, \"object\", true);\r",
+                      "    checkType(\"custom_fields\", item.custom_fields, \"object\", true);\r",
+                      "    checkType(\"inbound_email_local_part\", item.inbound_email_local_part, \"string\", true);\r",
+                      "    checkType(\"picture_uri\", item.picture_uri, \"string\", true);\r",
+                      "\r",
+                      "    checkType(\"attachments\", item.attachments, \"array\");\r",
+                      "\r",
+                      "    if (item.coordinator) {\r",
+                      "        checkType(\"coordinator.id\", item.coordinator.id, \"number\");\r",
+                      "        checkType(\"coordinator.name\", item.coordinator.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.manager) {\r",
+                      "        checkType(\"manager.id\", item.manager.id, \"number\");\r",
+                      "        checkType(\"manager.name\", item.manager.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.configuration_manager) {\r",
+                      "        checkType(\"configuration_manager.id\", item.configuration_manager.id, \"number\");\r",
+                      "        checkType(\"configuration_manager.name\", item.configuration_manager.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.work_hours) {\r",
+                      "        checkType(\"work_hours.id\", item.work_hours.id, \"number\");\r",
+                      "        checkType(\"work_hours.name\", item.work_hours.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "225063b6-4a4d-4ce6-915a-a8bc981bdf6d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-225063b6-4a4d-4ce6-915a-a8bc981bdf6d"
+            }
+          ],
+          "id": "983b5c2a-a2e6-460a-8eaa-b3233f2685ee",
+          "uid": "32335283-983b5c2a-a2e6-460a-8eaa-b3233f2685ee"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код — 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры Team по ID\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData; // Это объект, не массив\r",
+                      "    pm.environment.set(\"team_id_2\", item.id); // Устанавливаем переменную окружения для ID команды\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${typeof value}`);\r",
+                      "            }\r",
+                      "        } else if (typeof value !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${typeof value}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"remarks\", item.remarks, \"string\");\r",
+                      "    checkType(\"disabled\", item.disabled, \"boolean\");\r",
+                      "    checkType(\"auto_assign\", item.auto_assign, \"boolean\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"agile_board\", item.agile_board, \"object\", true);\r",
+                      "    checkType(\"scrum_workspace\", item.scrum_workspace, \"object\", true);\r",
+                      "    checkType(\"ui_extension\", item.ui_extension, \"object\", true);\r",
+                      "    checkType(\"custom_fields\", item.custom_fields, \"object\", true);\r",
+                      "    checkType(\"inbound_email_local_part\", item.inbound_email_local_part, \"string\", true);\r",
+                      "    checkType(\"picture_uri\", item.picture_uri, \"string\", true);\r",
+                      "\r",
+                      "    checkType(\"attachments\", item.attachments, \"array\");\r",
+                      "\r",
+                      "    if (item.coordinator) {\r",
+                      "        checkType(\"coordinator.id\", item.coordinator.id, \"number\");\r",
+                      "        checkType(\"coordinator.name\", item.coordinator.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.manager) {\r",
+                      "        checkType(\"manager.id\", item.manager.id, \"number\");\r",
+                      "        checkType(\"manager.name\", item.manager.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.configuration_manager) {\r",
+                      "        checkType(\"configuration_manager.id\", item.configuration_manager.id, \"number\");\r",
+                      "        checkType(\"configuration_manager.name\", item.configuration_manager.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.work_hours) {\r",
+                      "        checkType(\"work_hours.id\", item.work_hours.id, \"number\");\r",
+                      "        checkType(\"work_hours.name\", item.work_hours.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "773e9900-58f8-4fe8-987a-93fcb01ab831",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"auto_assign\": false,\r\n    \"configuration_manager_id\": 643,\r\n    \"coordinator_id\": 643,\r\n    \"disabled\": false,\r\n    \"manager_id\": 951,\r\n    \"name\": \"Astra Linux Серверы for {{$randomCompanyName}}\",\r\n    \"remarks\": \"Отвечает за все сервера в ЦОД, работающие под управлением операционной системы AstraLinux.\",\r\n    \"time_zone\": \"Moscow\",\r\n    \"work_hours_id\": 103\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}teams",
+                  "host": [
+                    "{{url}}teams"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-773e9900-58f8-4fe8-987a-93fcb01ab831"
+            }
+          ],
+          "id": "cb03a270-bc12-4083-8db4-534dc8b287e9",
+          "uid": "32335283-cb03a270-bc12-4083-8db4-534dc8b287e9"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "\r",
+                      "pm.test(\"Проверка структуры Team по ID\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData; // Это объект, не массив\r",
+                      "    pm.environment.set(\"team_id_2\", item.id); // Устанавливаем переменную окружения для ID команды\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${typeof value}`);\r",
+                      "            }\r",
+                      "        } else if (typeof value !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${typeof value}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"remarks\", item.remarks, \"string\");\r",
+                      "    checkType(\"disabled\", item.disabled, \"boolean\");\r",
+                      "    checkType(\"auto_assign\", item.auto_assign, \"boolean\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"agile_board\", item.agile_board, \"object\", true);\r",
+                      "    checkType(\"scrum_workspace\", item.scrum_workspace, \"object\", true);\r",
+                      "    checkType(\"ui_extension\", item.ui_extension, \"object\", true);\r",
+                      "    checkType(\"custom_fields\", item.custom_fields, \"object\", true);\r",
+                      "    checkType(\"inbound_email_local_part\", item.inbound_email_local_part, \"string\", true);\r",
+                      "    checkType(\"picture_uri\", item.picture_uri, \"string\", true);\r",
+                      "\r",
+                      "    if (item.auto_assign !== true) {\r",
+                      "        errors.push(`Свойство auto_assign должно быть равно true, но получено \"${item.auto_assign}\"`);\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"attachments\", item.attachments, \"array\");\r",
+                      "\r",
+                      "    if (item.coordinator) {\r",
+                      "        checkType(\"coordinator.id\", item.coordinator.id, \"number\");\r",
+                      "        checkType(\"coordinator.name\", item.coordinator.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.manager) {\r",
+                      "        checkType(\"manager.id\", item.manager.id, \"number\");\r",
+                      "        checkType(\"manager.name\", item.manager.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.configuration_manager) {\r",
+                      "        checkType(\"configuration_manager.id\", item.configuration_manager.id, \"number\");\r",
+                      "        checkType(\"configuration_manager.name\", item.configuration_manager.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item.work_hours) {\r",
+                      "        checkType(\"work_hours.id\", item.work_hours.id, \"number\");\r",
+                      "        checkType(\"work_hours.name\", item.work_hours.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "1e720191-8941-4680-984e-1d5ed138a295",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"auto_assign\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_2}}",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_2}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-1e720191-8941-4680-984e-1d5ed138a295"
+            }
+          ],
+          "id": "63b2e710-774f-47ed-abd7-9868795b7ad6",
+          "uid": "32335283-63b2e710-774f-47ed-abd7-9868795b7ad6"
+        }
+      ],
+      "id": "9b6615d9-e819-43b7-8db1-014550f0c74b",
+      "uid": "32335283-9b6615d9-e819-43b7-8db1-014550f0c74b"
+    },
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all members of a team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let jsonData = pm.response.json();\r",
+                      "let employee = Array.isArray(jsonData) ? jsonData[0] : jsonData;\r",
+                      "\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(employee, null, 2));\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры и типов первого сотрудника\", () => {\r",
+                      "    try {\r",
+                      "        pm.expect(employee).to.be.an(\"object\");\r",
+                      "\r",
+                      "        pm.expect(employee).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(employee).to.have.property(\"primary_email\").that.is.a(\"string\");\r",
+                      "        pm.expect(employee).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // organization (object, not null)\r",
+                      "        pm.expect(employee).to.have.property(\"organization\").that.is.an(\"object\");\r",
+                      "        pm.expect(employee.organization).to.include.all.keys(\"id\", \"name\", \"account\", \"nodeID\");\r",
+                      "        pm.expect(employee.organization.id).to.be.a(\"number\");\r",
+                      "        pm.expect(employee.organization.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        // organization.account\r",
+                      "        pm.expect(employee.organization.account).to.include.all.keys(\"id\", \"name\");\r",
+                      "        pm.expect(employee.organization.account.id).to.be.a(\"string\");\r",
+                      "        pm.expect(employee.organization.account.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        // site (nullable object)\r",
+                      "        pm.expect(employee).to.have.property(\"site\").that.satisfy(val => val === null || typeof val === \"object\");\r",
+                      "        if (employee.site !== null) {\r",
+                      "            pm.expect(employee.site).to.include.all.keys(\"id\", \"name\", \"account\", \"nodeID\");\r",
+                      "            pm.expect(employee.site.id).to.be.a(\"number\");\r",
+                      "            pm.expect(employee.site.name).to.be.a(\"string\");\r",
+                      "            pm.expect(employee.site.account).to.include.all.keys(\"id\", \"name\");\r",
+                      "            pm.expect(employee.site.account.id).to.be.a(\"string\");\r",
+                      "            pm.expect(employee.site.account.name).to.be.a(\"string\");\r",
+                      "        }\r",
+                      "\r",
+                      "        // manager (nullable object)\r",
+                      "        pm.expect(employee).to.have.property(\"manager\").that.satisfy(val => val === null || typeof val === \"object\");\r",
+                      "        if (employee.manager !== null) {\r",
+                      "            // Добавьте конкретные проверки, если известна структура manager\r",
+                      "        }\r",
+                      "\r",
+                      "        pm.expect(employee).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(employee).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // account (object)\r",
+                      "        pm.expect(employee).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(employee.account).to.include.all.keys(\"id\", \"name\");\r",
+                      "        pm.expect(employee.account.id).to.be.a(\"string\");\r",
+                      "        pm.expect(employee.account.name).to.be.a(\"string\");\r",
+                      "\r",
+                      "        // nodeID — не проверяется\r",
+                      "        // sourceID — не проверяется\r",
+                      "        // source — не проверяется\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.error(\"❌ Ошибка валидации данных сотрудника:\");\r",
+                      "        console.error(\"➡️ \" + err.message);\r",
+                      "        console.log(\"⚠️ Ответ сервера (JSON):\\n\" + JSON.stringify(employee, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f4ad8464-fd7b-4455-b12a-db914c2d38eb",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}/members",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}",
+                    "members"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f4ad8464-fd7b-4455-b12a-db914c2d38eb"
+            }
+          ],
+          "id": "ece65b4b-533a-4169-a9e1-bb75349fd691",
+          "uid": "32335283-ece65b4b-533a-4169-a9e1-bb75349fd691"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a member to a team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "62d1aaf2-2c99-48e6-b3ca-b0b43e521998",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}/members/604",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}",
+                    "members",
+                    "604"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-62d1aaf2-2c99-48e6-b3ca-b0b43e521998"
+            },
+            {
+              "name": "Check \"Add a member to a team\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверяем, что в ответе есть объект с id из переменной service_id\r",
+                      "pm.test(`Проверить наличие объекта с id: 604 в массиве`, function() {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = 604; // Получаем значение переменной\r",
+                      "    \r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "    \r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId); // == вместо === на случай, если переменная строка\r",
+                      "    \r",
+                      "    if (!foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} не найден в массиве ответа`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "        console.log(\"Ожидаемый ID:\", targetId);\r",
+                      "    }\r",
+                      "    \r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} должен присутствовать в ответе`).to.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2fbcbeaf-39c9-4c99-9ea5-199420dde4fe",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}/members",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}",
+                    "members"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2fbcbeaf-39c9-4c99-9ea5-199420dde4fe"
+            }
+          ],
+          "id": "b2392d69-3546-4db4-bf26-c7f08cfb15c1",
+          "uid": "32335283-b2392d69-3546-4db4-bf26-c7f08cfb15c1"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a member from a team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "e11900c9-a9c8-4d79-ae60-20ebe009ef5a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}/members/604",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}",
+                    "members",
+                    "604"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-e11900c9-a9c8-4d79-ae60-20ebe009ef5a"
+            },
+            {
+              "name": "Check \"Remove a member from a team\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверяем, что в ответе есть объект с id из переменной service_id\r",
+                      "pm.test(`Проверить наличие объекта с id: 604 в массиве`, function() {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = 604; // Получаем значение переменной\r",
+                      "    \r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "    \r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId); // == вместо === на случай, если переменная строка\r",
+                      "    \r",
+                      "    if (!foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} не найден в массиве ответа`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "        console.log(\"Ожидаемый ID:\", targetId);\r",
+                      "    }\r",
+                      "    \r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} не должен присутствовать в ответе после удаления`).to.not.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2787ddbc-a2c8-4055-a999-182bfb8da8c8",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}/members",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}",
+                    "members"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2787ddbc-a2c8-4055-a999-182bfb8da8c8"
+            }
+          ],
+          "id": "71cecf48-a0c4-47f0-801e-91159cc9d8e7",
+          "uid": "32335283-71cecf48-a0c4-47f0-801e-91159cc9d8e7"
+        }
+      ],
+      "id": "3d6acb5c-cd79-4601-bdcd-ac71c2a95edf",
+      "uid": "32335283-3d6acb5c-cd79-4601-bdcd-ac71c2a95edf"
+    },
+    {
+      "name": "Service Instances",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all service instances of a team",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let jsonData;\r",
+                      "try {\r",
+                      "    jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "} catch (e) {\r",
+                      "    pm.test(\"Ошибка парсинга JSON\", function () {\r",
+                      "        throw new Error(\"Не удалось распарсить ответ как JSON: \" + e);\r",
+                      "    });\r",
+                      "}\r",
+                      "\r",
+                      "const expectedTeamId = pm.environment.get(\"team_id_1\");\r",
+                      "\r",
+                      "pm.test(\"Проверка, что support_team.id в каждом объекте равен team_id_1\", function () {\r",
+                      "    if (!Array.isArray(jsonData)) {\r",
+                      "        throw new Error(\"Ожидался массив в корне ответа, но получено: \" + typeof jsonData);\r",
+                      "    }\r",
+                      "\r",
+                      "    jsonData.forEach((item, index) => {\r",
+                      "        const actualId = item?.support_team?.id;\r",
+                      "        if (actualId !== expectedTeamId) {\r",
+                      "            console.error(`Ошибка в элементе [${index}]: support_team.id ожидался '${expectedTeamId}', а пришёл '${actualId}'`);\r",
+                      "            console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "            throw new Error(`Элемент [${index}]: support_team.id !== team_id_1`);\r",
+                      "        }\r",
+                      "    });\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f32ed4fb-2d08-4ae9-9a9e-2739f5b2f16f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}teams/{{team_id_1}}/service_instances",
+                  "host": [
+                    "{{url}}teams"
+                  ],
+                  "path": [
+                    "{{team_id_1}}",
+                    "service_instances"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f32ed4fb-2d08-4ae9-9a9e-2739f5b2f16f"
+            }
+          ],
+          "id": "39c807fa-c880-477c-bcac-9ca882915b33",
+          "uid": "32335283-39c807fa-c880-477c-bcac-9ca882915b33"
+        }
+      ],
+      "id": "88ea7272-c226-4ffa-96d9-16fa581aead2",
+      "uid": "32335283-88ea7272-c226-4ffa-96d9-16fa581aead2"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "581a95fd-871e-4514-8023-7e149f9c07da",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "b598ca16-9966-4cfd-b69b-a8232327b74d",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1543 @@
+{
+  "info": {
+    "_postman_id": "be0e4f9d-eb45-4051-bec5-ebd32110fd28",
+    "name": "31. Project Templates",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-08-04T13:59:22.000Z",
+    "createdAt": "2025-08-04T11:51:18.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-be0e4f9d-eb45-4051-bec5-ebd32110fd28"
+  },
+  "item": [
+    {
+      "name": "Project Templates",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List project templates",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "\r",
+                      "pm.test(\"Массив не пустой\", function () {\r",
+                      "    pm.expect(json.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "const item = json[0];\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = false) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (typeof obj[field] !== type) {\r",
+                      "        errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Основные поля\r",
+                      "checkField(item, \"id\", \"number\");\r",
+                      "checkField(item, \"subject\", \"string\");\r",
+                      "checkField(item, \"created_at\", \"string\");\r",
+                      "checkField(item, \"updated_at\", \"string\");\r",
+                      "checkField(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "// Вывод ошибок\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ade28c7f-7996-482e-b84c-0d778a641f2a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates",
+                  "host": [
+                    "{{url}}project_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ade28c7f-7996-482e-b84c-0d778a641f2a"
+            },
+            {
+              "name": "Get a single project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = false) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (typeof obj[field] !== type) {\r",
+                      "        errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Проверяем поля объекта\r",
+                      "checkField(json, \"id\", \"number\");\r",
+                      "checkField(json, \"sourceID\", \"string\");\r",
+                      "checkField(json, \"subject\", \"string\");\r",
+                      "checkField(json, \"created_at\", \"string\");\r",
+                      "checkField(json, \"updated_at\", \"string\");\r",
+                      "checkField(json, \"nodeID\", \"string\");\r",
+                      "checkField(json, \"disabled\", \"boolean\");\r",
+                      "checkField(json, \"times_applied\", \"number\");\r",
+                      "checkField(json, \"source\", \"string\");\r",
+                      "\r",
+                      "// Вывод ошибок\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "00c704ba-9079-49ca-b1c5-8872056af285",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/1",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-00c704ba-9079-49ca-b1c5-8872056af285"
+            }
+          ],
+          "id": "8eb9884f-dccf-4987-ac53-8713bf7c8e74",
+          "uid": "32335283-8eb9884f-dccf-4987-ac53-8713bf7c8e74"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_id\", json.id); // Сохранение ID проектного шаблона в переменную окружения\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = true) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (Array.isArray(type)) {\r",
+                      "        if (!type.includes(typeof obj[field]) && !type.includes(obj[field])) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть одним из ${type.join(', ')}, а пришло ${typeof obj[field]}`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        if (typeof obj[field] !== type) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Проверяем поля объекта\r",
+                      "checkField(json, \"id\", \"number\");\r",
+                      "checkField(json, \"sourceID\", [\"string\", null]); // Проверка для sourceID обновлена\r",
+                      "checkField(json, \"subject\", \"string\");\r",
+                      "checkField(json, \"created_at\", \"string\");\r",
+                      "checkField(json, \"updated_at\", \"string\");\r",
+                      "checkField(json, \"nodeID\", \"string\");\r",
+                      "checkField(json, \"disabled\", \"boolean\");\r",
+                      "checkField(json, \"times_applied\", \"number\");\r",
+                      "checkField(json, \"source\", \"string\");\r",
+                      "\r",
+                      "// Вывод ошибок\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2707845e-5db9-49cc-ad57-e3f60ebd68a3",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"disabled\": false,\r\n    \"subject\": \"Новый проект - только фаза инициации and {{$randomLoremWords}}\",\r\n    \"times_applied\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates",
+                  "host": [
+                    "{{url}}project_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2707845e-5db9-49cc-ad57-e3f60ebd68a3"
+            }
+          ],
+          "id": "e57ad405-5291-40e6-bf3c-0a96cb5ee53c",
+          "uid": "32335283-e57ad405-5291-40e6-bf3c-0a96cb5ee53c"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a project",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_id\", json.id); // Сохранение ID проектного шаблона в переменную окружения\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = true) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (Array.isArray(type)) {\r",
+                      "        if (!type.includes(typeof obj[field]) && !type.includes(obj[field])) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть одним из ${type.join(', ')}, а пришло ${typeof obj[field]}`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        if (typeof obj[field] !== type) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Проверяем поля объекта\r",
+                      "checkField(json, \"id\", \"number\");\r",
+                      "checkField(json, \"sourceID\", [\"string\", null]); // Проверка для sourceID обновлена\r",
+                      "checkField(json, \"subject\", \"string\");\r",
+                      "checkField(json, \"created_at\", \"string\");\r",
+                      "checkField(json, \"updated_at\", \"string\");\r",
+                      "checkField(json, \"nodeID\", \"string\");\r",
+                      "checkField(json, \"disabled\", \"boolean\");\r",
+                      "checkField(json, \"times_applied\", \"number\");\r",
+                      "checkField(json, \"source\", \"string\");\r",
+                      "\r",
+                      "// Вывод ошибок\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      "pm.expect(json.disabled, 'disabled').to.eq(true);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "de6e705f-997e-4562-a2c9-11375e33072b",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"disabled\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-de6e705f-997e-4562-a2c9-11375e33072b"
+            }
+          ],
+          "id": "23558c75-c875-40b7-89fc-47a7878c4d12",
+          "uid": "32335283-23558c75-c875-40b7-89fc-47a7878c4d12"
+        }
+      ],
+      "id": "d7e43731-4a39-4165-b4a8-9379e805e8b9",
+      "uid": "32335283-d7e43731-4a39-4165-b4a8-9379e805e8b9"
+    },
+    {
+      "name": "Automation Rules",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List automation rules of a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "pm.test(\"Response is an array\", function () {\r",
+                      "    pm.expect(pm.response.json()).to.be.an('array');\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "a90a25f9-8619-43ff-b0e5-298d0189c4ce",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/1/automation_rules",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1",
+                    "automation_rules"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-a90a25f9-8619-43ff-b0e5-298d0189c4ce"
+            }
+          ],
+          "id": "3d1d53fa-76a9-43e0-9d97-75e3b29a595b",
+          "uid": "32335283-3d1d53fa-76a9-43e0-9d97-75e3b29a595b"
+        }
+      ],
+      "id": "84aee2ea-cf13-449a-b38e-222d77652499",
+      "uid": "32335283-84aee2ea-cf13-449a-b38e-222d77652499"
+    },
+    {
+      "name": "Phases",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a phase to a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_phase_id\", json.id);\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры ProjectTemplatePhase\", function () {\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkField(obj, field, expectedTypes, nullable = false) {\r",
+                      "        const value = obj[field];\r",
+                      "        const types = Array.isArray(expectedTypes) ? expectedTypes : [expectedTypes];\r",
+                      "\r",
+                      "        if (value === null) {\r",
+                      "            if (!nullable && !types.includes(null)) {\r",
+                      "                errors.push(`Свойство '${field}' не может быть null`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            const actualType = typeof value;\r",
+                      "            const isValid = types.includes(actualType);\r",
+                      "            if (!isValid) {\r",
+                      "                errors.push(`Свойство '${field}' ожидалось быть ${types.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkField(json, \"id\", \"number\");\r",
+                      "    checkField(json, \"name\", \"string\");\r",
+                      "    checkField(json, \"position\", \"number\");\r",
+                      "    checkField(json, \"created_at\", \"string\");\r",
+                      "    checkField(json, \"updated_at\", \"string\");\r",
+                      "    checkField(json, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "    // Дополнительные поля, если они есть\r",
+                      "    if (\"disabled\" in json) {\r",
+                      "        checkField(json, \"disabled\", \"boolean\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (\"sourceID\" in json) {\r",
+                      "        checkField(json, \"sourceID\", \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (\"source\" in json) {\r",
+                      "        checkField(json, \"source\", \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (\"times_applied\" in json) {\r",
+                      "        checkField(json, \"times_applied\", \"number\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length).to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "60fa8d95-3a88-41aa-9c6b-617b75522d57",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"{{$randomLoremWords}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates/1/phases",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1",
+                    "phases"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-60fa8d95-3a88-41aa-9c6b-617b75522d57"
+            }
+          ],
+          "id": "11a128ff-e328-49c5-884a-905230abef0f",
+          "uid": "32335283-11a128ff-e328-49c5-884a-905230abef0f"
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all phases of a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Ответ — массив объектов\", function () {\r",
+                      "    pm.expect(Array.isArray(json)).to.eql(true);\r",
+                      "    pm.expect(json.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры первого ProjectTemplatePhase\", function () {\r",
+                      "    const errors = [];\r",
+                      "    const item = json[0];\r",
+                      "\r",
+                      "    function checkField(obj, field, expectedTypes, nullable = false) {\r",
+                      "        const value = obj[field];\r",
+                      "        const types = Array.isArray(expectedTypes) ? expectedTypes : [expectedTypes];\r",
+                      "\r",
+                      "        if (value === null) {\r",
+                      "            if (!nullable && !types.includes(null)) {\r",
+                      "                errors.push(`Свойство '${field}' не может быть null`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            const actualType = typeof value;\r",
+                      "            const isValid = types.includes(actualType);\r",
+                      "            if (!isValid) {\r",
+                      "                errors.push(`Свойство '${field}' ожидалось быть ${types.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkField(item, \"id\", \"number\");\r",
+                      "    checkField(item, \"name\", \"string\");\r",
+                      "    checkField(item, \"position\", \"number\");\r",
+                      "    checkField(item, \"created_at\", \"string\");\r",
+                      "    checkField(item, \"updated_at\", \"string\");\r",
+                      "    checkField(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "    if (\"disabled\" in item) checkField(item, \"disabled\", \"boolean\");\r",
+                      "    if (\"sourceID\" in item) checkField(item, \"sourceID\", [\"string\", null]);\r",
+                      "    if (\"source\" in item) checkField(item, \"source\", [\"string\", null]);\r",
+                      "    if (\"times_applied\" in item) checkField(item, \"times_applied\", \"number\");\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length).to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f62fe6ce-2083-4441-8c8e-25d1f9ef8e50",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/1/phases",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1",
+                    "phases"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f62fe6ce-2083-4441-8c8e-25d1f9ef8e50"
+            }
+          ],
+          "id": "ce74aec0-eec1-4e42-8bc2-769940dfda98",
+          "uid": "32335283-ce74aec0-eec1-4e42-8bc2-769940dfda98"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a phase of a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const item = pm.response.json();\r",
+                      "if (item.position !== 1) {\r",
+                      "    console.error('position должно было обновиться на значение 1, но получено значение: ' + item.position);\r",
+                      "}\r",
+                      "pm.expect(item.position, 'position').to.eq(1);\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "9284c316-39bc-43c6-a4e6-49625382bda7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"position\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates/1/phases/{{project_template_phase_id}}",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1",
+                    "phases",
+                    "{{project_template_phase_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-9284c316-39bc-43c6-a4e6-49625382bda7"
+            }
+          ],
+          "id": "a422e653-e68a-4649-a11b-f4c89cb04bdc",
+          "uid": "32335283-a422e653-e68a-4649-a11b-f4c89cb04bdc"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a phase from a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 204\", function () {\r",
+                      "    if (pm.response.code !== 204) {\r",
+                      "        console.error('статус должен был равен 204, но он такоFF:' + pm.response.code);\r",
+                      "    }\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "028780cf-59b7-48c8-a08c-480e5012b335",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/1/phases/{{project_template_phase_id}}",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1",
+                    "phases",
+                    "{{project_template_phase_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-028780cf-59b7-48c8-a08c-480e5012b335"
+            },
+            {
+              "name": "Check \"Remove a phase from a project template\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверяем, что в ответе нет объекта с id project_template_phase_id\r",
+                      "pm.test(`Проверить Отсутствие объекта с id: project_template_phase_id в массиве`, function () {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = pm.environment.get(\"project_template_phase_id\"); // Получаем значение из переменной окружения\r",
+                      "\r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "\r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId);\r",
+                      "\r",
+                      "    if (foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} найден в ответе. Проверяем, что в ответе нет объекта с id project_template_phase_id после удаления связи`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(foundObject, null, 2));\r",
+                      "        console.log(\"Полный ответ:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} должен отсутствовать в ответе`).to.not.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "1dd13ba6-8643-4464-99eb-ea2c4a1e5feb",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/1/phases",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "1",
+                    "phases"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-1dd13ba6-8643-4464-99eb-ea2c4a1e5feb"
+            }
+          ],
+          "id": "fd839f2b-7434-46a8-a858-90d332903e67",
+          "uid": "32335283-fd839f2b-7434-46a8-a858-90d332903e67"
+        }
+      ],
+      "id": "40fac8fb-d4a2-4352-b535-03a69440e2f4",
+      "uid": "32335283-40fac8fb-d4a2-4352-b535-03a69440e2f4"
+    },
+    {
+      "name": "Project Task Templates",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_id\", json.id); // Сохранение ID проектного шаблона в переменную окружения\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = true) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (Array.isArray(type)) {\r",
+                      "        if (!type.includes(typeof obj[field]) && !type.includes(obj[field])) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть одним из ${type.join(', ')}, а пришло ${typeof obj[field]}`);\r",
+                      "        }\r",
+                      "    } else {\r",
+                      "        if (typeof obj[field] !== type) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Проверяем поля объекта\r",
+                      "checkField(json, \"id\", \"number\");\r",
+                      "checkField(json, \"sourceID\", [\"string\", null]); // Проверка для sourceID обновлена\r",
+                      "checkField(json, \"subject\", \"string\");\r",
+                      "checkField(json, \"created_at\", \"string\");\r",
+                      "checkField(json, \"updated_at\", \"string\");\r",
+                      "checkField(json, \"nodeID\", \"string\");\r",
+                      "checkField(json, \"disabled\", \"boolean\");\r",
+                      "checkField(json, \"times_applied\", \"number\");\r",
+                      "checkField(json, \"source\", \"string\");\r",
+                      "\r",
+                      "// Вывод ошибок\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "77970eba-1a5c-4a0e-b9e8-a2399e67be47",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"disabled\": false,\r\n    \"subject\": \"Новый проект - только фаза инициации and {{$randomLoremWords}}\",\r\n    \"times_applied\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates",
+                  "host": [
+                    "{{url}}project_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-77970eba-1a5c-4a0e-b9e8-a2399e67be47"
+            },
+            {
+              "name": "Add a phase to a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_phase_id\", json.id);\r",
+                      "pm.environment.set(\"project_template_phase_name\", json.name);\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры ProjectTemplatePhase\", function () {\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkField(obj, field, expectedTypes, nullable = false) {\r",
+                      "        const value = obj[field];\r",
+                      "        const types = Array.isArray(expectedTypes) ? expectedTypes : [expectedTypes];\r",
+                      "\r",
+                      "        if (value === null) {\r",
+                      "            if (!nullable && !types.includes(null)) {\r",
+                      "                errors.push(`Свойство '${field}' не может быть null`);\r",
+                      "            }\r",
+                      "        } else {\r",
+                      "            const actualType = typeof value;\r",
+                      "            const isValid = types.includes(actualType);\r",
+                      "            if (!isValid) {\r",
+                      "                errors.push(`Свойство '${field}' ожидалось быть ${types.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkField(json, \"id\", \"number\");\r",
+                      "    checkField(json, \"name\", \"string\");\r",
+                      "    checkField(json, \"position\", \"number\");\r",
+                      "    checkField(json, \"created_at\", \"string\");\r",
+                      "    checkField(json, \"updated_at\", \"string\");\r",
+                      "    checkField(json, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "    // Дополнительные поля, если они есть\r",
+                      "    if (\"disabled\" in json) {\r",
+                      "        checkField(json, \"disabled\", \"boolean\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (\"sourceID\" in json) {\r",
+                      "        checkField(json, \"sourceID\", \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (\"source\" in json) {\r",
+                      "        checkField(json, \"source\", \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (\"times_applied\" in json) {\r",
+                      "        checkField(json, \"times_applied\", \"number\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(json, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length).to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "bb735b99-752b-405d-aa39-a3e9324bc043",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"{{$randomLoremWords}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}/phases",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}",
+                    "phases"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-bb735b99-752b-405d-aa39-a3e9324bc043"
+            },
+            {
+              "name": "Add a project task template to a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "  pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const data = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_task_templates_id\", data.id); // Fixed to access id directly\r",
+                      "\r",
+                      "pm.test(\"Ответ — массив\", function () {\r",
+                      "  pm.expect(data).to.be.an(\"object\"); // Fixed to expect an object\r",
+                      "});\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(path, value, expectedType, nullable = false) {\r",
+                      "  const actualType = value === null ? \"null\" : typeof value;\r",
+                      "  if (nullable && value === null) return;\r",
+                      "  if (actualType !== expectedType) {\r",
+                      "    errors.push(`Свойство '${path}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "  }\r",
+                      "}\r",
+                      "\r",
+                      "if (data) { // Fixed condition to check if data exists\r",
+                      "  const item = data;\r",
+                      "\r",
+                      "  checkField(\"id\", item.id, \"number\");\r",
+                      "  checkField(\"phase_name\", item.phase_name, \"string\");\r",
+                      "  checkField(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "  if (typeof item.task_template !== \"object\" || item.task_template === null) {\r",
+                      "    errors.push(\"Свойство 'task_template' должно быть объектом и не null\");\r",
+                      "  } else {\r",
+                      "    checkField(\"task_template.id\", item.task_template.id, \"number\");\r",
+                      "    checkField(\"task_template.subject\", item.task_template.subject, \"string\");\r",
+                      "    checkField(\"task_template.sourceID\", item.task_template.sourceID, \"string\");\r",
+                      "    checkField(\"task_template.nodeID\", item.task_template.nodeID, \"string\");\r",
+                      "  }\r",
+                      "\r",
+                      "  if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "  }\r",
+                      "}\r",
+                      "\r",
+                      "pm.test(\"Ошибок валидации нет\", function () {\r",
+                      "  pm.expect(errors.length).to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "745fbd10-2cc6-45e9-81c6-285449287cf1",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"id\": {{project_template_phase_id}},\r\n    \"phase_name\": \"{{project_template_phase_name}}\",\r\n    \"task_template_id\": 6\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}/task_templates",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}",
+                    "task_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-745fbd10-2cc6-45e9-81c6-285449287cf1"
+            }
+          ],
+          "id": "394e2383-94ae-46e2-a9c0-17e16a53ee36",
+          "uid": "32335283-394e2383-94ae-46e2-a9c0-17e16a53ee36"
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all project task templates of a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "if (!Array.isArray(json)) {\r",
+                      "    errors.push(\"Ответ не является массивом\");\r",
+                      "} else if (json.length === 0) {\r",
+                      "    errors.push(\"Массив пустой\");\r",
+                      "} else {\r",
+                      "    const item = json[0];\r",
+                      "\r",
+                      "    function checkField(obj, field, types) {\r",
+                      "        const value = obj[field];\r",
+                      "        const actualType = value === null ? \"null\" : typeof value;\r",
+                      "        if (!types.includes(actualType)) {\r",
+                      "            errors.push(`Свойство '${field}' ожидалось быть ${types.join(\" или \")}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkField(item, \"id\", [\"number\"]);\r",
+                      "    checkField(item, \"phase_name\", [\"string\"]);\r",
+                      "    checkField(item, \"nodeID\", [\"string\"]);\r",
+                      "\r",
+                      "    if (typeof item.task_template !== \"object\" || item.task_template === null) {\r",
+                      "        errors.push(\"Свойство 'task_template' отсутствует или не является объектом\");\r",
+                      "    } else {\r",
+                      "        const t = item.task_template;\r",
+                      "        checkField(t, \"id\", [\"number\"]);\r",
+                      "        checkField(t, \"subject\", [\"string\"]);\r",
+                      "        checkField(t, \"sourceID\", [\"string\"]);\r",
+                      "        checkField(t, \"nodeID\", [\"string\"]);\r",
+                      "    }\r",
+                      "\r",
+                      "    if (errors.length) {\r",
+                      "        console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "461a78c3-1d0d-4c4a-8153-af01c2134428",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}/task_templates",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}",
+                    "task_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-461a78c3-1d0d-4c4a-8153-af01c2134428"
+            }
+          ],
+          "id": "89aca12d-68ed-4d4a-903e-55c92b26d567",
+          "uid": "32335283-89aca12d-68ed-4d4a-903e-55c92b26d567"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a project task template linked to a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const data = pm.response.json();\r",
+                      "pm.environment.set(\"project_template_task_templates_id\", data.id); // Fixed to access id directly\r",
+                      "\r",
+                      "pm.test(\"Ответ — массив\", function () {\r",
+                      "    pm.expect(data).to.be.an(\"object\"); // Fixed to expect an object\r",
+                      "});\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(path, value, expectedType, nullable = false) {\r",
+                      "    const actualType = value === null ? \"null\" : typeof value;\r",
+                      "    if (nullable && value === null) return;\r",
+                      "    if (actualType !== expectedType) {\r",
+                      "        errors.push(`Свойство '${path}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "if (data) { // Fixed condition to check if data exists\r",
+                      "    const item = data;\r",
+                      "\r",
+                      "    checkField(\"id\", item.id, \"number\");\r",
+                      "    checkField(\"phase_name\", item.phase_name, \"string\");\r",
+                      "    checkField(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    if (typeof item.task_template !== \"object\" || item.task_template === null) {\r",
+                      "        errors.push(\"Свойство 'task_template' должно быть объектом и не null\");\r",
+                      "    } else {\r",
+                      "        checkField(\"task_template.id\", item.task_template.id, \"number\");\r",
+                      "        checkField(\"task_template.subject\", item.task_template.subject, \"string\");\r",
+                      "        checkField(\"task_template.sourceID\", item.task_template.sourceID, \"string\");\r",
+                      "        checkField(\"task_template.nodeID\", item.task_template.nodeID, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    if (data.task_template.id !== 8) {\r",
+                      "        errors.push('task_template.id не обновился, он должен был быть = 8, а пришло: ' + data.task_template.id);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.test(\"Ошибок валидации нет\", function () {\r",
+                      "    pm.expect(errors.length).to.eql(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "afed4dc7-6be3-446b-a2aa-b140e94e22bc",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"id\": {{project_template_phase_id}},\r\n    \"phase_name\": \"{{project_template_phase_name}}\",\r\n    \"task_template_id\": 8\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}/task_templates/{{project_template_task_templates_id}}",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}",
+                    "task_templates",
+                    "{{project_template_task_templates_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-afed4dc7-6be3-446b-a2aa-b140e94e22bc"
+            }
+          ],
+          "id": "92102755-797d-451c-9159-1b0bf5e620f7",
+          "uid": "32335283-92102755-797d-451c-9159-1b0bf5e620f7"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a project task template from a project template",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 204\", function () {\r",
+                      "    if (pm.response.code !== 204) {\r",
+                      "        console.error('статус должен был равен 204, но он такоFF:' + pm.response.code);\r",
+                      "    }\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "b4526575-a8a4-4f54-8b3f-15262bbfc572",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}/task_templates/{{project_template_task_templates_id}}",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}",
+                    "task_templates",
+                    "{{project_template_task_templates_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-b4526575-a8a4-4f54-8b3f-15262bbfc572"
+            },
+            {
+              "name": "Check \"Remove a project task template from a project template\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверяем, что в ответе нет объекта с id project_template_task_templates_id\r",
+                      "pm.test(`Проверить Отсутствие объекта с id: project_template_task_templates_id в массиве`, function () {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = pm.environment.get(\"project_template_task_templates_id\"); // Получаем значение из переменной окружения\r",
+                      "\r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "\r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId);\r",
+                      "\r",
+                      "    if (foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} найден в ответе. Проверяем, что в ответе нет объекта с id project_template_task_templates_id после удаления связи`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(foundObject, null, 2));\r",
+                      "        console.log(\"Полный ответ:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} должен отсутствовать в ответе`).to.not.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2250fb26-cf9d-4fd7-ab65-25faec1a78b8",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}project_templates/{{project_template_id}}/task_templates",
+                  "host": [
+                    "{{url}}project_templates"
+                  ],
+                  "path": [
+                    "{{project_template_id}}",
+                    "task_templates"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2250fb26-cf9d-4fd7-ab65-25faec1a78b8"
+            }
+          ],
+          "id": "f733fc7d-b8b4-4190-93cf-e24f93043b88",
+          "uid": "32335283-f733fc7d-b8b4-4190-93cf-e24f93043b88"
+        }
+      ],
+      "id": "b09c4a13-20f8-4cd9-84e7-74b297dd64b0",
+      "uid": "32335283-b09c4a13-20f8-4cd9-84e7-74b297dd64b0"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "519edd2f-f6ff-454b-82a1-e0ff854eb965",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "38dc580d-a3f9-4ace-a6eb-53968362e5e0",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

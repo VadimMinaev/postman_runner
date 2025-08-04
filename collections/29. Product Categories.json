@@ -1,0 +1,448 @@
+{
+  "info": {
+    "_postman_id": "2eaa1a89-a0d6-4593-a4cb-1b1e5f638155",
+    "name": "29. Product Categories",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-08-01T13:28:43.000Z",
+    "createdAt": "2025-08-01T13:20:17.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-2eaa1a89-a0d6-4593-a4cb-1b1e5f638155"
+  },
+  "item": [
+    {
+      "name": "Product Categories",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List product categories",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "const item = jsonData[0];\r",
+                      "\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = false) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null && !nullable) {\r",
+                      "        errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] !== null && typeof obj[field] !== type) {\r",
+                      "        errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "checkField(item, \"id\", \"number\");\r",
+                      "checkField(item, \"sourceID\", \"string\", true); // null допустим\r",
+                      "checkField(item, \"reference\", \"string\");\r",
+                      "checkField(item, \"name\", \"string\");\r",
+                      "checkField(item, \"group\", \"string\");\r",
+                      "checkField(item, \"rule_set\", \"string\");\r",
+                      "checkField(item, \"created_at\", \"string\");\r",
+                      "checkField(item, \"updated_at\", \"string\");\r",
+                      "checkField(item, \"localized_group\", \"string\");\r",
+                      "checkField(item, \"localized_name\", \"string\");\r",
+                      "checkField(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "583e48e7-a021-42fc-9bf5-cd1c57765729",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}product_categories",
+                  "host": [
+                    "{{url}}product_categories"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-583e48e7-a021-42fc-9bf5-cd1c57765729"
+            },
+            {
+              "name": "Get a single product category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "const item = pm.response.json();\r",
+                      "\r",
+                      "\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = false) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (typeof obj[field] !== type) {\r",
+                      "        errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "checkField(item, \"id\", \"number\");\r",
+                      "checkField(item, \"name\", \"string\");\r",
+                      "checkField(item, \"reference\", \"string\");\r",
+                      "checkField(item, \"rule_set\", \"string\");\r",
+                      "checkField(item, \"created_at\", \"string\");\r",
+                      "checkField(item, \"updated_at\", \"string\");\r",
+                      "checkField(item, \"localized_name\", \"string\");\r",
+                      "checkField(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "checkField(item, \"group\", \"string\", true);\r",
+                      "checkField(item, \"source\", \"string\", true);\r",
+                      "checkField(item, \"sourceID\", \"string\", true);\r",
+                      "checkField(item, \"picture_uri\", \"string\", true);\r",
+                      "checkField(item, \"ui_extension\", \"string\", true);\r",
+                      "checkField(item, \"localized_group\", \"string\", true);\r",
+                      "checkField(item, \"disabled\", \"boolean\");\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "127148c6-0936-4b41-932c-ef9f873dd994",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}product_categories/551",
+                  "host": [
+                    "{{url}}product_categories"
+                  ],
+                  "path": [
+                    "551"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-127148c6-0936-4b41-932c-ef9f873dd994"
+            }
+          ],
+          "id": "ed917fed-ac53-4813-a2b2-4cec32c6891b",
+          "uid": "32335283-ed917fed-ac53-4813-a2b2-4cec32c6891b"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a product category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Response status code is 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "const item = pm.response.json();\r",
+                      "pm.environment.set(\"product_categories_id\", item.id);\r",
+                      "\r",
+                      "\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = false) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (typeof obj[field] !== type) {\r",
+                      "        errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "checkField(item, \"id\", \"number\");\r",
+                      "checkField(item, \"name\", \"string\");\r",
+                      "checkField(item, \"reference\", \"string\");\r",
+                      "checkField(item, \"rule_set\", \"string\");\r",
+                      "checkField(item, \"created_at\", \"string\");\r",
+                      "checkField(item, \"updated_at\", \"string\");\r",
+                      "checkField(item, \"localized_name\", \"string\");\r",
+                      "checkField(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "checkField(item, \"group\", \"string\", true);\r",
+                      "checkField(item, \"source\", \"string\", true);\r",
+                      "checkField(item, \"sourceID\", \"string\", true);\r",
+                      "checkField(item, \"picture_uri\", \"string\", true);\r",
+                      "checkField(item, \"ui_extension\", \"string\", true);\r",
+                      "checkField(item, \"localized_group\", \"string\", true);\r",
+                      "checkField(item, \"disabled\", \"boolean\");\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "41772731-6c8f-48dd-8fcf-7792e7e08bbc",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Док-станция {{$randomWords}}\",\r\n    \"reference\": \"docking_station\",\r\n    \"rule_set\": \"physical_asset\",\r\n    \"localized_name\": \"Док-станция\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}product_categories",
+                  "host": [
+                    "{{url}}product_categories"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-41772731-6c8f-48dd-8fcf-7792e7e08bbc"
+            }
+          ],
+          "id": "afe3f125-3ff9-45af-9934-02de799e1b68",
+          "uid": "32335283-afe3f125-3ff9-45af-9934-02de799e1b68"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a product category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "const item = pm.response.json();\r",
+                      "\r",
+                      "\r",
+                      "console.log(\"Ответ сервера:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "\r",
+                      "function checkField(obj, field, type, nullable = false) {\r",
+                      "    if (!(field in obj)) {\r",
+                      "        errors.push(`Отсутствует поле '${field}'`);\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (obj[field] === null) {\r",
+                      "        if (!nullable) {\r",
+                      "            errors.push(`Поле '${field}' не может быть null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "    if (typeof obj[field] !== type) {\r",
+                      "        errors.push(`Свойство '${field}' ожидалось быть ${type}, а пришло ${typeof obj[field]}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "let errors = [];\r",
+                      "\r",
+                      "checkField(item, \"id\", \"number\");\r",
+                      "checkField(item, \"name\", \"string\");\r",
+                      "checkField(item, \"reference\", \"string\");\r",
+                      "checkField(item, \"rule_set\", \"string\");\r",
+                      "checkField(item, \"created_at\", \"string\");\r",
+                      "checkField(item, \"updated_at\", \"string\");\r",
+                      "checkField(item, \"localized_name\", \"string\");\r",
+                      "checkField(item, \"nodeID\", \"string\");\r",
+                      "\r",
+                      "checkField(item, \"group\", \"string\", true);\r",
+                      "checkField(item, \"source\", \"string\", true);\r",
+                      "checkField(item, \"sourceID\", \"string\", true);\r",
+                      "checkField(item, \"picture_uri\", \"string\", true);\r",
+                      "checkField(item, \"ui_extension\", \"string\", true);\r",
+                      "checkField(item, \"localized_group\", \"string\", true);\r",
+                      "checkField(item, \"disabled\", \"boolean\");\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f840bf2b-e36e-4b34-bd28-e24b818310cc",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Док-станция {{$randomWords}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}product_categories/{{product_categories_id}}",
+                  "host": [
+                    "{{url}}product_categories"
+                  ],
+                  "path": [
+                    "{{product_categories_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f840bf2b-e36e-4b34-bd28-e24b818310cc"
+            }
+          ],
+          "id": "36ff0ec4-2e5e-4609-ac74-26e64d800f59",
+          "uid": "32335283-36ff0ec4-2e5e-4609-ac74-26e64d800f59"
+        }
+      ],
+      "id": "4e3a1e09-6806-4225-9bcf-7335d154fa07",
+      "uid": "32335283-4e3a1e09-6806-4225-9bcf-7335d154fa07"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "519edd2f-f6ff-454b-82a1-e0ff854eb965",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "38dc580d-a3f9-4ace-a6eb-53968362e5e0",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

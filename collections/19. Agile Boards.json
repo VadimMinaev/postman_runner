@@ -1,0 +1,1366 @@
+{
+  "info": {
+    "_postman_id": "b56bed54-8726-487a-a9ac-c5ce0ae85330",
+    "name": "19. Agile Boards",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-28T08:00:35.000Z",
+    "createdAt": "2025-07-25T13:57:58.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-b56bed54-8726-487a-a9ac-c5ce0ae85330"
+  },
+  "item": [
+    {
+      "name": "Agile Boards",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List agile boards",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, path = \"\", optional = false) {\r",
+                      "    const fullPath = path ? `${path}.${field}` : field;\r",
+                      "    const value = obj[field];\r",
+                      "\r",
+                      "    if (value === undefined || value === null) {\r",
+                      "        if (!optional) {\r",
+                      "            errors.push(`Свойство '${fullPath}' обязательно, но отсутствует или равно null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "\r",
+                      "    const actualType = typeof value;\r",
+                      "    if (type === \"array\") {\r",
+                      "        if (!Array.isArray(value)) {\r",
+                      "            errors.push(`Свойство '${fullPath}' ожидалось как массив, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    } else if (actualType !== type) {\r",
+                      "        errors.push(`Свойство '${fullPath}' ожидалось быть ${type}, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "if (!Array.isArray(jsonData)) {\r",
+                      "    errors.push(\"Ожидался массив объектов в корне ответа\");\r",
+                      "} else if (jsonData.length === 0) {\r",
+                      "    errors.push(\"Ответ содержит пустой массив\");\r",
+                      "} else {\r",
+                      "    const item = jsonData[0];\r",
+                      "    checkField(item, \"id\", \"number\");\r",
+                      "    checkField(item, \"name\", \"string\");\r",
+                      "    checkField(item, \"created_at\", \"string\");\r",
+                      "    checkField(item, \"updated_at\", \"string\");\r",
+                      "    checkField(item, \"nodeID\", \"string\");\r",
+                      "    // sourceID пропускаем\r",
+                      "}\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData[0], null, 2));\r",
+                      "}\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "96229c4d-6573-4f0d-8ec8-a94dd923c53a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-96229c4d-6573-4f0d-8ec8-a94dd923c53a"
+            },
+            {
+              "name": "Get a single agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, path = \"\", optional = false) {\r",
+                      "    const fullPath = path ? `${path}.${field}` : field;\r",
+                      "    const value = obj[field];\r",
+                      "\r",
+                      "    if (value === undefined || value === null) {\r",
+                      "        if (!optional) {\r",
+                      "            errors.push(`Свойство '${fullPath}' обязательно, но отсутствует или равно null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "\r",
+                      "    const actualType = typeof value;\r",
+                      "    if (type === \"array\") {\r",
+                      "        if (!Array.isArray(value)) {\r",
+                      "            errors.push(`Свойство '${fullPath}' ожидалось как массив, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    } else if (actualType !== type) {\r",
+                      "        errors.push(`Свойство '${fullPath}' ожидалось быть ${type}, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Основные поля\r",
+                      "checkField(jsonData, \"id\", \"number\");\r",
+                      "checkField(jsonData, \"name\", \"string\");\r",
+                      "checkField(jsonData, \"description\", \"string\");\r",
+                      "checkField(jsonData, \"disabled\", \"boolean\");\r",
+                      "checkField(jsonData, \"created_at\", \"string\");\r",
+                      "checkField(jsonData, \"updated_at\", \"string\");\r",
+                      "checkField(jsonData, \"nodeID\", \"string\");\r",
+                      "checkField(jsonData, \"attachments\", \"array\");\r",
+                      "checkField(jsonData, \"current_sprint\", \"object\", \"\", true);\r",
+                      "checkField(jsonData, \"picture_uri\", \"string\", \"\", true);\r",
+                      "checkField(jsonData, \"source\", \"object\", \"\", true);\r",
+                      "// sourceID не проверяем\r",
+                      "\r",
+                      "// manager\r",
+                      "if (jsonData.manager) {\r",
+                      "    checkField(jsonData.manager, \"id\", \"number\", \"manager\");\r",
+                      "    checkField(jsonData.manager, \"name\", \"string\", \"manager\");\r",
+                      "    checkField(jsonData.manager, \"nodeID\", \"string\", \"manager\");\r",
+                      "\r",
+                      "    if (jsonData.manager.account) {\r",
+                      "        checkField(jsonData.manager.account, \"id\", \"string\", \"manager.account\");\r",
+                      "        checkField(jsonData.manager.account, \"name\", \"string\", \"manager.account\");\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'manager.account' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "} else {\r",
+                      "    errors.push(\"Свойство 'manager' обязательно, но отсутствует\");\r",
+                      "}\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "}\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "97e11266-248e-4f7d-a8e6-a4cc5f650153",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-97e11266-248e-4f7d-a8e6-a4cc5f650153"
+            }
+          ],
+          "id": "4b98223e-f3e2-48c9-8fd1-6da1db95d610",
+          "uid": "32335283-4b98223e-f3e2-48c9-8fd1-6da1db95d610"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(obj, field, type, path = \"\", optional = false) {\r",
+                      "    const fullPath = path ? `${path}.${field}` : field;\r",
+                      "    const value = obj[field];\r",
+                      "\r",
+                      "    if (value === undefined || value === null) {\r",
+                      "        if (!optional) {\r",
+                      "            errors.push(`Свойство '${fullPath}' обязательно, но отсутствует или равно null`);\r",
+                      "        }\r",
+                      "        return;\r",
+                      "    }\r",
+                      "\r",
+                      "    const actualType = typeof value;\r",
+                      "    if (type === \"array\") {\r",
+                      "        if (!Array.isArray(value)) {\r",
+                      "            errors.push(`Свойство '${fullPath}' ожидалось как массив, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    } else if (actualType !== type) {\r",
+                      "        errors.push(`Свойство '${fullPath}' ожидалось быть ${type}, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "}\r",
+                      "\r",
+                      "// Основные поля AgileBoard\r",
+                      "checkField(jsonData, \"id\", \"number\");\r",
+                      "checkField(jsonData, \"name\", \"string\");\r",
+                      "checkField(jsonData, \"description\", \"string\");\r",
+                      "checkField(jsonData, \"disabled\", \"boolean\");\r",
+                      "checkField(jsonData, \"created_at\", \"string\");\r",
+                      "checkField(jsonData, \"updated_at\", \"string\");\r",
+                      "checkField(jsonData, \"nodeID\", \"string\");\r",
+                      "checkField(jsonData, \"attachments\", \"array\");\r",
+                      "checkField(jsonData, \"current_sprint\", \"object\", \"\", true);\r",
+                      "checkField(jsonData, \"picture_uri\", \"string\", \"\", true);\r",
+                      "checkField(jsonData, \"source\", \"string\", \"\", true); // nullable, но если есть — должна быть строкой\r",
+                      "// sourceID — НЕ проверяем\r",
+                      "\r",
+                      "// manager\r",
+                      "if (jsonData.manager) {\r",
+                      "    checkField(jsonData.manager, \"id\", \"number\", \"manager\");\r",
+                      "    checkField(jsonData.manager, \"name\", \"string\", \"manager\");\r",
+                      "    checkField(jsonData.manager, \"nodeID\", \"string\", \"manager\");\r",
+                      "\r",
+                      "    if (jsonData.manager.account) {\r",
+                      "        checkField(jsonData.manager.account, \"id\", \"string\", \"manager.account\");\r",
+                      "        checkField(jsonData.manager.account, \"name\", \"string\", \"manager.account\");\r",
+                      "    } else {\r",
+                      "        errors.push(\"Свойство 'manager.account' обязательно, но отсутствует\");\r",
+                      "    }\r",
+                      "} else {\r",
+                      "    errors.push(\"Свойство 'manager' обязательно, но отсутствует\");\r",
+                      "}\r",
+                      "\r",
+                      "if (errors.length > 0) {\r",
+                      "    console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "    console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "}\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "3c2d07db-a546-4c6d-adef-af15480b54f1",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"Эта Agile-доска определяет для команды разработки приложений структуру рабочего процесса, что позволяет команде ориентироваться на текущие приоритеты и их изменения.\",\r\n    \"disabled\": false,\r\n    \"manager_id\": 1003,\r\n    \"name\": \"Отчеты о доходах {{$randomInt}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}agile_boards",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-3c2d07db-a546-4c6d-adef-af15480b54f1"
+            }
+          ],
+          "id": "bb655c09-c720-493a-9890-211ffc0f07d1",
+          "uid": "32335283-bb655c09-c720-493a-9890-211ffc0f07d1"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "var responseJSON = pm.response.json();\r",
+                      "\r",
+                      "// Test to check that the description property starts with the expected text\r",
+                      "pm.test(\"Description starts with the expected text\", function () {\r",
+                      "    pm.expect(responseJSON.description).to.match(/^В Госдуме готовят закон о полном запрете\\. Скоро будет нельзя.*/);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "0fc6c761-c408-492a-9e17-1988c665496f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"description\": \"В Госдуме готовят закон о полном запрете. Скоро будет нельзя {{$randomInt}}-{{$randomCompanyName}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}agile_boards/1",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-0fc6c761-c408-492a-9e17-1988c665496f"
+            }
+          ],
+          "id": "dcada84f-d67d-4b8e-a287-6730f076bbeb",
+          "uid": "32335283-dcada84f-d67d-4b8e-a287-6730f076bbeb"
+        }
+      ],
+      "id": "50a70d27-0be2-4218-87c6-c5ba05693f1c",
+      "uid": "32335283-50a70d27-0be2-4218-87c6-c5ba05693f1c"
+    },
+    {
+      "name": "Columns",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all columns of an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа (первый элемент массива)\r",
+                      "pm.test(\"Проверка структуры ответа (первый элемент)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    \r",
+                      "    // Проверяем, что ответ — массив\r",
+                      "    pm.expect(Array.isArray(jsonData), \"Ответ должен быть массивом\").to.be.true;\r",
+                      "    \r",
+                      "    // Берем первый элемент массива\r",
+                      "    const item = jsonData[0];\r",
+                      "    \r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(propPath, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        \r",
+                      "        const actualType = typeof value;\r",
+                      "        \r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть массивом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"object\") {\r",
+                      "            if (value !== null && typeof value !== \"object\") {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть объектом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "            // Если объект не null, проверяем его свойства\r",
+                      "            if (value && typeof value === \"object\") {\r",
+                      "                for (const key in value) {\r",
+                      "                    if (key !== \"sourceID\" && key !== \"source\" && key !== \"nodeID\") {\r",
+                      "                        checkType(`${propPath}.${key}`, value[key], typeof value[key], true);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${propPath}' должно быть ${expectedType}, но получено: ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем обязательные поля\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    // nodeID не проверяем по требованию\r",
+                      "\r",
+                      "    // Форматированный вывод ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "        \r",
+                      "        console.log(\"\\nОтвет сервера (первый элемент):\\n\");\r",
+                      "        console.log(JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "35f0bbc4-a52d-4c8a-8080-1410797773dd",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/agile_board_columns",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "agile_board_columns"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-35f0bbc4-a52d-4c8a-8080-1410797773dd"
+            },
+            {
+              "name": "Get a single column of an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа\r",
+                      "pm.test(\"Проверка структуры ответа\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(propPath, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        \r",
+                      "        const actualType = typeof value;\r",
+                      "        \r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть массивом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"object\") {\r",
+                      "            if (value !== null && typeof value !== \"object\") {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть объектом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "            // Если объект не null, проверяем его свойства\r",
+                      "            if (value && typeof value === \"object\") {\r",
+                      "                for (const key in value) {\r",
+                      "                    if (key !== \"sourceID\" && key !== \"source\" && key !== \"nodeID\") {\r",
+                      "                        checkType(`${propPath}.${key}`, value[key], typeof value[key], true);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${propPath}' должно быть ${expectedType}, но получено: ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем обязательные поля\r",
+                      "    checkType(\"action_type\", jsonData.action_type, \"string\");\r",
+                      "    checkType(\"clear_member\", jsonData.clear_member, \"boolean\");\r",
+                      "    checkType(\"created_at\", jsonData.created_at, \"string\");\r",
+                      "    checkType(\"deleted\", jsonData.deleted, \"boolean\");\r",
+                      "    checkType(\"dialog_type\", jsonData.dialog_type, \"string\");\r",
+                      "    checkType(\"id\", jsonData.id, \"number\");\r",
+                      "    checkType(\"member\", jsonData.member, \"object\", true);\r",
+                      "    checkType(\"name\", jsonData.name, \"string\");\r",
+                      "    checkType(\"position\", jsonData.position, \"number\");\r",
+                      "    checkType(\"remove_after\", jsonData.remove_after, \"object\", true);\r",
+                      "    checkType(\"team\", jsonData.team, \"object\", true);\r",
+                      "    checkType(\"updated_at\", jsonData.updated_at, \"string\");\r",
+                      "    checkType(\"wip_limit\", jsonData.wip_limit, \"object\", true);\r",
+                      "    // nodeID не проверяем по требованию\r",
+                      "\r",
+                      "    // Форматированный вывод ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "        \r",
+                      "        console.log(\"\\nОтвет сервера:\\n\");\r",
+                      "        console.log(JSON.stringify(jsonData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "604935df-7efe-47e8-9e2d-e6465d9788a7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/agile_board_columns/1",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "agile_board_columns",
+                    "1"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-604935df-7efe-47e8-9e2d-e6465d9788a7"
+            }
+          ],
+          "id": "81a1ba8f-b5c7-46c7-90d3-6b88558096a5",
+          "uid": "32335283-81a1ba8f-b5c7-46c7-90d3-6b88558096a5"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a column to an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа\r",
+                      "pm.test(\"Проверка структуры ответа\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    pm.environment.set(\"agile_board_columns_id\", jsonData.id);\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(propPath, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        \r",
+                      "        const actualType = typeof value;\r",
+                      "        \r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть массивом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"object\") {\r",
+                      "            if (value !== null && typeof value !== \"object\") {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть объектом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "            // Если объект не null, проверяем его свойства\r",
+                      "            if (value && typeof value === \"object\") {\r",
+                      "                for (const key in value) {\r",
+                      "                    if (key !== \"sourceID\" && key !== \"source\" && key !== \"nodeID\") {\r",
+                      "                        checkType(`${propPath}.${key}`, value[key], typeof value[key], true);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${propPath}' должно быть ${expectedType}, но получено: ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем обязательные поля\r",
+                      "    checkType(\"action_type\", jsonData.action_type, \"string\");\r",
+                      "    checkType(\"clear_member\", jsonData.clear_member, \"boolean\");\r",
+                      "    checkType(\"created_at\", jsonData.created_at, \"string\");\r",
+                      "    checkType(\"deleted\", jsonData.deleted, \"boolean\");\r",
+                      "    checkType(\"dialog_type\", jsonData.dialog_type, \"string\");\r",
+                      "    checkType(\"id\", jsonData.id, \"number\");\r",
+                      "    checkType(\"member\", jsonData.member, \"object\", true);\r",
+                      "    checkType(\"name\", jsonData.name, \"string\");\r",
+                      "    checkType(\"position\", jsonData.position, \"number\");\r",
+                      "    checkType(\"team\", jsonData.team, \"object\", true);\r",
+                      "    checkType(\"updated_at\", jsonData.updated_at, \"string\");\r",
+                      "    checkType(\"wip_limit\", jsonData.wip_limit, \"object\", true);\r",
+                      "    // nodeID не проверяем по требованию\r",
+                      "\r",
+                      "    // Специальная проверка для remove_after\r",
+                      "    const removeAfterValue = jsonData.remove_after;\r",
+                      "    if (removeAfterValue !== null) {\r",
+                      "        if (typeof removeAfterValue !== 'number') {\r",
+                      "            errors.push(`Свойство 'remove_after' должно быть числом или null, но получено: ${typeof removeAfterValue}`);\r",
+                      "        }\r",
+                      "        // Дополнительно можно добавить проверку на целочисленность\r",
+                      "        if (typeof removeAfterValue === 'number' && !Number.isInteger(removeAfterValue)) {\r",
+                      "            errors.push(`Свойство 'remove_after' должно быть целым числом, но получено дробное значение: ${removeAfterValue}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Форматированный вывод ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "        \r",
+                      "        console.log(\"\\nОтвет сервера:\\n\");\r",
+                      "        console.log(JSON.stringify(jsonData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "b0510c67-e5da-49cf-8da7-9f78601aa6cf",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"action_type\": \"none\",\r\n    \"clear_member\": false,\r\n    \"dialog_type\": \"none\",\r\n    \"member\": null,\r\n    \"name\": \"Новое {{$randomInt}}\",\r\n    \"remove_after\": null,\r\n    \"team\": null,\r\n    \"wip_limit\": null\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}agile_boards/1/agile_board_columns",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "agile_board_columns"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-b0510c67-e5da-49cf-8da7-9f78601aa6cf"
+            }
+          ],
+          "id": "63b9ce07-2097-41be-a4bb-c77eeb004827",
+          "uid": "32335283-63b9ce07-2097-41be-a4bb-c77eeb004827"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a column of an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа\r",
+                      "pm.test(\"Проверка структуры ответа\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(propPath, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        \r",
+                      "        const actualType = typeof value;\r",
+                      "        \r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть массивом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"object\") {\r",
+                      "            if (value !== null && typeof value !== \"object\") {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть объектом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "            // Если объект не null, проверяем его свойства\r",
+                      "            if (value && typeof value === \"object\") {\r",
+                      "                for (const key in value) {\r",
+                      "                    if (key !== \"sourceID\" && key !== \"source\" && key !== \"nodeID\") {\r",
+                      "                        checkType(`${propPath}.${key}`, value[key], typeof value[key], true);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${propPath}' должно быть ${expectedType}, но получено: ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем обязательные поля\r",
+                      "    checkType(\"action_type\", jsonData.action_type, \"string\");\r",
+                      "    checkType(\"clear_member\", jsonData.clear_member, \"boolean\");\r",
+                      "    checkType(\"created_at\", jsonData.created_at, \"string\");\r",
+                      "    checkType(\"deleted\", jsonData.deleted, \"boolean\");\r",
+                      "    checkType(\"dialog_type\", jsonData.dialog_type, \"string\");\r",
+                      "    checkType(\"id\", jsonData.id, \"number\");\r",
+                      "    checkType(\"member\", jsonData.member, \"object\", true);\r",
+                      "    checkType(\"name\", jsonData.name, \"string\");\r",
+                      "    checkType(\"position\", jsonData.position, \"number\");\r",
+                      "    checkType(\"team\", jsonData.team, \"object\", true);\r",
+                      "    checkType(\"updated_at\", jsonData.updated_at, \"string\");\r",
+                      "    checkType(\"wip_limit\", jsonData.wip_limit, \"object\", true);\r",
+                      "    // nodeID не проверяем по требованию\r",
+                      "\r",
+                      "    // Обработка remove_after с учетом обоих возможных типов\r",
+                      "    const removeAfterValue = jsonData.remove_after;\r",
+                      "    \r",
+                      "    if (typeof removeAfterValue === 'number') {\r",
+                      "        // Если число, проверяем значение\r",
+                      "        if (removeAfterValue !== 100) {\r",
+                      "            errors.push(`Числовое значение 'remove_after' должно быть равно 100, но получено: ${removeAfterValue}`);\r",
+                      "        }\r",
+                      "    } else if (typeof removeAfterValue === 'object') {\r",
+                      "        // Если объект, проверяем тип\r",
+                      "        checkType(\"remove_after\", removeAfterValue, \"object\", true);\r",
+                      "    } else {\r",
+                      "        errors.push(`Свойство 'remove_after' должно быть числом или объектом, но получено: ${typeof removeAfterValue}`);\r",
+                      "    }\r",
+                      "\r",
+                      "    // Форматированный вывод ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "        \r",
+                      "        console.log(\"\\nОтвет сервера:\\n\");\r",
+                      "        console.log(JSON.stringify(jsonData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2bcada6a-6e08-4b66-9bae-655e98b76705",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"remove_after\": 100\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}agile_boards/1/agile_board_columns/{{agile_board_columns_id}}",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "agile_board_columns",
+                    "{{agile_board_columns_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2bcada6a-6e08-4b66-9bae-655e98b76705"
+            }
+          ],
+          "id": "3287c0b8-ab0d-414d-9cac-653a0255a965",
+          "uid": "32335283-3287c0b8-ab0d-414d-9cac-653a0255a965"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a column from an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "401968b5-0216-4616-880b-16342d3dcff4",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"remove_after\": 100\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}agile_boards/1/agile_board_columns/{{agile_board_columns_id}}",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "agile_board_columns",
+                    "{{agile_board_columns_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-401968b5-0216-4616-880b-16342d3dcff4"
+            },
+            {
+              "name": "Check \"Remove a column from an agile board\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ce7a6f41-3e37-4750-a824-07e7d6ed0c19",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/agile_board_columns/{{agile_board_columns_id}}",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "agile_board_columns",
+                    "{{agile_board_columns_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ce7a6f41-3e37-4750-a824-07e7d6ed0c19"
+            }
+          ],
+          "id": "ce9e3c70-742b-4005-9235-9a5eef0eefa8",
+          "uid": "32335283-ce9e3c70-742b-4005-9235-9a5eef0eefa8"
+        }
+      ],
+      "id": "13c5e8fd-31e2-4379-ad70-bab94909e711",
+      "uid": "32335283-13c5e8fd-31e2-4379-ad70-bab94909e711"
+    },
+    {
+      "name": "Customer Representative SLAs",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a service level agreement to an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "a69491cd-d6e0-4999-8bae-340675b1a5df",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/customer_representative_slas/202",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "customer_representative_slas",
+                    "202"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-a69491cd-d6e0-4999-8bae-340675b1a5df"
+            }
+          ],
+          "id": "edef2c12-408e-4d1e-b86a-2394c79158ae",
+          "uid": "32335283-edef2c12-408e-4d1e-b86a-2394c79158ae"
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all service level agreements of an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверка структуры ответа (первый элемент массива)\r",
+                      "pm.test(\"Проверка структуры ответа (первый элемент)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "\r",
+                      "    // Проверяем, что ответ — массив\r",
+                      "    pm.expect(Array.isArray(jsonData), \"Ответ должен быть массивом\").to.be.true;\r",
+                      "\r",
+                      "    // Проверяем, что массив не пустой\r",
+                      "    pm.expect(jsonData.length > 0, \"Массив должен содержать элементы\").to.be.true;\r",
+                      "\r",
+                      "    // Берем первый элемент массива\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    // Функция для проверки типов\r",
+                      "    function checkType(propPath, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "\r",
+                      "        const actualType = typeof value;\r",
+                      "\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть массивом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (expectedType === \"object\") {\r",
+                      "            if (value !== null && typeof value !== \"object\") {\r",
+                      "                errors.push(`Свойство '${propPath}' должно быть объектом, но получено: ${actualType}`);\r",
+                      "            }\r",
+                      "            // Если объект не null, проверяем его свойства\r",
+                      "            if (value && typeof value === \"object\") {\r",
+                      "                for (const key in value) {\r",
+                      "                    if (key !== \"sourceID\" && key !== \"source\" && key !== \"nodeID\") {\r",
+                      "                        checkType(`${propPath}.${key}`, value[key], typeof value[key], true);\r",
+                      "                    }\r",
+                      "                }\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${propPath}' должно быть ${expectedType}, но получено: ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Проверяем обязательные поля\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"object\", true);\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"status\", item.status, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"service_offering\", item.service_offering, \"object\", true);\r",
+                      "\r",
+                      "    // Форматированный вывод ошибок\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"\\nОшибки валидации:\\n\");\r",
+                      "        errors.forEach((error, index) => {\r",
+                      "            console.error(`${index + 1}. ${error}`);\r",
+                      "        });\r",
+                      "\r",
+                      "        console.log(\"\\nОтвет сервера (первый элемент):\\n\");\r",
+                      "        console.log(JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Все проверки должны пройти успешно\").to.equal(0);\r",
+                      "});\r",
+                      "\r",
+                      "// Проверяем, что в ответе нет объекта с id 202\r",
+                      "pm.test(`Проверить присутсивие объекта с id: 202 в массиве`, function () {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = 202;\r",
+                      "\r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "\r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId);\r",
+                      "\r",
+                      "    if (foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} не найден в ответе. Проверяем, что в ответе есть объект с id 202 после создания связи`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(foundObject, null, 2));\r",
+                      "        console.log(\"Полный ответ:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} должен присутствовать в ответе`).to.exist;\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "16b8f1dd-4ecc-4d0c-85d9-0e5c94272f19",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/customer_representative_slas",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "customer_representative_slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-16b8f1dd-4ecc-4d0c-85d9-0e5c94272f19"
+            }
+          ],
+          "id": "4a6f3074-1c3e-4f6a-a591-83c84f828e74",
+          "uid": "32335283-4a6f3074-1c3e-4f6a-a591-83c84f828e74"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a service level agreement from an agile board",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "61c63eeb-4aa2-4106-bc78-554db0be5f05",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/customer_representative_slas/202",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "customer_representative_slas",
+                    "202"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-61c63eeb-4aa2-4106-bc78-554db0be5f05"
+            },
+            {
+              "name": "Check \"Remove a service level agreement from an agile board\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "// Проверка статуса ответа\r",
+                      "pm.test(\"Статус ответа — 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "// Проверяем, что в ответе нет объекта с id 202\r",
+                      "pm.test(`Проверить отсутствие объекта с id: 202 в массиве`, function () {\r",
+                      "    const responseData = pm.response.json();\r",
+                      "    const targetId = 202;\r",
+                      "\r",
+                      "    // Проверяем, что ответ является массивом\r",
+                      "    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+                      "\r",
+                      "    // Ищем объект с нужным id\r",
+                      "    const foundObject = responseData.find(item => item.id == targetId);\r",
+                      "\r",
+                      "    if (foundObject) {\r",
+                      "        console.error(`Тест провален: объект с id: ${targetId} найден в ответе. Проверяем, что в ответе нет объекта с id 202 после удаления`);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(foundObject, null, 2));\r",
+                      "        console.log(\"Полный ответ:\\n\" + JSON.stringify(responseData, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(foundObject, `Объект с id: ${targetId} не должен присутствовать в ответе`).to.not.exist;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "25d6fd97-32ef-4976-927f-c70fffe1a3a6",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}agile_boards/1/customer_representative_slas",
+                  "host": [
+                    "{{url}}agile_boards"
+                  ],
+                  "path": [
+                    "1",
+                    "customer_representative_slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-25d6fd97-32ef-4976-927f-c70fffe1a3a6"
+            }
+          ],
+          "id": "fd77279a-4514-4234-886c-9caa7278f81b",
+          "uid": "32335283-fd77279a-4514-4234-886c-9caa7278f81b"
+        }
+      ],
+      "id": "7adf8daf-2bb6-402d-b0f4-e2fd8e4c2e60",
+      "uid": "32335283-7adf8daf-2bb6-402d-b0f4-e2fd8e4c2e60"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "ba6edaca-ba4c-4351-b831-e26f63b57bae",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "cd1acac7-b06b-445d-a0be-e6878bfc2afc",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

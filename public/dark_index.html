@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧑‍💻Postman Runner ©️vadmin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-gradient: linear-gradient(135deg, #03197a 0%, #0694a7 100%);
+      --secondary-gradient: linear-gradient(45deg, #39598c, #1d4ed8);
+      --success-gradient: linear-gradient(45deg, #10b981, #059669);
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --text-primary: #760000;
+      --text-secondary: #f1f5f9;
+      --text-muted: rgba(19, 16, 183, 0.7);
+      --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --border-radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Dark theme variables */
+    [data-theme="dark"] {
+      --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      --secondary-gradient: linear-gradient(45deg, #2d3748, #1a202c);
+      --success-gradient: linear-gradient(45deg, #38a169, #2f855a);
+      --glass-bg: rgba(0, 0, 0, 0.3);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--primary-gradient);
+      min-height: 100vh;
+      color: var(--text-primary);
+      padding: 20px;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--glass-border);
+      animation: slideIn 0.6s ease-out;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 8px;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .theme-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: var(--glass-bg);
+      border-radius: 25px;
+      border: 2px solid var(--glass-border);
+      cursor: pointer;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .theme-switch::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(45deg, #fbbf24, #f59e0b);
+      border-radius: 50%;
+      transition: var(--transition);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="dark"] .theme-switch::before {
+      transform: translateX(30px);
+      background: linear-gradient(45deg, #6366f1, #8b5cf6);
+    }
+
+    .theme-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      transition: var(--transition);
+    }
+
+    .sun-icon {
+      left: 6px;
+      opacity: 1;
+    }
+
+    .moon-icon {
+      right: 6px;
+      opacity: 0.3;
+    }
+
+    [data-theme="dark"] .sun-icon {
+      opacity: 0.3;
+    }
+
+    [data-theme="dark"] .moon-icon {
+      opacity: 1;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 30px;
+      width: 200px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      transition: var(--transition);
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(45deg, #ffffff, #f0f9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      border: 1px solid var(--glass-border);
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    [data-theme="dark"] .glass-card:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    .status-connected { background: #10b981; }
+    .status-disconnected { background: #ef4444; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    [data-theme="dark"] input, [data-theme="dark"] select {
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #60a5fa;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+      transform: scale(1.02);
+    }
+
+    [data-theme="dark"] input:focus, [data-theme="dark"] select:focus {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn {
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      background: var(--secondary-gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      font-size: 18px;
+      padding: 18px 36px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(45deg, #1d4ed8, #1e40af);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn.secondary {
+      background: linear-gradient(45deg, #6b7280, #4b5563);
+      color: white;
+      box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+    }
+
+    .btn.secondary:hover {
+      background: linear-gradient(45deg, #4b5563, #374151);
+      box-shadow: 0 8px 25px rgba(107, 114, 128, 0.6);
+    }
+
+    .btn.success {
+      background: var(--success-gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn.success:hover {
+      background: linear-gradient(45deg, #059669, #047857);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    [data-theme="dark"] .card:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .card input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #60a5fa;
+      cursor: pointer;
+      transform: scale(1.2);
+    }
+
+    .card span {
+      flex: 1;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .card::before {
+      content: '📄';
+      margin-right: 8px;
+      font-size: 18px;
+    }
+
+    #output {
+      margin-top: 24px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      color: #22c55e;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      white-space: pre-wrap;
+      font-size: 14px;
+      border: 1px solid var(--glass-border);
+      min-height: 80px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    [data-theme="dark"] #output {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #output:empty::before {
+      content: '💻 Вывод команд будет отображаться здесь...';
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .switcher {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .switcher label {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .switcher select {
+      min-width: 200px;
+    }
+
+    .loading {
+      position: relative;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid var(--text-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      transform: translateY(-50%);
+    }
+
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 12px 20px;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #60a5fa;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 24px;
+        margin: 10px;
+      }
+
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        margin-right: 0;
+        width: 100%;
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .switcher {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .stats-bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--glass-bg);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--glass-border);
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <div class="theme-toggle">
+    <div class="theme-switch" onclick="toggleTheme()">
+      <span class="theme-icon sun-icon">☀️</span>
+      <span class="theme-icon moon-icon">🌙</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <img class="logo" src="Service_Logo_full_.svg" alt="Logo">
+    <h1>🚀 Postman Runner</h1>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value" id="collectionsCount">0</div>
+        <div class="stat-label">Коллекций</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="environmentsCount">0</div>
+        <div class="stat-label">Окружений</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="selectedCount">0</div>
+        <div class="stat-label">Выбрано</div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="glass-card">
+        <div class="form-group">
+          <label for="apiKey">
+            <span class="status-indicator status-disconnected" id="apiStatus"></span>
+            🔑 Postman API Key
+          </label>
+          <input type="text" id="apiKey" placeholder="Введите ваш API ключ...">
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="form-group">
+          <label for="workspaceId">
+            <span class="status-indicator status-disconnected" id="workspaceStatus"></span>
+            🏢 Workspace ID
+          </label>
+          <input type="text" id="workspaceId" placeholder="Введите ID рабочего пространства...">
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="switcher">
+        <label for="modeSwitch">⚙️ Режим работы:</label>
+        <select id="modeSwitch">
+          <option value="api">🌐 API Mode</option>
+          <option value="local">💻 Local Mode</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="form-row">
+        <button class="btn secondary" id="saveConfig">💾 Сохранить конфиг</button>
+        <button class="btn secondary" id="refresh">🔄 Обновить данные</button>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="section-header">
+        <span class="section-title">📋 Коллекции</span>
+        <button class="btn success" id="selectAll">✅ Выбрать все</button>
+      </div>
+      <div id="collections" class="cards"></div>
+    </div>
+
+    <div class="glass-card">
+      <div class="form-group">
+        <label for="envs" class="section-title">🌍 Окружение</label>
+        <select id="envs">
+          <option value="">🚫 (без окружения)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn primary" id="run">▶️ Запустить тестирование</button>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    let collections = [], environments = [], selectedAll = false;
+
+    const apiKeyEl = document.getElementById('apiKey');
+    const workspaceEl = document.getElementById('workspaceId');
+    const modeEl = document.getElementById('modeSwitch');
+    const envSel = document.getElementById('envs');
+    const output = document.getElementById('output');
+    const colDiv = document.getElementById('collections');
+    const apiStatus = document.getElementById('apiStatus');
+    const workspaceStatus = document.getElementById('workspaceStatus');
+    const collectionsCount = document.getElementById('collectionsCount');
+    const environmentsCount = document.getElementById('environmentsCount');
+    const selectedCount = document.getElementById('selectedCount');
+
+    // Theme toggle functionality
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      // Add a subtle animation effect
+      document.body.style.transition = 'all 0.3s ease';
+      setTimeout(() => {
+        document.body.style.transition = '';
+      }, 300);
+    }
+
+    // Load saved theme on page load
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    // Update status indicators
+    function updateStatus() {
+      const hasApiKey = apiKeyEl.value.trim().length > 0;
+      const hasWorkspace = workspaceEl.value.trim().length > 0;
+      
+      apiStatus.className = `status-indicator ${hasApiKey ? 'status-connected' : 'status-disconnected'}`;
+      workspaceStatus.className = `status-indicator ${hasWorkspace ? 'status-connected' : 'status-disconnected'}`;
+      
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      const selected = document.querySelectorAll('#collections input:checked').length;
+      selectedCount.textContent = selected;
+    }
+
+    // Add event listeners for status updates
+    apiKeyEl.addEventListener('input', updateStatus);
+    workspaceEl.addEventListener('input', updateStatus);
+
+    async function loadConfig() {
+      try {
+        const res = await fetch('/config');
+        const data = await res.json();
+        apiKeyEl.value = data.apiKey || '';
+        workspaceEl.value = data.workspaceId || '';
+        modeEl.value = data.useApiMode ? 'api' : 'local';
+        updateStatus();
+      } catch (err) {
+        output.textContent = '⚠️ Ошибка загрузки конфигурации';
+      }
+    }
+
+    async function saveConfig() {
+      const btn = document.getElementById('saveConfig');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      
+      try {
+        await fetch('/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            apiKey: apiKeyEl.value,
+            workspaceId: workspaceEl.value,
+            useApi: modeEl.value === 'api'
+          })
+        });
+        output.textContent = '✅ Конфигурация успешно сохранена';
+        updateStatus();
+        await loadData();
+      } catch (err) {
+        output.textContent = '⚠️ Ошибка сохранения конфигурации';
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    async function loadData() {
+      try {
+        output.textContent = '🔄 Загрузка данных...';
+        const [coll, env] = await Promise.all([
+          fetch('/collections').then(r => r.json()),
+          fetch('/environments').then(r => r.json())
+        ]);
+        collections = coll;
+        environments = env;
+
+        // Update stats
+        collectionsCount.textContent = coll.length;
+        environmentsCount.textContent = env.length;
+
+        colDiv.innerHTML = '';
+        coll.forEach(({ name }, index) => {
+          const cleaned = name.replace(/\.json$/, '');
+
+          const el = document.createElement('label');
+          el.className = 'card';
+          el.style.animationDelay = `${index * 0.1}s`;
+          el.innerHTML = `
+            <input type="checkbox" value="${name}" data-name="${name}" onchange="updateSelectedCount()">
+            <span>${cleaned}</span>
+          `;
+          colDiv.appendChild(el);
+        });
+
+        envSel.innerHTML = '<option value="">🚫 (без окружения)</option>';
+        env.forEach(({ name }) => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = `🌍 ${name}`;
+          envSel.appendChild(opt);
+        });
+
+        output.textContent = `✅ Загружено ${coll.length} коллекций и ${env.length} окружений`;
+        updateSelectedCount();
+      } catch (err) {
+        output.textContent = '⚠️ Ошибка загрузки данных';
+      }
+    }
+
+    document.getElementById('saveConfig').onclick = saveConfig;
+
+    document.getElementById('refresh').onclick = async () => {
+      const btn = document.getElementById('refresh');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      
+      try {
+        output.textContent = '🔄 Обновление данных...';
+        const res = await fetch('/refresh', { method: 'POST' });
+        const json = await res.json();
+        if (json.updated) {
+          await loadData();
+          output.textContent = '✅ Данные успешно обновлены!';
+        } else {
+          output.textContent = '⚠️ Ошибка обновления данных';
+        }
+      } catch (err) {
+        output.textContent = '❌ Ошибка соединения при обновлении';
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    };
+
+    document.getElementById('selectAll').onclick = () => {
+      selectedAll = !selectedAll;
+      const checkboxes = document.querySelectorAll('#collections input[type=checkbox]');
+      checkboxes.forEach((cb, index) => {
+        setTimeout(() => {
+          cb.checked = selectedAll;
+          updateSelectedCount();
+        }, index * 50);
+      });
+
+      const btn = document.getElementById('selectAll');
+      btn.textContent = selectedAll ? '❌ Снять все' : '✅ Выбрать все';
+    };
+
+    document.getElementById('run').onclick = async () => {
+      const checked = Array.from(document.querySelectorAll('#collections input:checked'))
+        .map(cb => {
+          const item = collections.find(c => c.name === cb.dataset.name);
+          return { name: item.name, uid: item.uid };
+        });
+
+      const envName = envSel.value;
+      const env = environments.find(e => e.name === envName);
+      
+      if (!checked.length) {
+        output.textContent = '❗ Выберите хотя бы одну коллекцию для запуска';
+        return;
+      }
+
+      const btn = document.getElementById('run');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      output.textContent = `⏳ Запуск ${checked.length} коллекций...\n${envName ? `🌍 Окружение: ${envName}` : '🚫 Без окружения'}`;
+
+      try {
+        const res = await fetch('/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ files: checked, environment: env || null })
+        });
+
+        const result = await res.json();
+        output.textContent = res.ok 
+          ? `✅ Тестирование завершено успешно!\n🎯 Allure отчёт откроется автоматически\n📊 Обработано коллекций: ${checked.length}` 
+          : `❌ Ошибка выполнения:\n${result.error}`;
+      } catch (err) {
+        output.textContent = '❌ Ошибка соединения с сервером';
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    };
+
+    // Initialize theme and load data
+    loadTheme();
+    loadConfig().then(loadData);
+  </script>
+</body>
+</html>

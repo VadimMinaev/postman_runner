@@ -1,0 +1,827 @@
+{
+  "info": {
+    "_postman_id": "b60eca3a-af98-4afc-9f26-296fc8036f2e",
+    "name": "15. Sites",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-24T06:36:45.000Z",
+    "createdAt": "2025-07-23T12:16:36.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-b60eca3a-af98-4afc-9f26-296fc8036f2e"
+  },
+  "item": [
+    {
+      "name": "Sites",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List sites",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры Site (первый элемент массива)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData[0]; // проверяем только первый объект\r",
+                      "    pm.environment.set(\"site_id_1\", item.id);\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    // // account\r",
+                      "    // pm.expect(item).to.have.property(\"account\");\r",
+                      "    // const account = item.account;\r",
+                      "    // checkType(\"account.id\", account.id, \"string\");\r",
+                      "    // checkType(\"account.name\", account.name, \"string\");\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "7eb31529-189a-4868-b340-73aa8674289a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}sites",
+                  "host": [
+                    "{{url}}sites"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-7eb31529-189a-4868-b340-73aa8674289a"
+            },
+            {
+              "name": "Get a single site",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры Site (одиночный объект)\", function () {\r",
+                      "    const item = pm.response.json();\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"address\", item.address, \"string\");\r",
+                      "    checkType(\"city\", item.city, \"string\");\r",
+                      "    checkType(\"country\", item.country, \"string\");\r",
+                      "    checkType(\"zip\", item.zip, \"string\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "\r",
+                      "    checkType(\"disabled\", item.disabled, \"boolean\");\r",
+                      "    checkType(\"integration\", item.integration, \"boolean\");\r",
+                      "\r",
+                      "    checkType(\"picture_uri\", item.picture_uri, \"string\", true);\r",
+                      "    checkType(\"remarks\", item.remarks, \"string\", true);\r",
+                      "    checkType(\"source\", item.source, \"string\", true);\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"state\", item.state, \"string\", true);\r",
+                      "\r",
+                      "    checkType(\"attachments\", item.attachments, \"array\");\r",
+                      "    checkType(\"custom_fields\", item.custom_fields, \"array\");\r",
+                      "\r",
+                      "    // custom_fields: каждый элемент должен иметь id (string) и value (может быть null)\r",
+                      "    if (item.custom_fields) {\r",
+                      "        item.custom_fields.forEach((field, index) => {\r",
+                      "            checkType(`custom_fields[${index}].id`, field.id, \"string\");\r",
+                      "            // value может быть любого типа, кроме undefined — просто проверим наличие ключа\r",
+                      "            if (!field.hasOwnProperty(\"value\")) {\r",
+                      "                errors.push(`custom_fields[${index}] должен содержать поле 'value'`);\r",
+                      "            }\r",
+                      "        });\r",
+                      "    }\r",
+                      "\r",
+                      "    // account\r",
+                      "    pm.expect(item).to.have.property(\"account\");\r",
+                      "    const account = item.account;\r",
+                      "    checkType(\"account.id\", account.id, \"string\");\r",
+                      "    checkType(\"account.name\", account.name, \"string\");\r",
+                      "\r",
+                      "    // ui_extension\r",
+                      "    if (item.ui_extension) {\r",
+                      "        const ext = item.ui_extension;\r",
+                      "        checkType(\"ui_extension.id\", ext.id, \"number\");\r",
+                      "        checkType(\"ui_extension.name\", ext.name, \"string\");\r",
+                      "        checkType(\"ui_extension.category\", ext.category, \"string\");\r",
+                      "        checkType(\"ui_extension.title\", ext.title, \"string\");\r",
+                      "        checkType(\"ui_extension.localized_title\", ext.localized_title, \"string\");\r",
+                      "        checkType(\"ui_extension.nodeID\", ext.nodeID, \"string\");\r",
+                      "\r",
+                      "        // ui_extension.account\r",
+                      "        if (ext.account) {\r",
+                      "            checkType(\"ui_extension.account.id\", ext.account.id, \"string\");\r",
+                      "            checkType(\"ui_extension.account.name\", ext.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "041eaa88-b5a5-45ea-8b22-d152500f8003",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}sites/10",
+                  "host": [
+                    "{{url}}sites"
+                  ],
+                  "path": [
+                    "10"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-041eaa88-b5a5-45ea-8b22-d152500f8003"
+            }
+          ],
+          "id": "74ca422b-6c49-4d54-abe8-a67e72f6cee8",
+          "uid": "32335283-74ca422b-6c49-4d54-abe8-a67e72f6cee8"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a site",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры Site (одиночный объект)\", function () {\r",
+                      "    const item = pm.response.json();\r",
+                      "    pm.environment.set(\"site_id\", item.id);\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"address\", item.address, \"string\");\r",
+                      "    checkType(\"city\", item.city, \"string\");\r",
+                      "    checkType(\"country\", item.country, \"string\");\r",
+                      "    checkType(\"zip\", item.zip, \"string\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"disabled\", item.disabled, \"boolean\");\r",
+                      "    checkType(\"integration\", item.integration, \"boolean\");\r",
+                      "    checkType(\"picture_uri\", item.picture_uri, \"string\", true);\r",
+                      "    checkType(\"remarks\", item.remarks, \"string\", true);\r",
+                      "    checkType(\"source\", item.source, \"string\", true);\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"state\", item.state, \"string\", true);\r",
+                      "    checkType(\"attachments\", item.attachments, \"array\");\r",
+                      "\r",
+                      "\r",
+                      "    // custom_fields: каждый элемент должен иметь id (string) и value (может быть null)\r",
+                      "    if (item.custom_fields) {\r",
+                      "        item.custom_fields.forEach((field, index) => {\r",
+                      "            checkType(`custom_fields[${index}].id`, field.id, \"string\");\r",
+                      "            // value может быть любого типа, кроме undefined — просто проверим наличие ключа\r",
+                      "            if (!field.hasOwnProperty(\"value\")) {\r",
+                      "                errors.push(`custom_fields[${index}] должен содержать поле 'value'`);\r",
+                      "            }\r",
+                      "        });\r",
+                      "    }\r",
+                      "\r",
+                      "    // account\r",
+                      "    if (item.account) {\r",
+                      "        pm.expect(item).to.have.property(\"account\");\r",
+                      "        const account = item.account;\r",
+                      "        checkType(\"account.id\", account.id, \"string\");\r",
+                      "        checkType(\"account.name\", account.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // ui_extension\r",
+                      "    if (item.ui_extension) {\r",
+                      "        const ext = item.ui_extension;\r",
+                      "        checkType(\"ui_extension.id\", ext.id, \"number\");\r",
+                      "        checkType(\"ui_extension.name\", ext.name, \"string\");\r",
+                      "        checkType(\"ui_extension.category\", ext.category, \"string\");\r",
+                      "        checkType(\"ui_extension.title\", ext.title, \"string\");\r",
+                      "        checkType(\"ui_extension.localized_title\", ext.localized_title, \"string\");\r",
+                      "        checkType(\"ui_extension.nodeID\", ext.nodeID, \"string\");\r",
+                      "\r",
+                      "        // ui_extension.account\r",
+                      "        if (ext.account) {\r",
+                      "            checkType(\"ui_extension.account.id\", ext.account.id, \"string\");\r",
+                      "            checkType(\"ui_extension.account.name\", ext.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "89002c0a-eefb-42a4-9a44-f15cf7bf9ae0",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"address\": \"Большой Спасоглинищевский пер., 12, Москва, 101000\",\r\n    \"attachments\": [],\r\n    \"city\": \"Москва\",\r\n    \"country\": \"RU\",\r\n    \"disabled\": false,\r\n    \"name\": \"Главный офис компании {{$randomCompanyName}} АО ПроПродукт\",\r\n    \"time_zone\": \"Moscow\",\r\n    \"zip\": \"101000\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}sites",
+                  "host": [
+                    "{{url}}sites"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-89002c0a-eefb-42a4-9a44-f15cf7bf9ae0"
+            }
+          ],
+          "id": "c1873c4b-6088-4f9f-97e1-b9e326a67657",
+          "uid": "32335283-c1873c4b-6088-4f9f-97e1-b9e326a67657"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a site",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры Site (одиночный объект)\", function () {\r",
+                      "    const item = pm.response.json();\r",
+                      "    pm.environment.set(\"site_id\", item.id);\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"address\", item.address, \"string\");\r",
+                      "    checkType(\"city\", item.city, \"string\");\r",
+                      "    checkType(\"country\", item.country, \"string\");\r",
+                      "    checkType(\"zip\", item.zip, \"string\");\r",
+                      "    checkType(\"time_zone\", item.time_zone, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"disabled\", item.disabled, \"boolean\");\r",
+                      "    checkType(\"integration\", item.integration, \"boolean\");\r",
+                      "    checkType(\"picture_uri\", item.picture_uri, \"string\", true);\r",
+                      "    checkType(\"remarks\", item.remarks, \"string\", true);\r",
+                      "    checkType(\"source\", item.source, \"string\", true);\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"state\", item.state, \"string\", true);\r",
+                      "    checkType(\"attachments\", item.attachments, \"array\");\r",
+                      "    if (item.city !== \"Питер\") {\r",
+                      "        errors.push(`Свойство city должно быть равно \"Питер\", но получено \"${item.city}\"`);\r",
+                      "    }\r",
+                      "\r",
+                      "\r",
+                      "    // custom_fields: каждый элемент должен иметь id (string) и value (может быть null)\r",
+                      "    if (item.custom_fields) {\r",
+                      "        item.custom_fields.forEach((field, index) => {\r",
+                      "            checkType(`custom_fields[${index}].id`, field.id, \"string\");\r",
+                      "            // value может быть любого типа, кроме undefined — просто проверим наличие ключа\r",
+                      "            if (!field.hasOwnProperty(\"value\")) {\r",
+                      "                errors.push(`custom_fields[${index}] должен содержать поле 'value'`);\r",
+                      "            }\r",
+                      "        });\r",
+                      "    }\r",
+                      "\r",
+                      "    // account\r",
+                      "    if (item.account) {\r",
+                      "        pm.expect(item).to.have.property(\"account\");\r",
+                      "        const account = item.account;\r",
+                      "        checkType(\"account.id\", account.id, \"string\");\r",
+                      "        checkType(\"account.name\", account.name, \"string\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // ui_extension\r",
+                      "    if (item.ui_extension) {\r",
+                      "        const ext = item.ui_extension;\r",
+                      "        checkType(\"ui_extension.id\", ext.id, \"number\");\r",
+                      "        checkType(\"ui_extension.name\", ext.name, \"string\");\r",
+                      "        checkType(\"ui_extension.category\", ext.category, \"string\");\r",
+                      "        checkType(\"ui_extension.title\", ext.title, \"string\");\r",
+                      "        checkType(\"ui_extension.localized_title\", ext.localized_title, \"string\");\r",
+                      "        checkType(\"ui_extension.nodeID\", ext.nodeID, \"string\");\r",
+                      "\r",
+                      "        // ui_extension.account\r",
+                      "        if (ext.account) {\r",
+                      "            checkType(\"ui_extension.account.id\", ext.account.id, \"string\");\r",
+                      "            checkType(\"ui_extension.account.name\", ext.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "eccc7b45-3f0f-4a6d-b2ad-d7b437abe4b1",
+                    "exec": [
+                      "pm.request.headers.add({key: 'User-Agent', value: 'VADMIN@RR-TH.COM'});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "51f7eb28-1df7-4a3f-99ea-6d1442c13d00",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"city\": \"Питер\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}sites/{{site_id}}",
+                  "host": [
+                    "{{url}}sites"
+                  ],
+                  "path": [
+                    "{{site_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-51f7eb28-1df7-4a3f-99ea-6d1442c13d00"
+            }
+          ],
+          "id": "50b95a03-1b1a-4ffe-bad8-2ee8988ebd9a",
+          "uid": "32335283-50b95a03-1b1a-4ffe-bad8-2ee8988ebd9a"
+        }
+      ],
+      "id": "4fa67154-3d55-4232-9ca4-03d94187ef0c",
+      "uid": "32335283-4fa67154-3d55-4232-9ca4-03d94187ef0c"
+    },
+    {
+      "name": "People",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List people of a site",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры Person (первый элемент массива)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData[0]; // проверяем только первого человека\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    if (item) { // Check if item exists before accessing properties\r",
+                      "        checkType(\"id\", item.id, \"number\");\r",
+                      "        checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "        checkType(\"primary_email\", item.primary_email, \"string\");\r",
+                      "        checkType(\"name\", item.name, \"string\");\r",
+                      "        checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "        checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "        checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "        // account\r",
+                      "        pm.expect(item).to.have.property(\"account\");\r",
+                      "        const account = item.account;\r",
+                      "        checkType(\"account.id\", account.id, \"string\");\r",
+                      "        checkType(\"account.name\", account.name, \"string\");\r",
+                      "\r",
+                      "        // organization\r",
+                      "        if (item.organization) {\r",
+                      "            const org = item.organization;\r",
+                      "            checkType(\"organization.id\", org.id, \"number\");\r",
+                      "            checkType(\"organization.name\", org.name, \"string\");\r",
+                      "            checkType(\"organization.nodeID\", org.nodeID, \"string\");\r",
+                      "\r",
+                      "            if (org.account) {\r",
+                      "                checkType(\"organization.account.id\", org.account.id, \"string\");\r",
+                      "                checkType(\"organization.account.name\", org.account.name, \"string\");\r",
+                      "            }\r",
+                      "        }\r",
+                      "\r",
+                      "        // site\r",
+                      "        if (item.site) {\r",
+                      "            const site = item.site;\r",
+                      "            checkType(\"site.id\", site.id, \"number\");\r",
+                      "            checkType(\"site.name\", site.name, \"string\");\r",
+                      "            checkType(\"site.nodeID\", site.nodeID, \"string\");\r",
+                      "\r",
+                      "            if (site.account) {\r",
+                      "                checkType(\"site.account.id\", site.account.id, \"string\");\r",
+                      "                checkType(\"site.account.name\", site.account.name, \"string\");\r",
+                      "            }\r",
+                      "        }\r",
+                      "\r",
+                      "        // manager (может быть null)\r",
+                      "        checkType(\"manager\", item.manager, \"object\", true);\r",
+                      "    } else {\r",
+                      "        errors.push(\"Первый элемент массива отсутствует.\");\r",
+                      "    }\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\", JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "7568c5e5-cf1b-4fcd-bd95-aba9d7158601",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}sites/10/people",
+                  "host": [
+                    "{{url}}sites"
+                  ],
+                  "path": [
+                    "10",
+                    "people"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-7568c5e5-cf1b-4fcd-bd95-aba9d7158601"
+            }
+          ],
+          "id": "1077a7cf-08d7-431e-9bf1-56772579d359",
+          "uid": "32335283-1077a7cf-08d7-431e-9bf1-56772579d359"
+        }
+      ],
+      "id": "a1540990-10cf-4e10-914e-9c3cb183f14f",
+      "uid": "32335283-a1540990-10cf-4e10-914e-9c3cb183f14f"
+    },
+    {
+      "name": "Service Level Agreements",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "ist service level agreements of a site",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры SLA (первый элемент массива)\", function () {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    const item = jsonData[0];\r",
+                      "    const errors = [];\r",
+                      "\r",
+                      "    function checkType(prop, value, expectedType, nullable = false) {\r",
+                      "        if (nullable && value === null) return;\r",
+                      "        const actualType = typeof value;\r",
+                      "        if (expectedType === \"array\") {\r",
+                      "            if (!Array.isArray(value)) {\r",
+                      "                errors.push(`Свойство '${prop}' ожидалось быть array, а пришло ${actualType}`);\r",
+                      "            }\r",
+                      "        } else if (actualType !== expectedType) {\r",
+                      "            errors.push(`Свойство '${prop}' ожидалось быть ${expectedType}, а пришло ${actualType}`);\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Основные поля SLA\r",
+                      "    checkType(\"id\", item.id, \"number\");\r",
+                      "    checkType(\"sourceID\", item.sourceID, \"string\", true);\r",
+                      "    checkType(\"name\", item.name, \"string\");\r",
+                      "    checkType(\"status\", item.status, \"string\");\r",
+                      "    checkType(\"created_at\", item.created_at, \"string\");\r",
+                      "    checkType(\"updated_at\", item.updated_at, \"string\");\r",
+                      "    checkType(\"nodeID\", item.nodeID, \"string\");\r",
+                      "\r",
+                      "    // account\r",
+                      "    pm.expect(item).to.have.property(\"account\");\r",
+                      "    checkType(\"account.id\", item.account.id, \"string\");\r",
+                      "    checkType(\"account.name\", item.account.name, \"string\");\r",
+                      "\r",
+                      "    // service_offering\r",
+                      "    pm.expect(item).to.have.property(\"service_offering\");\r",
+                      "    const offering = item.service_offering;\r",
+                      "    checkType(\"service_offering.id\", offering.id, \"number\");\r",
+                      "    checkType(\"service_offering.name\", offering.name, \"string\");\r",
+                      "    checkType(\"service_offering.nodeID\", offering.nodeID, \"string\");\r",
+                      "\r",
+                      "    // service_offering.account\r",
+                      "    checkType(\"service_offering.account.id\", offering.account.id, \"string\");\r",
+                      "    checkType(\"service_offering.account.name\", offering.account.name, \"string\");\r",
+                      "\r",
+                      "    // service\r",
+                      "    pm.expect(offering).to.have.property(\"service\");\r",
+                      "    const service = offering.service;\r",
+                      "    checkType(\"service.id\", service.id, \"number\");\r",
+                      "    checkType(\"service.name\", service.name, \"string\");\r",
+                      "    checkType(\"service.localized_name\", service.localized_name, \"string\");\r",
+                      "    checkType(\"service.nodeID\", service.nodeID, \"string\");\r",
+                      "\r",
+                      "    // service.account\r",
+                      "    checkType(\"service.account.id\", service.account.id, \"string\");\r",
+                      "    checkType(\"service.account.name\", service.account.name, \"string\");\r",
+                      "\r",
+                      "    // provider\r",
+                      "    if (service.provider) {\r",
+                      "        const provider = service.provider;\r",
+                      "        checkType(\"provider.id\", provider.id, \"number\");\r",
+                      "        checkType(\"provider.name\", provider.name, \"string\");\r",
+                      "        checkType(\"provider.nodeID\", provider.nodeID, \"string\");\r",
+                      "\r",
+                      "        // provider.account\r",
+                      "        if (provider.account) {\r",
+                      "            checkType(\"provider.account.id\", provider.account.id, \"string\");\r",
+                      "            checkType(\"provider.account.name\", provider.account.name, \"string\");\r",
+                      "        }\r",
+                      "    }\r",
+                      "\r",
+                      "    // Валидация\r",
+                      "    if (errors.length > 0) {\r",
+                      "        console.error(\"Ошибки валидации:\\n\" + errors.join(\"\\n\"));\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "    }\r",
+                      "\r",
+                      "    pm.expect(errors.length, \"Должно быть 0 ошибок валидации\").to.equal(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "c0e63ff4-0d0c-4782-a5d7-23ed6877db9e",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}sites/10/slas",
+                  "host": [
+                    "{{url}}sites"
+                  ],
+                  "path": [
+                    "10",
+                    "slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-c0e63ff4-0d0c-4782-a5d7-23ed6877db9e"
+            }
+          ],
+          "id": "cdf049d0-8b89-479f-a3ce-78df1e543a7f",
+          "uid": "32335283-cdf049d0-8b89-479f-a3ce-78df1e543a7f"
+        }
+      ],
+      "id": "ae8b8ef3-3601-47e5-9df6-436e925f901c",
+      "uid": "32335283-ae8b8ef3-3601-47e5-9df6-436e925f901c"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "e50dd2f6-a176-4e49-b458-081ae5ac1324",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "58afd237-8e24-4b4b-99ee-eb2c8d8badab",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

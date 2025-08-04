@@ -1,0 +1,2882 @@
+{
+  "info": {
+    "_postman_id": "f553d9e3-f48e-43c1-a7e8-0dd6e11d0c83",
+    "name": "08. Requests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "updatedAt": "2025-07-30T16:21:08.000Z",
+    "createdAt": "2025-07-10T11:51:39.000Z",
+    "lastUpdatedBy": "32335283",
+    "uid": "32335283-f553d9e3-f48e-43c1-a7e8-0dd6e11d0c83"
+  },
+  "item": [
+    {
+      "name": "Requests",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List Requests",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус ответа 200\", function () {\r",
+                      "  pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const json = pm.response.json();\r",
+                      "const errors = [];\r",
+                      "\r",
+                      "function checkField(field, expectedType, nullable = false) {\r",
+                      "  if (nullable && field === null) return;\r",
+                      "  if (!nullable && field === null) {\r",
+                      "    errors.push(`Поле не может быть null`);\r",
+                      "    return;\r",
+                      "  }\r",
+                      "\r",
+                      "  const actualType = typeof field;\r",
+                      "  if (expectedType === 'array') {\r",
+                      "    if (!Array.isArray(field)) {\r",
+                      "      errors.push(`Ожидался тип array, а пришло ${actualType}`);\r",
+                      "    }\r",
+                      "  } else if (actualType !== expectedType) {\r",
+                      "    errors.push(`Ожидался тип ${expectedType}, а пришло ${actualType}`);\r",
+                      "  }\r",
+                      "}\r",
+                      "\r",
+                      "const item = Array.isArray(json) ? json[0] : json;\r",
+                      "\r",
+                      "// Основные поля\r",
+                      "checkField(item.id, \"number\");\r",
+                      "// sourceID не проверяем\r",
+                      "checkField(item.subject, \"string\");\r",
+                      "checkField(item.category, \"string\");\r",
+                      "checkField(item.impact, \"string\");\r",
+                      "checkField(item.status, \"string\");\r",
+                      "checkField(item.next_target_at, \"string\");\r",
+                      "checkField(item.completed_at, \"string\", true);\r",
+                      "\r",
+                      "// team\r",
+                      "if (item.team) {\r",
+                      "  checkField(item.team.id, \"number\");\r",
+                      "  checkField(item.team.name, \"string\");\r",
+                      "  checkField(item.team.nodeID, \"string\");\r",
+                      "}\r",
+                      "\r",
+                      "// member — nullable\r",
+                      "if (item.member !== null) {\r",
+                      "  checkField(item.member, \"object\");\r",
+                      "}\r",
+                      "\r",
+                      "// grouped_into — nullable\r",
+                      "if (item.grouped_into !== null) {\r",
+                      "  checkField(item.grouped_into, \"object\");\r",
+                      "}\r",
+                      "\r",
+                      "// service_instance\r",
+                      "if (item.service_instance) {\r",
+                      "  checkField(item.service_instance.id, \"number\");\r",
+                      "  checkField(item.service_instance.name, \"string\");\r",
+                      "  checkField(item.service_instance.localized_name, \"string\");\r",
+                      "  checkField(item.service_instance.nodeID, \"string\");\r",
+                      "}\r",
+                      "\r",
+                      "checkField(item.created_at, \"string\");\r",
+                      "checkField(item.updated_at, \"string\");\r",
+                      "checkField(item.nodeID, \"string\");\r",
+                      "\r",
+                      "if (errors.length) {\r",
+                      "  console.log(\"Ошибки валидации:\\n\" + JSON.stringify(errors, null, 2));\r",
+                      "  console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "}\r",
+                      "\r",
+                      "pm.expect(errors.length).to.eql(0);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "f9c66b02-f951-4093-8132-90bc1d2ada9c",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests",
+                  "host": [
+                    "{{url}}requests"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-f9c66b02-f951-4093-8132-90bc1d2ada9c"
+            },
+            {
+              "name": "Get a Request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Проверка структуры объекта Request\", () => {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ (JSON):\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "    try {\r",
+                      "        const item = jsonData;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"addressed\").that.is.a(\"boolean\");\r",
+                      "        pm.expect(item).to.have.property(\"agile_board\");\r",
+                      "        pm.expect(item.agile_board === null || typeof item.agile_board === \"object\").to.be.true;\r",
+                      "        pm.expect(item).to.have.property(\"agile_board_column\");\r",
+                      "        pm.expect(item.agile_board_column === null || typeof item.agile_board_column === \"object\").to.be.true;\r",
+                      "        pm.expect(item).to.have.property(\"agile_board_column_position\");\r",
+                      "        pm.expect(item.agile_board_column_position === null || typeof item.agile_board_column_position === \"number\").to.be.true;\r",
+                      "        pm.expect(item).to.have.property(\"assignment_count\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"attachments\").that.is.an(\"array\");\r",
+                      "        pm.expect(item).to.have.property(\"category\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"checked_items\");\r",
+                      "        pm.expect(item.checked_items === null || typeof item.checked_items === \"number\").to.be.true;\r",
+                      "        pm.expect(item).to.have.property(\"ci\");\r",
+                      "        pm.expect(item.ci === null || typeof item.ci === \"object\").to.be.true;\r",
+                      "        pm.expect(item).to.have.property(\"ci_id\");\r",
+                      "        pm.expect(item.ci_id === null || typeof item.ci_id === \"number\").to.be.true;\r",
+                      "        pm.expect(item).to.have.property(\"completed_at\");\r",
+                      "        pm.expect(item.completed_at === null || typeof item.completed_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"created_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.created_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.created_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.created_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"custom_fields\");\r",
+                      "        pm.expect(item.custom_fields === null || typeof item.custom_fields === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"desired_completion_at\");\r",
+                      "        pm.expect(item.desired_completion_at === null || typeof item.desired_completion_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"downtime_end_at\");\r",
+                      "        pm.expect(item.downtime_end_at === null || typeof item.downtime_end_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"downtime_start_at\");\r",
+                      "        pm.expect(item.downtime_start_at === null || typeof item.downtime_start_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"feedback_on_knowledge_article\");\r",
+                      "        pm.expect(item.feedback_on_knowledge_article === null || typeof item.feedback_on_knowledge_article === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"grouped_into\");\r",
+                      "        pm.expect(item.grouped_into === null || typeof item.grouped_into === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"grouping\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"impact\");\r",
+                      "        pm.expect(item.impact === null || typeof item.impact === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"knowledge_article\");\r",
+                      "        pm.expect(item.knowledge_article === null || typeof item.knowledge_article === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"major_incident_status\");\r",
+                      "        pm.expect(item.major_incident_status === null || typeof item.major_incident_status === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"member\");\r",
+                      "        pm.expect(item.member === null || typeof item.member === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"new_assignment\").that.is.a(\"boolean\");\r",
+                      "        pm.expect(item).to.have.property(\"next_target_at\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"organization\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.organization).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.organization).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.organization).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.organization.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.organization.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.organization).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"planned_effort\");\r",
+                      "        pm.expect(item.planned_effort === null || typeof item.planned_effort === \"number\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"problem\");\r",
+                      "        pm.expect(item.problem === null || typeof item.problem === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"product_backlog\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.product_backlog).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.product_backlog).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.product_backlog).to.have.property(\"sourceID\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.product_backlog).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"product_backlog_estimate\").that.is.a(\"number\");\r",
+                      "        pm.expect(item).to.have.property(\"product_backlog_position\").that.is.a(\"number\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"project\");\r",
+                      "        pm.expect(item.project === null || typeof item.project === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"provider_not_accountable\").that.is.a(\"boolean\");\r",
+                      "        pm.expect(item).to.have.property(\"provider_was_not_accountable\").that.is.a(\"boolean\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"reopen_count\").that.is.a(\"number\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"requested_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.requested_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.requested_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.requested_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.requested_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.requested_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.requested_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"requested_for\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.requested_for).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.requested_for).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.requested_for).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.requested_for.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.requested_for.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.requested_for).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"requester_resolution_target_at\");\r",
+                      "        pm.expect(item.requester_resolution_target_at === null || typeof item.requester_resolution_target_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"reservation\");\r",
+                      "        pm.expect(item.reservation === null || typeof item.reservation === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"resolution_duration\");\r",
+                      "        pm.expect(item.resolution_duration === null || typeof item.resolution_duration === \"number\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"resolution_target_at\");\r",
+                      "        pm.expect(item.resolution_target_at === null || typeof item.resolution_target_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"response_target_at\");\r",
+                      "        pm.expect(item.response_target_at === null || typeof item.response_target_at === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"reviewed\").that.is.a(\"boolean\");\r",
+                      "        pm.expect(item).to.have.property(\"satisfaction\");\r",
+                      "        pm.expect(item.satisfaction === null || typeof item.satisfaction === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"service_instance\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"source\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"sourceID\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "        pm.expect(item).to.have.property(\"subject\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"summary\");\r",
+                      "        pm.expect(item.summary === null || typeof item.summary === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"supplier\");\r",
+                      "        pm.expect(item.supplier === null || typeof item.supplier === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"supplier_requestID\");\r",
+                      "        pm.expect(item.supplier_requestID === null || typeof item.supplier_requestID === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"tags\").that.is.an(\"array\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"task\");\r",
+                      "        pm.expect(item.task === null || typeof item.task === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"team\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.team).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.team.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.team.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.team).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"template\");\r",
+                      "        pm.expect(item.template === null || typeof item.template === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"urgent\").that.is.a(\"boolean\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"waiting_until\");\r",
+                      "        pm.expect(item.waiting_until === null || typeof item.waiting_until === \"string\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"workflow\");\r",
+                      "        pm.expect(item.workflow === null || typeof item.workflow === \"object\").to.be.true;\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (err) {\r",
+                      "        console.log(\"Ошибка валидации:\\n\" + err);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(jsonData, null, 2));\r",
+                      "        throw err;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "011f22aa-b15f-49b4-92cf-4019885b20b8",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-011f22aa-b15f-49b4-92cf-4019885b20b8"
+            }
+          ],
+          "id": "2648fa09-8853-4b53-b0e7-c43e197efff7",
+          "uid": "32335283-2648fa09-8853-4b53-b0e7-c43e197efff7"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a Request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Ответ — объект\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"object\");\r",
+                      "    pm.environment.set(\"request_id\", jsonData.id); // Сохранение ID запроса в переменную окружения\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры объекта RFC\", function () {\r",
+                      "    try {\r",
+                      "        // Основные поля\r",
+                      "        pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"category\").that.is.a(\"string\");\r",
+                      "        // pm.expect(jsonData.subject).to.eq(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"next_target_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Создатель\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Account внутри created_by\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.created_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.created_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // // Член команды\r",
+                      "        // pm.expect(jsonData).to.have.property(\"member\").that.is.an(\"object\");\r",
+                      "        // pm.expect(jsonData.member).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        // pm.expect(jsonData.member).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        // pm.expect(jsonData.member).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // // Account внутри member\r",
+                      "        // pm.expect(jsonData.member).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        // pm.expect(jsonData.member.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        // pm.expect(jsonData.member.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Организация\r",
+                      "        pm.expect(jsonData).to.have.property(\"organization\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // // Product backlog\r",
+                      "        // pm.expect(jsonData).to.have.property(\"product_backlog\").that.is.an(\"object\");\r",
+                      "        // pm.expect(jsonData.product_backlog).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        // pm.expect(jsonData.product_backlog).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        // pm.expect(jsonData.product_backlog).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Service instance\r",
+                      "        pm.expect(jsonData).to.have.property(\"service_instance\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Команда\r",
+                      "        pm.expect(jsonData).to.have.property(\"team\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        console.error(\"Ошибка валидации структуры RFC:\", e.message);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "5b6ec8e2-27bf-4d9e-8938-51aac6d83c87",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"subject\": \"{{$randomFullName}}\",\r\n    \"category\": \"incident\",\r\n    \"impact\": \"low\",\r\n    \"service_instance_id\": 254,\r\n    \"status\": \"assigned\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests",
+                  "host": [
+                    "{{url}}requests"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-5b6ec8e2-27bf-4d9e-8938-51aac6d83c87"
+            }
+          ],
+          "id": "20dab671-b0dc-4ef2-9a49-6b37712412dc",
+          "uid": "32335283-20dab671-b0dc-4ef2-9a49-6b37712412dc"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a Request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Ответ — объект\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"object\");\r",
+                      "    // pm.environment.set(\"request_id\", jsonData.id); // Сохранение ID запроса в переменную окружения\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры объекта RFC\", function () {\r",
+                      "    try {\r",
+                      "        // Основные поля\r",
+                      "        pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.subject).to.eq(\"Рандомный Запрос\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"category\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.status).to.eq(\"completed\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"next_target_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Создатель\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Account внутри created_by\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.created_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.created_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    \r",
+                      "        // Организация\r",
+                      "        pm.expect(jsonData).to.have.property(\"organization\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Service instance\r",
+                      "        pm.expect(jsonData).to.have.property(\"service_instance\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Команда\r",
+                      "        pm.expect(jsonData).to.have.property(\"team\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        console.error(\"Ошибка валидации структуры RFC:\", e.message);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "054a8f6d-a658-41ed-a540-709594a1fda9",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"subject\": \"Рандомный Запрос\",\r\n    \"status\": \"completed\",\r\n    \"completion_reason\": \"solved\",\r\n    \"note\": \"Комментарий не может быть пустым\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-054a8f6d-a658-41ed-a540-709594a1fda9"
+            }
+          ],
+          "id": "f8e562c9-dc82-4401-ad11-3eb6d7ac7e35",
+          "uid": "32335283-f8e562c9-dc82-4401-ad11-3eb6d7ac7e35"
+        },
+        {
+          "name": "Archive",
+          "item": [
+            {
+              "name": "Archive a Request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log('Ответ:', jsonData);\r",
+                      "\r",
+                      "    pm.test(\"Ответ — объект\", function () {\r",
+                      "        try {\r",
+                      "            pm.expect(jsonData).to.be.an(\"object\");\r",
+                      "        } catch (e) {\r",
+                      "            console.error(\"Ответ не является объектом:\", e);\r",
+                      "            throw e;\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверка archived, если есть\r",
+                      "    if (jsonData.archived) {\r",
+                      "        pm.test(\"Поле archived\", function () {\r",
+                      "            try {\r",
+                      "                pm.expect(jsonData.archived).to.eq(true);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(\"Ошибка в валидации archived:\", e);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "8f569dbc-821d-48dd-a3a7-0d82371d7891",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/archive",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "archive"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-8f569dbc-821d-48dd-a3a7-0d82371d7891"
+            },
+            {
+              "name": "Trash a Request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log('Ответ:', jsonData);\r",
+                      "    pm.environment.set(\"person_pro_product_id\", jsonData.id);\r",
+                      "\r",
+                      "    pm.test(\"Ответ — объект\", function () {\r",
+                      "        try {\r",
+                      "            pm.expect(jsonData).to.be.an(\"object\");\r",
+                      "        } catch (e) {\r",
+                      "            console.error(\"Ответ не является объектом:\", e);\r",
+                      "            throw e;\r",
+                      "        }\r",
+                      "    });\r",
+                      "\r",
+                      "    // Проверка trashed, если есть\r",
+                      "    if (jsonData.trashed) {\r",
+                      "        pm.test(\"Поле trashed\", function () {\r",
+                      "            try {\r",
+                      "                pm.expect(jsonData.trashed).to.eq(true);\r",
+                      "            } catch (e) {\r",
+                      "                console.error(\"Ошибка в валидации trashed:\", e);\r",
+                      "                throw e;\r",
+                      "            }\r",
+                      "        });\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "b8a510e4-eb53-4520-a008-51e8fbb4c90b",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/trash",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "trash"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-b8a510e4-eb53-4520-a008-51e8fbb4c90b"
+            },
+            {
+              "name": "Restore a Request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Ответ — объект\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"object\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры объекта RFC\", function () {\r",
+                      "    try {\r",
+                      "        // Основные поля\r",
+                      "        pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"category\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"status\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"next_target_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"updated_at\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Создатель\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Account внутри created_by\r",
+                      "        pm.expect(jsonData.created_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.created_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.created_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Член команды\r",
+                      "        pm.expect(jsonData).to.have.property(\"member\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.member).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.member).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.member).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Account внутри member\r",
+                      "        pm.expect(jsonData.member).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.member.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.member.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Организация\r",
+                      "        pm.expect(jsonData).to.have.property(\"organization\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.organization).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "\r",
+                      "        // Service instance\r",
+                      "        pm.expect(jsonData).to.have.property(\"service_instance\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"localized_name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.service_instance).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        // Команда\r",
+                      "        pm.expect(jsonData).to.have.property(\"team\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.team).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        console.error(\"Ошибка валидации структуры объекта:\", e.message);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "5ef63521-cd72-4f8f-b776-3792508c1e36",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/restore",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "restore"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-5ef63521-cd72-4f8f-b776-3792508c1e36"
+            }
+          ],
+          "id": "16ea92fa-bce7-449e-a4d3-072487b82e47",
+          "uid": "32335283-16ea92fa-bce7-449e-a4d3-072487b82e47"
+        }
+      ],
+      "id": "d9b30637-7843-406e-a58d-0e9500d53d1d",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "9348fdb3-3b24-42d6-8ebd-52424ad91cbd",
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "3d45de98-7e52-427a-96b5-d5492334013a",
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ],
+      "uid": "32335283-d9b30637-7843-406e-a58d-0e9500d53d1d"
+    },
+    {
+      "name": "Affected SLAs",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List affected SLAs of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Ответ — массив с хотя бы одним элементом\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "    pm.expect(jsonData.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "const item = jsonData[0];\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры SLA\", function () {\r",
+                      "    try {\r",
+                      "        // Основные поля\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "        pm.expect(item).to.have.property(\"accountability\").that.is.a(\"string\", `Свойство 'accountability' ожидалось быть string, а пришло ${typeof item.accountability}`);\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"next_target_at\").that.is.a(\"string\", `Свойство 'next_target_at' ожидалось быть string, а пришло ${typeof item.next_target_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"time_zone\").that.is.a(\"string\", `Свойство 'time_zone' ожидалось быть string, а пришло ${typeof item.time_zone}`);\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\", `Свойство 'updated_at' ожидалось быть string, а пришло ${typeof item.updated_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                      "\r",
+                      "        // Service instance\r",
+                      "        pm.expect(item).to.have.property(\"service_instance\").that.is.an(\"object\", `Свойство 'service_instance' ожидалось быть объектом, а пришло ${typeof item.service_instance}`);\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'service_instance.id' ожидалось быть number, а пришло ${typeof item.service_instance.id}`);\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'service_instance.name' ожидалось быть string, а пришло ${typeof item.service_instance.name}`);\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"localized_name\").that.is.a(\"string\", `Свойство 'service_instance.localized_name' ожидалось быть string, а пришло ${typeof item.service_instance.localized_name}`);\r",
+                      "        pm.expect(item.service_instance).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'service_instance.nodeID' ожидалось быть string, а пришло ${typeof item.service_instance.nodeID}`);\r",
+                      "\r",
+                      "        // SLA\r",
+                      "        pm.expect(item).to.have.property(\"sla\").that.is.an(\"object\", `Свойство 'sla' ожидалось быть объектом, а пришло ${typeof item.sla}`);\r",
+                      "        pm.expect(item.sla).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'sla.id' ожидалось быть number, а пришло ${typeof item.sla.id}`);\r",
+                      "        pm.expect(item.sla).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'sla.name' ожидалось быть string, а пришло ${typeof item.sla.name}`);\r",
+                      "        pm.expect(item.sla).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'sla.nodeID' ожидалось быть string, а пришло ${typeof item.sla.nodeID}`);\r",
+                      "\r",
+                      "        // Support team\r",
+                      "        pm.expect(item).to.have.property(\"support_team\").that.is.an(\"object\", `Свойство 'support_team' ожидалось быть объектом, а пришло ${typeof item.support_team}`);\r",
+                      "        pm.expect(item.support_team).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'support_team.id' ожидалось быть number, а пришло ${typeof item.support_team.id}`);\r",
+                      "        pm.expect(item.support_team).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'support_team.name' ожидалось быть string, а пришло ${typeof item.support_team.name}`);\r",
+                      "        pm.expect(item.support_team).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'support_team.nodeID' ожидалось быть string, а пришло ${typeof item.support_team.nodeID}`);\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", JSON.stringify(item, null, 2));\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "078127ed-a8f0-4f6b-a051-14b871db244d",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200/affected_slas",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200",
+                    "affected_slas"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-078127ed-a8f0-4f6b-a051-14b871db244d"
+            }
+          ],
+          "id": "86f1c4cc-58ce-44d7-bdad-cf21210a957f",
+          "uid": "32335283-86f1c4cc-58ce-44d7-bdad-cf21210a957f"
+        }
+      ],
+      "id": "5e9bb377-34d9-4189-98bd-12c020336668",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "9348fdb3-3b24-42d6-8ebd-52424ad91cbd",
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "3d45de98-7e52-427a-96b5-d5492334013a",
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ],
+      "uid": "32335283-5e9bb377-34d9-4189-98bd-12c020336668"
+    },
+    {
+      "name": "Automation Rules",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List automation rules of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "4cce8809-9626-4a7a-82f8-c57779c68ec4",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200/automation_rules",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200",
+                    "automation_rules"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-4cce8809-9626-4a7a-82f8-c57779c68ec4"
+            }
+          ],
+          "id": "a337f938-e825-4f81-99bc-2f3a21cededa",
+          "uid": "32335283-a337f938-e825-4f81-99bc-2f3a21cededa"
+        }
+      ],
+      "id": "978bf8f1-28d8-4cdd-a4e7-5015641f4af0",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "9348fdb3-3b24-42d6-8ebd-52424ad91cbd",
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "3d45de98-7e52-427a-96b5-d5492334013a",
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ],
+      "uid": "32335283-978bf8f1-28d8-4cdd-a4e7-5015641f4af0"
+    },
+    {
+      "name": "Configuration Items",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all configuration items of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Ответ — массив с хотя бы одним элементом\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "    pm.expect(jsonData.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "const item = jsonData[0];\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры Software Asset\", function () {\r",
+                      "    try {\r",
+                      "        // Основные поля\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "        pm.expect(item).to.have.property(\"software\").that.is.a(\"boolean\", `Свойство 'software' ожидалось быть boolean, а пришло ${typeof item.software}`);\r",
+                      "        pm.expect(item).to.have.property(\"label\").that.is.a(\"string\", `Свойство 'label' ожидалось быть string, а пришло ${typeof item.label}`);\r",
+                      "        pm.expect(item).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'name' ожидалось быть string, а пришло ${typeof item.name}`);\r",
+                      "        pm.expect(item).to.have.property(\"status\").that.is.a(\"string\", `Свойство 'status' ожидалось быть string, а пришло ${typeof item.status}`);\r",
+                      "        pm.expect(item).to.have.property(\"rule_set\").that.is.a(\"string\", `Свойство 'rule_set' ожидалось быть string, а пришло ${typeof item.rule_set}`);\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\", `Свойство 'updated_at' ожидалось быть string, а пришло ${typeof item.updated_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                      "\r",
+                      "        // Продукт\r",
+                      "        pm.expect(item).to.have.property(\"product\").that.is.an(\"object\", `Свойство 'product' ожидалось быть объектом, а пришло ${typeof item.product}`);\r",
+                      "        pm.expect(item.product).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'product.id' ожидалось быть number, а пришло ${typeof item.product.id}`);\r",
+                      "        pm.expect(item.product).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'product.name' ожидалось быть string, а пришло ${typeof item.product.name}`);\r",
+                      "        pm.expect(item.product).to.have.property(\"category\").that.is.a(\"string\", `Свойство 'product.category' ожидалось быть string, а пришло ${typeof item.product.category}`);\r",
+                      "        pm.expect(item.product).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'product.nodeID' ожидалось быть string, а пришло ${typeof item.product.nodeID}`);\r",
+                      "        pm.expect(item.product).to.have.property(\"brand\").that.is.a(\"string\", `Свойство 'product.brand' ожидалось быть string, а пришло ${typeof item.product.brand}`);\r",
+                      "\r",
+                      "        // Support team\r",
+                      "        pm.expect(item).to.have.property(\"support_team\").that.is.an(\"object\", `Свойство 'support_team' ожидалось быть объектом, а пришло ${typeof item.support_team}`);\r",
+                      "        pm.expect(item.support_team).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'support_team.id' ожидалось быть number, а пришло ${typeof item.support_team.id}`);\r",
+                      "        pm.expect(item.support_team).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'support_team.name' ожидалось быть string, а пришло ${typeof item.support_team.name}`);\r",
+                      "        pm.expect(item.support_team).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'support_team.nodeID' ожидалось быть string, а пришло ${typeof item.support_team.nodeID}`);\r",
+                      "\r",
+                      "        // Service\r",
+                      "        pm.expect(item).to.have.property(\"service\").that.is.an(\"object\", `Свойство 'service' ожидалось быть объектом, а пришло ${typeof item.service}`);\r",
+                      "        pm.expect(item.service).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'service.id' ожидалось быть number, а пришло ${typeof item.service.id}`);\r",
+                      "        pm.expect(item.service).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'service.name' ожидалось быть string, а пришло ${typeof item.service.name}`);\r",
+                      "        pm.expect(item.service).to.have.property(\"localized_name\").that.is.a(\"string\", `Свойство 'service.localized_name' ожидалось быть string, а пришло ${typeof item.service.localized_name}`);\r",
+                      "        pm.expect(item.service).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'service.nodeID' ожидалось быть string, а пришло ${typeof item.service.nodeID}`);\r",
+                      "\r",
+                      "        // Provider\r",
+                      "        const provider = item.service.provider;\r",
+                      "        pm.expect(provider).to.be.an(\"object\", `Свойство 'service.provider' ожидалось быть объектом, а пришло ${typeof provider}`);\r",
+                      "        pm.expect(provider).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'service.provider.id' ожидалось быть number, а пришло ${typeof provider.id}`);\r",
+                      "        pm.expect(provider).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'service.provider.name' ожидалось быть string, а пришло ${typeof provider.name}`);\r",
+                      "\r",
+                      "        const account = provider.account;\r",
+                      "        pm.expect(account).to.be.an(\"object\", `Свойство 'service.provider.account' ожидалось быть объектом, а пришло ${typeof account}`);\r",
+                      "        pm.expect(account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'service.provider.account.id' ожидалось быть string, а пришло ${typeof account.id}`);\r",
+                      "        pm.expect(account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'service.provider.account.name' ожидалось быть string, а пришло ${typeof account.name}`);\r",
+                      "\r",
+                      "        pm.expect(provider).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'service.provider.nodeID' ожидалось быть string, а пришло ${typeof provider.nodeID}`);\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "cce37b88-8059-4996-9d77-0e3953e82541",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/1310/cis",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "1310",
+                    "cis"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-cce37b88-8059-4996-9d77-0e3953e82541"
+            }
+          ],
+          "id": "5196de95-3a82-4f9f-b973-beb99a0f50c2",
+          "uid": "32335283-5196de95-3a82-4f9f-b973-beb99a0f50c2"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a configuration item to a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.be.an(\"object\", \"Ожидался объект в ответе\");\r",
+                      "    pm.expect(Object.keys(jsonData).length).to.equal(0, \"Ожидался пустой объект\");\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "7377e287-10f5-4ac9-a48b-49f79d2842ed",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200/cis/2479",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200",
+                    "cis",
+                    "2479"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-7377e287-10f5-4ac9-a48b-49f79d2842ed"
+            },
+            {
+              "name": "List all configuration items of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Ответ содержит объект с id = 2479\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "    pm.expect(jsonData).to.be.an(\"object\", \"Ожидался массив в ответе\");\r",
+                      "    pm.expect(jsonData.id).to.equal(2479, \"ID объекта должен быть 2479\");\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "09c1d11b-40fa-43f2-b965-fe7a35fa0b18",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200/cis/2479",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200",
+                    "cis",
+                    "2479"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-09c1d11b-40fa-43f2-b965-fe7a35fa0b18"
+            }
+          ],
+          "id": "c68c6e7f-a50d-4962-8a29-e84f3648f29a",
+          "uid": "32335283-c68c6e7f-a50d-4962-8a29-e84f3648f29a"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a configuration item from a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус 204 и пустой объект\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "03e385eb-44fa-4a70-a742-bd194b63bb78",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200/cis/2479",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200",
+                    "cis",
+                    "2479"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-03e385eb-44fa-4a70-a742-bd194b63bb78"
+            },
+            {
+              "name": "List all configuration items of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Ответ не содержит объект с id = 2479\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "7c11bebf-1b86-4256-a7b5-e6148fc5ef0a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/200/cis/2479",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "200",
+                    "cis",
+                    "2479"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-7c11bebf-1b86-4256-a7b5-e6148fc5ef0a"
+            }
+          ],
+          "id": "08e3d819-a781-4a57-9d30-eb3377703568",
+          "uid": "32335283-08e3d819-a781-4a57-9d30-eb3377703568"
+        }
+      ],
+      "id": "45612ad2-ae52-41ed-987e-e52e0df97c43",
+      "uid": "32335283-45612ad2-ae52-41ed-987e-e52e0df97c43"
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Submit Event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                "exec": [
+                  "pm.test(\"Статус код 200\", function () {\r",
+                  "   pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "console.log(\"Ответ:\", jsonData);\r",
+                  "pm.environment.set(\"request_id\", jsonData.id);\r",
+                  "\r",
+                  "pm.test(\"Проверка структуры объекта запроса\", function () {\r",
+                  "    const item = jsonData;\r",
+                  "\r",
+                  "    try {\r",
+                  "        // Основные поля\r",
+                  "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                  "        pm.expect(item).to.have.property(\"addressed\").that.is.a(\"boolean\", `Свойство 'addressed' ожидалось быть boolean, а пришло ${typeof item.addressed}`);\r",
+                  "        pm.expect(item).to.have.property(\"assignment_count\").that.is.a(\"number\", `Свойство 'assignment_count' ожидалось быть number, а пришло ${typeof item.assignment_count}`);\r",
+                  "        pm.expect(item).to.have.property(\"category\").that.is.a(\"string\", `Свойство 'category' ожидалось быть string, а пришло ${typeof item.category}`);\r",
+                  "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                  "        pm.expect(item).to.have.property(\"new_assignment\").that.is.a(\"boolean\", `Свойство 'new_assignment' ожидалось быть boolean, а пришло ${typeof item.new_assignment}`);\r",
+                  "        pm.expect(item).to.have.property(\"next_target_at\").that.is.a(\"string\", `Свойство 'next_target_at' ожидалось быть string, а пришло ${typeof item.next_target_at}`);\r",
+                  "        pm.expect(item).to.have.property(\"provider_not_accountable\").that.is.a(\"boolean\", `Свойство 'provider_not_accountable' ожидалось быть boolean, а пришло ${typeof item.provider_not_accountable}`);\r",
+                  "        pm.expect(item).to.have.property(\"provider_was_not_accountable\").that.is.a(\"boolean\", `Свойство 'provider_was_not_accountable' ожидалось быть boolean, а пришло ${typeof item.provider_was_not_accountable}`);\r",
+                  "        pm.expect(item).to.have.property(\"reopen_count\").that.is.a(\"number\", `Свойство 'reopen_count' ожидалось быть number, а пришло ${typeof item.reopen_count}`);\r",
+                  "        pm.expect(item).to.have.property(\"reviewed\").that.is.a(\"boolean\", `Свойство 'reviewed' ожидалось быть boolean, а пришло ${typeof item.reviewed}`);\r",
+                  "        pm.expect(item).to.have.property(\"source\").that.is.a(\"string\", `Свойство 'source' ожидалось быть string, а пришло ${typeof item.source}`);\r",
+                  "        pm.expect(item).to.have.property(\"sourceID\").that.is.a(\"string\", `Свойство 'sourceID' ожидалось быть string, а пришло ${typeof item.sourceID}`);\r",
+                  "        pm.expect(item).to.have.property(\"status\").that.is.a(\"string\", `Свойство 'status' ожидалось быть string, а пришло ${typeof item.status}`);\r",
+                  "        pm.expect(item).to.have.property(\"subject\").that.is.a(\"string\", `Свойство 'subject' ожидалось быть string, а пришло ${typeof item.subject}`);\r",
+                  "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\", `Свойство 'updated_at' ожидалось быть string, а пришло ${typeof item.updated_at}`);\r",
+                  "        pm.expect(item).to.have.property(\"urgent\").that.is.a(\"boolean\", `Свойство 'urgent' ожидалось быть boolean, а пришло ${typeof item.urgent}`);\r",
+                  "        pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                  "\r",
+                  "        // created_by\r",
+                  "        pm.expect(item).to.have.property(\"created_by\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.created_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                  "        pm.expect(item.created_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.created_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.created_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.created_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.created_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                  "\r",
+                  "        // organization\r",
+                  "        pm.expect(item).to.have.property(\"organization\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.organization).to.have.property(\"id\").that.is.a(\"number\");\r",
+                  "        pm.expect(item.organization).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.organization).to.have.property(\"account\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.organization.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.organization.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.organization).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                  "\r",
+                  "        // requested_by\r",
+                  "        pm.expect(item).to.have.property(\"requested_by\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.requested_by).to.have.property(\"id\").that.is.a(\"number\");\r",
+                  "        pm.expect(item.requested_by).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.requested_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.requested_by.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.requested_by.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.requested_by).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                  "\r",
+                  "        // requested_for\r",
+                  "        pm.expect(item).to.have.property(\"requested_for\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.requested_for).to.have.property(\"id\").that.is.a(\"number\");\r",
+                  "        pm.expect(item.requested_for).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.requested_for).to.have.property(\"account\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.requested_for.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.requested_for.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.requested_for).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                  "\r",
+                  "        // team\r",
+                  "        pm.expect(item).to.have.property(\"team\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.team).to.have.property(\"id\").that.is.a(\"number\");\r",
+                  "        pm.expect(item.team).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.team).to.have.property(\"account\").that.is.an(\"object\");\r",
+                  "        pm.expect(item.team.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.team.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                  "        pm.expect(item.team).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                  "    } catch (e) {\r",
+                  "        console.error(e.message);\r",
+                  "        console.log(\"Данные, вызвавшие ошибку:\\n\" + JSON.stringify(item, null, 2));\r",
+                  "        throw e;\r",
+                  "    }\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "6ea2d03b-0601-499c-9581-bcf9947fb2d5",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-4me-account",
+                "value": "dc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}events?subject=Server%20Down&source=MyMonitoringTool&sourceID=882395&note=Not%20reachable",
+              "host": [
+                "{{url}}events"
+              ],
+              "query": [
+                {
+                  "key": "subject",
+                  "value": "Server%20Down"
+                },
+                {
+                  "key": "source",
+                  "value": "MyMonitoringTool"
+                },
+                {
+                  "key": "sourceID",
+                  "value": "882395"
+                },
+                {
+                  "key": "note",
+                  "value": "Not%20reachable"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "uid": "32335283-6ea2d03b-0601-499c-9581-bcf9947fb2d5"
+        }
+      ],
+      "id": "4d06e069-1825-4106-a427-70483082aa87",
+      "uid": "32335283-4d06e069-1825-4106-a427-70483082aa87"
+    },
+    {
+      "name": "Grouped Requests",
+      "item": [
+        {
+          "name": "List grouped requests of a request group",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                "exec": [
+                  "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "2267ec2c-4beb-4d53-b161-ce371520d7a6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-4me-account",
+                "value": "dc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}requests/200/grouped_requests",
+              "host": [
+                "{{url}}requests"
+              ],
+              "path": [
+                "200",
+                "grouped_requests"
+              ]
+            }
+          },
+          "response": [],
+          "uid": "32335283-2267ec2c-4beb-4d53-b161-ce371520d7a6"
+        }
+      ],
+      "id": "d4903f4a-750e-4159-84fa-c7222f65e0bc",
+      "uid": "32335283-d4903f4a-750e-4159-84fa-c7222f65e0bc"
+    },
+    {
+      "name": "Knowledge Articles",
+      "item": [
+        {
+          "name": "List all knowledge articles of a request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                "exec": [
+                  "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "088effe2-83ac-45b2-b73b-b52ffae87880",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-4me-account",
+                "value": "dc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}requests/200/knowledge_articles",
+              "host": [
+                "{{url}}requests"
+              ],
+              "path": [
+                "200",
+                "knowledge_articles"
+              ]
+            }
+          },
+          "response": [],
+          "uid": "32335283-088effe2-83ac-45b2-b73b-b52ffae87880"
+        }
+      ],
+      "id": "82899129-fd55-4bcc-be9e-3667e7615266",
+      "uid": "32335283-82899129-fd55-4bcc-be9e-3667e7615266"
+    },
+    {
+      "name": "Inbound emails",
+      "item": [
+        {
+          "name": "List inbound emails of a request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                "exec": [
+                  "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "27553937-2434-4c0f-8b4e-2a01be4c3104",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-4me-account",
+                "value": "dc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}requests/{{request_id}}/inbound_emails",
+              "host": [
+                "{{url}}requests"
+              ],
+              "path": [
+                "{{request_id}}",
+                "inbound_emails"
+              ]
+            }
+          },
+          "response": [],
+          "uid": "32335283-27553937-2434-4c0f-8b4e-2a01be4c3104"
+        }
+      ],
+      "id": "db494809-8da5-4bb8-afac-118fe8d6e8e0",
+      "uid": "32335283-db494809-8da5-4bb8-afac-118fe8d6e8e0"
+    },
+    {
+      "name": "Notes",
+      "item": [
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List notes of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Ответ — массив с хотя бы одним элементом\", function () {\r",
+                      "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                      "    pm.expect(jsonData.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "const item = jsonData[0];\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры комментария\", function () {\r",
+                      "    try {\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"text\").that.is.a(\"string\", `Свойство 'text' ожидалось быть string, а пришло ${typeof item.text}`);\r",
+                      "        pm.expect(item).to.have.property(\"medium\").that.is.a(\"string\", `Свойство 'medium' ожидалось быть string, а пришло ${typeof item.medium}`);\r",
+                      "        pm.expect(item).to.have.property(\"internal\").that.is.a(\"boolean\", `Свойство 'internal' ожидалось быть boolean, а пришло ${typeof item.internal}`);\r",
+                      "        pm.expect(item).to.have.property(\"attachments\").that.is.an(\"array\", `Свойство 'attachments' ожидалось быть array, а пришло ${typeof item.attachments}`);\r",
+                      "        pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"person\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.person).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(item.person).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.person).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.person).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.person.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(item.person.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "ada4b37c-dedc-4e17-b816-79089c6a6c11",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/notes",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "notes"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-ada4b37c-dedc-4e17-b816-79089c6a6c11"
+            }
+          ],
+          "id": "313108c5-a9d1-4377-b20e-dc6463951b0c",
+          "uid": "32335283-313108c5-a9d1-4377-b20e-dc6463951b0c"
+        },
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Create a note",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 201\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "pm.environment.set(\"note_id\", jsonData.id);\r",
+                      "\r",
+                      "pm.test(\"Проверка наличия и типа свойства 'id'\", function () {\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof jsonData.id}`);\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", jsonData);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "357e90f8-f76f-42b3-a3b6-fc9ec9526c45",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"text\": \"Всем привет{{$randomAbbreviation}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/notes",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "notes"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-357e90f8-f76f-42b3-a3b6-fc9ec9526c45"
+            },
+            {
+              "name": "Notes of a request by id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Проверка обязательных полей объекта комментария\", function () {\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof jsonData.id}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"text\").that.is.a(\"string\", `Свойство 'text' ожидалось быть string, а пришло ${typeof jsonData.text}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"internal\").that.is.a(\"boolean\", `Свойство 'internal' ожидалось быть boolean, а пришло ${typeof jsonData.internal}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"medium\").that.is.a(\"string\", `Свойство 'medium' ожидалось быть string, а пришло ${typeof jsonData.medium}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof jsonData.created_at}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"attachments\").that.is.an(\"array\", `Свойство 'attachments' ожидалось быть array, а пришло ${typeof jsonData.attachments}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"person\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.person).to.have.property(\"id\").that.is.a(\"number\");\r",
+                      "        pm.expect(jsonData.person).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.person).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(jsonData.person.account).to.have.property(\"id\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.person.account).to.have.property(\"name\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData.person).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "        pm.expect(jsonData).to.have.property(\"nodeID\").that.is.a(\"string\");\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", jsonData);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "a80d1a1a-daaf-448e-b4a3-adb1cff66c84",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/notes/{{note_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "notes",
+                    "{{note_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-a80d1a1a-daaf-448e-b4a3-adb1cff66c84"
+            }
+          ],
+          "id": "7072844f-39b5-427b-8457-156354818845",
+          "uid": "32335283-7072844f-39b5-427b-8457-156354818845"
+        }
+      ],
+      "id": "d6f07cad-edb3-42cf-8a0c-c592e5dc9e8c",
+      "uid": "32335283-d6f07cad-edb3-42cf-8a0c-c592e5dc9e8c"
+    },
+    {
+      "name": "Note attachments",
+      "item": [
+        {
+          "name": "List note attachments of a request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                "exec": [
+                  "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "fa13dca2-1b9a-45f1-a6ea-0e637bd53238",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-4me-account",
+                "value": "dc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}requests/{{request_id}}/note_attachments",
+              "host": [
+                "{{url}}requests"
+              ],
+              "path": [
+                "{{request_id}}",
+                "note_attachments"
+              ]
+            }
+          },
+          "response": [],
+          "uid": "32335283-fa13dca2-1b9a-45f1-a6ea-0e637bd53238"
+        }
+      ],
+      "id": "d9bd2b86-451a-424a-94ae-746109341f5f",
+      "uid": "32335283-d9bd2b86-451a-424a-94ae-746109341f5f"
+    },
+    {
+      "name": "Satisfaction",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Requester is satisfied",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "0462f0db-ac84-4b20-bed0-5001b6bfff5c",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"status\": \"completed\",\r\n    \"completion_reason\": \"solved\",\r\n    \"note\": \"Комментарий не может быть пустым\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-0462f0db-ac84-4b20-bed0-5001b6bfff5c"
+            },
+            {
+              "name": "Requester is satisfied",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "e70b472f-86b0-4c25-86fa-a5e63855205f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/satisfied",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "satisfied"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-e70b472f-86b0-4c25-86fa-a5e63855205f"
+            }
+          ],
+          "id": "ea4cf205-62bc-4138-9093-7d14a5cccceb",
+          "uid": "32335283-ea4cf205-62bc-4138-9093-7d14a5cccceb"
+        }
+      ],
+      "id": "a48b8938-b582-417b-b482-3cd39ae29257",
+      "uid": "32335283-a48b8938-b582-417b-b482-3cd39ae29257"
+    },
+    {
+      "name": "Sprint Backlog Items",
+      "item": [
+        {
+          "name": "List sprint backlog items of a request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                "exec": [
+                  "pm.test(\"Статус 200 и пустой объект\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "53471fb3-9f9c-494e-b986-3a891c0688fe",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-4me-account",
+                "value": "dc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}requests/1264/sprint_backlog_items",
+              "host": [
+                "{{url}}requests"
+              ],
+              "path": [
+                "1264",
+                "sprint_backlog_items"
+              ]
+            }
+          },
+          "response": [],
+          "uid": "32335283-53471fb3-9f9c-494e-b986-3a891c0688fe"
+        }
+      ],
+      "id": "7aa0238e-7fe1-4cbf-934f-e840044df0af",
+      "uid": "32335283-7aa0238e-7fe1-4cbf-934f-e840044df0af"
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a tag to a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "pm.environment.set(\"tag_id\", jsonData.id);\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры тега\", function () {\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof jsonData.id}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'name' ожидалось быть string, а пришло ${typeof jsonData.name}`);\r",
+                      "        pm.expect(jsonData).to.have.property(\"request_count\").that.is.a(\"number\", `Свойство 'request_count' ожидалось быть number, а пришло ${typeof jsonData.request_count}`);\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", jsonData);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "902c3e99-c308-40ea-a814-82d87791eb40",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"My Tag {{$randomInt}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/tags",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "tags"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-902c3e99-c308-40ea-a814-82d87791eb40"
+            }
+          ],
+          "id": "eb1ed443-8f29-4183-bf42-9f7345944fdf",
+          "uid": "32335283-eb1ed443-8f29-4183-bf42-9f7345944fdf"
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all tags of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", jsonData);\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры первого тега в массиве\", function () {\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "        const item = jsonData[0];\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "        pm.expect(item).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'name' ожидалось быть string, а пришло ${typeof item.name}`);\r",
+                      "        pm.expect(item).to.have.property(\"request_count\").that.is.a(\"number\", `Свойство 'request_count' ожидалось быть number, а пришло ${typeof item.request_count}`);\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", jsonData[0]);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "6471a184-43f6-4c66-88a1-de05d234b142",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/tags",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "tags"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-6471a184-43f6-4c66-88a1-de05d234b142"
+            }
+          ],
+          "id": "6891ed96-444c-4a0e-b7ea-b36378e34ae2",
+          "uid": "32335283-6891ed96-444c-4a0e-b7ea-b36378e34ae2"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "List all tags of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "05d10b7d-e798-42de-8acc-5dbcfa634f8a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/tags/{{tag_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "tags",
+                    "{{tag_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-05d10b7d-e798-42de-8acc-5dbcfa634f8a"
+            },
+            {
+              "name": "tags by is of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "8ef47e06-42d1-4895-b266-959bc1f3ccd7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/tags/{{tag_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "tags",
+                    "{{tag_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-8ef47e06-42d1-4895-b266-959bc1f3ccd7"
+            }
+          ],
+          "id": "90594c0d-c8da-4192-a905-8cbfe969c20e",
+          "uid": "32335283-90594c0d-c8da-4192-a905-8cbfe969c20e"
+        }
+      ],
+      "id": "a0454e1a-b649-483e-9d26-7fff65c2243c",
+      "uid": "32335283-a0454e1a-b649-483e-9d26-7fff65c2243c"
+    },
+    {
+      "name": "Watches",
+      "item": [
+        {
+          "name": "POST",
+          "item": [
+            {
+              "name": "Add a watch to a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200 или 422\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 422]);\r",
+                      "});\r",
+                      "\r",
+                      "if (pm.response.code === 200) {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ:\", jsonData);\r",
+                      "    pm.environment.set(\"watch_id\", jsonData.id);\r",
+                      "\r",
+                      "    pm.test(\"Проверка структуры Watch-объекта\", function () {\r",
+                      "        try {\r",
+                      "            const item = jsonData;\r",
+                      "            pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "            pm.expect(item).to.have.property(\"added_by\").that.satisfies(val => val === null || typeof val === \"object\", `Свойство 'added_by' ожидалось быть object или null, а пришло ${typeof item.added_by}`);\r",
+                      "            pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                      "            pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\", `Свойство 'updated_at' ожидалось быть string, а пришло ${typeof item.updated_at}`);\r",
+                      "            pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                      "            pm.expect(item).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(item.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'account.id' ожидалось быть string, а пришло ${typeof item.account.id}`);\r",
+                      "            pm.expect(item.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'account.name' ожидалось быть string, а пришло ${typeof item.account.name}`);\r",
+                      "            pm.expect(item).to.have.property(\"person\").that.is.an(\"object\");\r",
+                      "            pm.expect(item.person).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'person.id' ожидалось быть number, а пришло ${typeof item.person.id}`);\r",
+                      "            pm.expect(item.person).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'person.name' ожидалось быть string, а пришло ${typeof item.person.name}`);\r",
+                      "            pm.expect(item.person).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(item.person.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'person.account.id' ожидалось быть string, а пришло ${typeof item.person.account.id}`);\r",
+                      "            pm.expect(item.person.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'person.account.name' ожидалось быть string, а пришло ${typeof item.person.account.name}`);\r",
+                      "            pm.expect(item.person).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'person.nodeID' ожидалось быть string, а пришло ${typeof item.person.nodeID}`);\r",
+                      "        } catch (e) {\r",
+                      "            console.error(e.message);\r",
+                      "            console.log(\"Данные, вызвавшие ошибку:\", jsonData);\r",
+                      "            throw e;\r",
+                      "        }\r",
+                      "    });\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "a4a1c27d-f0da-4349-976a-52f90a8a22c4",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"person_id\": 584\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/watches",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "watches"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-a4a1c27d-f0da-4349-976a-52f90a8a22c4"
+            }
+          ],
+          "id": "590fdae7-67fa-4524-b914-53d56b89b426",
+          "uid": "32335283-590fdae7-67fa-4524-b914-53d56b89b426"
+        },
+        {
+          "name": "GET",
+          "item": [
+            {
+              "name": "List all watches of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const jsonData = pm.response.json();\r",
+                      "console.log(\"Ответ:\", JSON.stringify(jsonData, null, 2));\r",
+                      "\r",
+                      "pm.test(\"Проверка структуры массива Watch-объектов\", function () {\r",
+                      "    try {\r",
+                      "        pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty;\r",
+                      "\r",
+                      "        const item = jsonData[0];\r",
+                      "        pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "        pm.expect(item).to.have.property(\"added_by\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.added_by).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'added_by.id' ожидалось быть number, а пришло ${typeof item.added_by.id}`);\r",
+                      "        pm.expect(item.added_by).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'added_by.name' ожидалось быть string, а пришло ${typeof item.added_by.name}`);\r",
+                      "        pm.expect(item.added_by).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.added_by.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'added_by.account.id' ожидалось быть string, а пришло ${typeof item.added_by.account.id}`);\r",
+                      "        pm.expect(item.added_by.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'added_by.account.name' ожидалось быть string, а пришло ${typeof item.added_by.account.name}`);\r",
+                      "        pm.expect(item.added_by).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'added_by.nodeID' ожидалось быть string, а пришло ${typeof item.added_by.nodeID}`);\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\", `Свойство 'updated_at' ожидалось быть string, а пришло ${typeof item.updated_at}`);\r",
+                      "        pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'account.id' ожидалось быть string, а пришло ${typeof item.account.id}`);\r",
+                      "        pm.expect(item.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'account.name' ожидалось быть string, а пришло ${typeof item.account.name}`);\r",
+                      "\r",
+                      "        pm.expect(item).to.have.property(\"person\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.person).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'person.id' ожидалось быть number, а пришло ${typeof item.person.id}`);\r",
+                      "        pm.expect(item.person).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'person.name' ожидалось быть string, а пришло ${typeof item.person.name}`);\r",
+                      "        pm.expect(item.person).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "        pm.expect(item.person.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'person.account.id' ожидалось быть string, а пришло ${typeof item.person.account.id}`);\r",
+                      "        pm.expect(item.person.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'person.account.name' ожидалось быть string, а пришло ${typeof item.person.account.name}`);\r",
+                      "        pm.expect(item.person).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'person.nodeID' ожидалось быть string, а пришло ${typeof item.person.nodeID}`);\r",
+                      "\r",
+                      "    } catch (e) {\r",
+                      "        console.error(e.message);\r",
+                      "        console.log(\"Данные, вызвавшие ошибку:\", item);\r",
+                      "        throw e;\r",
+                      "    }\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "82dc5d55-30f2-482c-b6ef-290f19d28612",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"person_id\": 584\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/watches",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "watches"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-82dc5d55-30f2-482c-b6ef-290f19d28612"
+            }
+          ],
+          "id": "8ad8b189-39fc-498a-91da-dbcfc916e812",
+          "uid": "32335283-8ad8b189-39fc-498a-91da-dbcfc916e812"
+        },
+        {
+          "name": "PATCH",
+          "item": [
+            {
+              "name": "Update a watch of a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Статус код 200 или 422\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 422]);\r",
+                      "});\r",
+                      "\r",
+                      "if (pm.response.code === 200) {\r",
+                      "    const jsonData = pm.response.json();\r",
+                      "    console.log(\"Ответ:\", jsonData);\r",
+                      "    pm.environment.set(\"watch_id\", jsonData.id);\r",
+                      "\r",
+                      "    pm.test(\"Проверка структуры Watch-объекта\", function () {\r",
+                      "        try {\r",
+                      "            const item = jsonData;\r",
+                      "            pm.expect(item).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'id' ожидалось быть number, а пришло ${typeof item.id}`);\r",
+                      "            pm.expect(item).to.have.property(\"added_by\").that.satisfies(val => val === null || typeof val === \"object\", `Свойство 'added_by' ожидалось быть object или null, а пришло ${typeof item.added_by}`);\r",
+                      "            pm.expect(item).to.have.property(\"created_at\").that.is.a(\"string\", `Свойство 'created_at' ожидалось быть string, а пришло ${typeof item.created_at}`);\r",
+                      "            pm.expect(item).to.have.property(\"updated_at\").that.is.a(\"string\", `Свойство 'updated_at' ожидалось быть string, а пришло ${typeof item.updated_at}`);\r",
+                      "            pm.expect(item).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'nodeID' ожидалось быть string, а пришло ${typeof item.nodeID}`);\r",
+                      "            pm.expect(item).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(item.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'account.id' ожидалось быть string, а пришло ${typeof item.account.id}`);\r",
+                      "            pm.expect(item.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'account.name' ожидалось быть string, а пришло ${typeof item.account.name}`);\r",
+                      "            pm.expect(item).to.have.property(\"person\").that.is.an(\"object\");\r",
+                      "            pm.expect(item.person).to.have.property(\"id\").that.is.a(\"number\", `Свойство 'person.id' ожидалось быть number, а пришло ${typeof item.person.id}`);\r",
+                      "            pm.expect(item.person).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'person.name' ожидалось быть string, а пришло ${typeof item.person.name}`);\r",
+                      "            pm.expect(item.person).to.have.property(\"account\").that.is.an(\"object\");\r",
+                      "            pm.expect(item.person.account).to.have.property(\"id\").that.is.a(\"string\", `Свойство 'person.account.id' ожидалось быть string, а пришло ${typeof item.person.account.id}`);\r",
+                      "            pm.expect(item.person.account).to.have.property(\"name\").that.is.a(\"string\", `Свойство 'person.account.name' ожидалось быть string, а пришло ${typeof item.person.account.name}`);\r",
+                      "            pm.expect(item.person).to.have.property(\"nodeID\").that.is.a(\"string\", `Свойство 'person.nodeID' ожидалось быть string, а пришло ${typeof item.person.nodeID}`);\r",
+                      "        } catch (e) {\r",
+                      "            console.error(e.message);\r",
+                      "            console.log(\"Данные, вызвавшие ошибку:\", jsonData);\r",
+                      "            throw e;\r",
+                      "        }\r",
+                      "    });\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "2ae89c0c-fafb-479e-b93f-123c1fdb2b96",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"person_id\": 580\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/watches/{{watch_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "watches",
+                    "{{watch_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-2ae89c0c-fafb-479e-b93f-123c1fdb2b96"
+            }
+          ],
+          "id": "f8ac1d6b-9fff-4d64-a35c-b86ec0c05643",
+          "uid": "32335283-f8ac1d6b-9fff-4d64-a35c-b86ec0c05643"
+        },
+        {
+          "name": "DELETE",
+          "item": [
+            {
+              "name": "Remove a watch from a request",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b55b007f-9ec5-4f0a-a9f2-bf4ac412f11f",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {\r",
+                      "    pm.response.to.have.status(204);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "6c1a36f4-b698-44df-b80f-8a64a9715c05",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-4me-account",
+                    "value": "dc",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"person_id\": 580\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}requests/{{request_id}}/watches/{{watch_id}}",
+                  "host": [
+                    "{{url}}requests"
+                  ],
+                  "path": [
+                    "{{request_id}}",
+                    "watches",
+                    "{{watch_id}}"
+                  ]
+                }
+              },
+              "response": [],
+              "uid": "32335283-6c1a36f4-b698-44df-b80f-8a64a9715c05"
+            }
+          ],
+          "id": "225ba6fc-b2eb-4025-af46-0b5d2cf7989a",
+          "uid": "32335283-225ba6fc-b2eb-4025-af46-0b5d2cf7989a"
+        }
+      ],
+      "id": "322df32f-b6ff-4373-be05-0a5b85cb8090",
+      "uid": "32335283-322df32f-b6ff-4373-be05-0a5b85cb8090"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "be83cef9-3768-4bda-b10e-afbacc55ab4c",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "38ce22a1-821e-4b58-952a-9c864cb85b1d",
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
