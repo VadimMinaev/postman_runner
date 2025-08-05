@@ -15,13 +15,11 @@ const allureResults = path.join(__dirname, 'allure-results');
 const allureReport = path.join(__dirname, 'allure-report');
 const configPath = path.join(__dirname, 'config.json');
 
-// 👇 Подставь свою ссылку на Render (без слэша в конце!)
-const publicUrl = 'https://postman-allure-server.onrender.com';
-
 fs.ensureDirSync(collDir);
 fs.ensureDirSync(envDir);
 fs.ensureFileSync(configPath);
 
+// Загружаем конфиг
 let config = { apiKey: '', workspaceId: '', useApiMode: true };
 try {
   const file = fs.readFileSync(configPath);
@@ -122,38 +120,43 @@ app.post('/refresh', async (req, res) => {
   }
 });
 
-async function runCollection(file, environment, config) {
-  const name = file.name;
-  const uid = file.uid;
-  let collection, envObj;
 
-  try {
-    if (config.useApiMode) {
-      const { data } = await axios.get(
-        `https://api.getpostman.com/collections/${uid}`,
-        { headers: { 'X-Api-Key': config.apiKey } }
-      );
-      collection = data.collection;
+app.post('/run', async (req, res) => {
+  const { files, environment } = req.body;
+  fs.emptyDirSync(allureResults);
+  fs.emptyDirSync(allureReport);
 
-      if (environment && environment.uid) {
-        const { data: envData } = await axios.get(
-          `https://api.getpostman.com/environments/${environment.uid}`,
+  const runs = files.map(file => new Promise(async (resolve) => {
+    const name = file.name;
+    const uid = file.uid;
+    let collection, envObj;
+
+    try {
+      if (config.useApiMode) {
+        const { data } = await axios.get(
+          `https://api.getpostman.com/collections/${uid}`,
           { headers: { 'X-Api-Key': config.apiKey } }
         );
-        envObj = envData.environment;
-      }
-    } else {
-      collection = require(path.join(collDir, name));
-      envObj = environment && environment.name
-        ? require(path.join(envDir, environment.name))
-        : undefined;
-    }
-  } catch (e) {
-    console.error(`❌ Ошибка загрузки ${name}:`, e.message);
-    return;
-  }
+        collection = data.collection;
 
-  return new Promise(resolve => {
+        if (environment && environment.uid) {
+          const { data: envData } = await axios.get(
+            `https://api.getpostman.com/environments/${environment.uid}`,
+            { headers: { 'X-Api-Key': config.apiKey } }
+          );
+          envObj = envData.environment;
+        }
+      } else {
+        collection = require(path.join(collDir, name));
+        envObj = environment && environment.name
+          ? require(path.join(envDir, environment.name))
+          : undefined;
+      }
+    } catch (e) {
+      console.error(`❌ Ошибка загрузки ${name}:`, e.message);
+      return resolve();
+    }
+
     newman.run({
       collection,
       environment: envObj,
@@ -170,28 +173,15 @@ async function runCollection(file, environment, config) {
         );
       } catch (_) {}
     }).on('done', () => resolve());
-  });
-}
+  }));
 
-app.post('/run', async (req, res) => {
-  const { files, environment, parallel } = req.body;
-
-  fs.emptyDirSync(allureResults);
-  fs.emptyDirSync(allureReport);
-
-  if (parallel) {
-    await Promise.all(files.map(file => runCollection(file, environment, config)));
-  } else {
-    for (const file of files) {
-      await runCollection(file, environment, config);
-    }
-  }
+  await Promise.all(runs);
 
   exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
     if (err) return res.status(500).json({ error: 'Allure generation failed' });
-
-    const reportUrl = `${publicUrl}/allure-report/index.html`;
-    res.json({ message: 'Test run complete', reportUrl });
+    const url = `http://localhost:${PORT}/allure-report/index.html`;
+    exec(`start "" "${url}"`);
+    res.json({ message: 'Test run complete', reportUrl: url });
   });
 });
 
