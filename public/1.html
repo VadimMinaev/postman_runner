@@ -773,6 +773,14 @@
       </div>
     </div>
 
+    <div class="form-row">
+      <label class="form-label">
+        <input type="checkbox" id="parallelSwitch" checked style="transform: scale(1.5); margin-right: 10px;">
+         Запускать коллекции параллельно
+      </label>
+    </div>
+
+
     <button class="btn btn-primary" id="runBtn" onclick="runCollections()">
       ▶️ Запустить тестирование
     </button>
@@ -1042,7 +1050,12 @@
         const res = await fetch('/run', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ files: selectedItems, environment: environment || null })
+          body: JSON.stringify({
+            files: selectedItems,
+            environment: environment || null,
+            parallel: document.getElementById('parallelSwitch').checked
+          })
+
         });
 
         const result = await res.json();

@@ -122,23 +122,24 @@ app.post('/refresh', async (req, res) => {
 
 
 app.post('/run', async (req, res) => {
-  const { files, environment } = req.body;
+  const { files, environment, parallel } = req.body;
   fs.emptyDirSync(allureResults);
   fs.emptyDirSync(allureReport);
 
-  const runs = files.map(file => new Promise(async (resolve) => {
-    const name = file.name;
-    const uid = file.uid;
+  const runCollection = async (file) => {
+    const { name, uid } = file;
     let collection, envObj;
 
     try {
       if (config.useApiMode) {
+        // Загружаем коллекцию из Postman API
         const { data } = await axios.get(
           `https://api.getpostman.com/collections/${uid}`,
           { headers: { 'X-Api-Key': config.apiKey } }
         );
         collection = data.collection;
 
+        // Загружаем окружение (если есть)
         if (environment && environment.uid) {
           const { data: envData } = await axios.get(
             `https://api.getpostman.com/environments/${environment.uid}`,
@@ -147,43 +148,80 @@ app.post('/run', async (req, res) => {
           envObj = envData.environment;
         }
       } else {
-        collection = require(path.join(collDir, name));
-        envObj = environment && environment.name
-          ? require(path.join(envDir, environment.name))
-          : undefined;
+        // Загружаем коллекцию из локального файла (без require кеша!)
+        const content = fs.readFileSync(path.join(collDir, name), 'utf-8');
+        collection = JSON.parse(content);
+
+        if (environment && environment.name) {
+          const envContent = fs.readFileSync(path.join(envDir, environment.name), 'utf-8');
+          envObj = JSON.parse(envContent);
+        }
       }
     } catch (e) {
-      console.error(`❌ Ошибка загрузки ${name}:`, e.message);
-      return resolve();
+      console.error(`❌ Ошибка загрузки "${name}":`, e.message);
+      return;
     }
 
-    newman.run({
-      collection,
-      environment: envObj,
-      reporters: ['cli', 'allure'],
-      reporter: { allure: { export: allureResults } }
-    }).on('request', (err, args) => {
-      if (err || !args?.response) return;
-      try {
-        const body = args.response.stream.toString();
-        const pretty = JSON.stringify(JSON.parse(body), null, 2);
-        fs.writeFileSync(
-          path.join(allureResults, `${Date.now()}-${args.item.name}-response.json`),
-          pretty
-        );
-      } catch (_) {}
-    }).on('done', () => resolve());
-  }));
+    console.log(`▶ Запуск коллекции: ${name}`);
 
-  await Promise.all(runs);
+    return new Promise(resolve => {
+      newman.run({
+        collection,
+        environment: envObj,
+        reporters: ['cli', 'allure'],
+        reporter: { allure: { export: allureResults } }
+      }).on('request', (err, args) => {
+        if (err || !args?.response) return;
+        try {
+          const body = args.response.stream.toString();
+          const pretty = JSON.stringify(JSON.parse(body), null, 2);
+          fs.writeFileSync(
+            path.join(allureResults, `${Date.now()}-${args.item.name}-response.json`),
+            pretty
+          );
+        } catch (_) { }
+      }).on('done', () => {
+        console.log(`✅ Завершено: ${name}`);
+        resolve();
+      });
+    });
+  };
 
-  exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
-    if (err) return res.status(500).json({ error: 'Allure generation failed' });
-    const url = `http://localhost:${PORT}/allure-report/index.html`;
-    exec(`start "" "${url}"`);
-    res.json({ message: 'Test run complete', reportUrl: url });
-  });
+  try {
+    if (parallel) {
+      // 🔁 Параллельный запуск всех коллекций
+      await Promise.all(files.map(file => runCollection(file)));
+    } else {
+      // 🔂 Последовательный запуск
+      for (const file of files) {
+        await runCollection(file);
+      }
+    }
+
+    // 📦 Генерация Allure отчета
+    exec(`npx allure-commandline generate ${allureResults} --clean -o ${allureReport}`, (err) => {
+      if (err) {
+        console.error('❌ Ошибка генерации Allure:', err.message);
+        return res.status(500).json({ error: 'Allure generation failed' });
+      }
+
+      const url = `http://localhost:${PORT}/allure-report/index.html`;
+
+      // 🔓 Открываем отчет в браузере только на Windows
+      if (process.platform === 'win32') {
+        exec(`start "" "${url}"`);
+      }
+
+      console.log('📊 Отчет Allure успешно сгенерирован.');
+      res.json({ message: 'Test run complete', reportUrl: url });
+    });
+
+  } catch (e) {
+    console.error('❌ Ошибка запуска тестов:', e.message);
+    res.status(500).json({ error: 'Test run failed' });
+  }
 });
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Сервер запущен: http://localhost:${PORT}`);
