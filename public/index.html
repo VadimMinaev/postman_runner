@@ -788,6 +788,23 @@
     <pre class="output" id="output"></pre>
   </div>
 
+  <!-- Switcher for Output / Allure -->
+  <div class="form-row" style="margin-top: 20px;">
+    <button class="btn btn-secondary" onclick="showOutput()">🧾 Логи</button>
+    <button class="btn btn-success" onclick="showAllure()">📊 Отчёт</button>
+  </div>
+
+  <!-- Embedded Allure report -->
+  <div class="glass-card" style="margin-top: 20px; display: none;" id="allureContainer">
+    <div class="section-title">📊 Allure отчёт</div>
+    <iframe 
+      id="allureFrame" 
+      src="/allure-report/index.html" 
+      style="width:100%; height:80vh; border:1px solid var(--glass-border); border-radius: 12px;"
+    ></iframe>
+  </div>
+
+
   <script>
     // Global variables
     let collections = [];
@@ -1059,9 +1076,19 @@
         });
 
         const result = await res.json();
-        outputEl.textContent = res.ok 
-          ? `✅ Тестирование завершено успешно!\n🎯 Allure отчёт откроется автоматически\n📊 Обработано коллекций: ${selectedItems.length}` 
-          : `❌ Ошибка выполнения:\n${result.error}`;
+        if (res.ok) {
+  outputEl.textContent = `✅ Тестирование завершено успешно!\n📊 Загружаем отчёт...`;
+
+  const frame = document.getElementById('allureFrame');
+  if (frame) {
+    frame.src = `/allure-report/index.html?${Date.now()}`; // избежать кэширования
+  }
+
+  showAllure(); // переключаем на Allure
+} else {
+  outputEl.textContent = `❌ Ошибка выполнения:\n${result.error}`;
+}
+
       } catch (err) {
         outputEl.textContent = '❌ Ошибка соединения с сервером';
       } finally {
@@ -1070,7 +1097,17 @@
     }
 
     // Initialize app when DOM is loaded
-    document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', init);
+  function showOutput() {
+    outputEl.style.display = 'block';
+    document.getElementById('allureContainer').style.display = 'none';
+  } 
+
+  function showAllure() {
+    outputEl.style.display = 'none';
+    document.getElementById('allureContainer').style.display = 'block';
+  }
+
   </script>
 </body>
 </html>
