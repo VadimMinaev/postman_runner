@@ -174,7 +174,6 @@ async function safeAxiosGet(url, headers) {
   }
 }
 
-// 🔥 ИСПРАВЛЕНО: убраны лишние пробелы в URL!
 app.get('/collections', async (req, res) => {
   try {
     if (config.useApiMode && config.apiKey && config.workspaceId) {
@@ -442,7 +441,6 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // ----------------------- Старт HTTP-сервера -----------------------
-// 🔥 КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: слушаем 0.0.0.0
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
   console.log(`🌐 Доступен по:`);
