@@ -35,7 +35,6 @@ try {
   }
 } catch (err) {
   console.warn('⚠️ config.json повреждён или пуст. Используется конфиг по умолчанию.');
-  // Не падаем — просто используем дефолтный конфиг
 }
 
 // ----------------------- Мидлвары Express -----------------------
@@ -175,6 +174,7 @@ async function safeAxiosGet(url, headers) {
   }
 }
 
+// 🔥 ИСПРАВЛЕНО: убраны лишние пробелы в URL!
 app.get('/collections', async (req, res) => {
   try {
     if (config.useApiMode && config.apiKey && config.workspaceId) {
@@ -442,7 +442,13 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // ----------------------- Старт HTTP-сервера -----------------------
+// 🔥 КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: слушаем 0.0.0.0
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Сервер запущен на порту ${PORT}`);
-  console.log(`🌐 Слушает все интерфейсы (0.0.0.0)`);
+  console.log(`🌐 Доступен по:`);
+  if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+    console.log(`   https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+  } else {
+    console.log(`   http://localhost:${PORT}`);
+  }
 });
