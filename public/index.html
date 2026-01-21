@@ -130,6 +130,15 @@
     }
     .card:hover { background: rgba(255,255,255,.12); transform: translateY(-2px); box-shadow: var(--shadow-md); }
     [data-theme="dark"] .card:hover { background: rgba(0,0,0,.4); }
+    .results-list { display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+    .result-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px;
+      border-radius:12px; background: var(--glass-bg); border:1px solid var(--glass-border); color: var(--text-secondary);
+      transition: var(--transition); }
+    .result-name { flex:1; white-space: normal; word-break: break-word; }
+    .result-status { font-size:12px; font-weight:700; padding:6px 10px; border-radius:999px; text-transform: uppercase; letter-spacing:.5px; }
+    .status-running { background: rgba(59,130,246,.2); color:#93c5fd; border:1px solid rgba(59,130,246,.4); }
+    .status-done { background: rgba(16,185,129,.2); color:#6ee7b7; border:1px solid rgba(16,185,129,.4); }
+    .status-error { background: rgba(239,68,68,.2); color:#fecaca; border:1px solid rgba(239,68,68,.4); }
     .card-checkbox { width:20px; height:20px; accent-color:#60a5fa; cursor:pointer; transform: scale(1.2); }
     .card-text { flex:1; white-space: normal; word-break: break-word; line-height:1.4; }
     .card-icon { margin-right:8px; font-size:18px; }
@@ -251,6 +260,13 @@
     </div>
 
     <div class="glass-card">
+      <div class="section-header">
+        <span class="section-title">📊 Результаты по коллекциям</span>
+      </div>
+      <div class="results-list" id="resultsContainer"></div>
+    </div>
+
+    <div class="glass-card">
       <div class="form-group">
         <label class="section-title">🌍 Окружение</label>
         <select class="form-select" id="environmentSelect">
@@ -279,6 +295,9 @@
     let selectedAll = false;
     let theme = 'light';
     let showConfig = false;
+    let awaitAllureOpen = false;
+    let lastAllureUrl = '';
+    const collectionStatuses = new Map();
 
     // DOM
     const apiKeyEl = document.getElementById('apiKey');
@@ -287,6 +306,7 @@
     const environmentSelectEl = document.getElementById('environmentSelect');
     const outputEl = document.getElementById('output');
     const collectionsContainer = document.getElementById('collectionsContainer');
+    const resultsContainer = document.getElementById('resultsContainer');
     const apiStatusEl = document.getElementById('apiStatus');
     const workspaceStatusEl = document.getElementById('workspaceStatus');
     const collectionsCountEl = document.getElementById('collectionsCount');
@@ -317,6 +337,12 @@
         try {
           const data = JSON.parse(e.data);
           switch (data.type) {
+            case 'snapshot':
+              (data.items || []).forEach(item => {
+                collectionStatuses.set(item.collection, item);
+              });
+              renderResults();
+              break;
             case 'log': appendLine(data.message); break;
             case 'start': appendLine(`🚀 Старт: ${data.collection}`); break;
             case 'item': appendLine(`▶ Запрос: ${data.item}`); break;
@@ -326,11 +352,18 @@
               break;
             case 'pm-console': appendLine(`🧪 pm.console: ${data.message}`); break;
             case 'collection-done': appendLine(`🏁 Коллекция завершена: ${data.collection} (ошибок: ${data.failures})`); break;
+            case 'collection-status':
+              if (data.collection) {
+                collectionStatuses.set(data.collection, data);
+                renderResults();
+              }
+              break;
             case 'allure':
               if (data.message && data.message.trim()) appendLine(`📦 Allure: ${data.message.trim()}`);
               break;
             case 'allure-done':
               appendLine(data.ok ? `✅ Allure готов: ${data.url}` : '❌ Allure не собран');
+              if (data.ok && data.url) openAllureOnce(data.url);
               break;
             case 'error': appendLine(`❌ ${data.message}`); break;
             default: /* noop */ ;
@@ -438,6 +471,7 @@
         collectionsCountEl.textContent = coll.length;
         environmentsCountEl.textContent = env.length;
         renderCollections();
+        renderResults();
         renderEnvironments();
         outputEl.textContent = `✅ Загружено ${coll.length} коллекций и ${env.length} окружений`;
         updateSelectedCount();
@@ -468,6 +502,48 @@
         option.value = env.name;
         option.textContent = `🌍 ${env.name}`;
         environmentSelectEl.appendChild(option);
+      });
+    }
+
+    function renderResults() {
+      resultsContainer.innerHTML = '';
+      const items = collections.map(c => {
+        const name = c.name;
+        const status = collectionStatuses.get(name) || {};
+        return { name, status };
+      });
+      if (!items.length) {
+        const empty = document.createElement('div');
+        empty.className = 'result-row';
+        empty.textContent = 'Пока нет данных по коллекциям';
+        resultsContainer.appendChild(empty);
+        return;
+      }
+      items.forEach(({ name, status }) => {
+        const row = document.createElement('div');
+        row.className = 'result-row';
+        const nameEl = document.createElement('div');
+        nameEl.className = 'result-name';
+        nameEl.textContent = (name || '').replace(/\.json$/, '');
+        const tag = document.createElement('div');
+        const s = status.status || 'idle';
+        if (s === 'running') {
+          tag.className = 'result-status status-running';
+          tag.textContent = 'RUNNING';
+        } else if (s === 'done') {
+          tag.className = 'result-status status-done';
+          const failures = Number.isFinite(status.failures) ? status.failures : 0;
+          tag.textContent = failures > 0 ? `FAIL ${failures}` : 'OK';
+        } else if (s === 'error') {
+          tag.className = 'result-status status-error';
+          tag.textContent = 'ERROR';
+        } else {
+          tag.className = 'result-status status-running';
+          tag.textContent = 'IDLE';
+        }
+        row.appendChild(nameEl);
+        row.appendChild(tag);
+        resultsContainer.appendChild(row);
       });
     }
 
@@ -527,6 +603,7 @@
       }
 
       setLoading(runBtn, true);
+      awaitAllureOpen = true;
       outputEl.textContent = `⏳ Запуск ${selectedItems.length} коллекций...\n${selectedEnvironment ? `🌍 Окружение: ${selectedEnvironment}` : '🚫 Без окружения'}`;
 
       try {
@@ -540,14 +617,23 @@
           })
         });
         const result = await res.json();
+        if (res.ok && result.reportUrl) openAllureOnce(result.reportUrl);
         outputEl.textContent = res.ok
           ? `✅ Тестирование завершено успешно!\n🎯 Allure отчёт откроется автоматически (Windows)\n📊 Обработано коллекций: ${selectedItems.length}`
           : `❌ Ошибка выполнения:\n${result.error}`;
       } catch {
         outputEl.textContent = '❌ Ошибка соединения с сервером';
       } finally {
+        awaitAllureOpen = false;
         setLoading(runBtn, false);
       }
+    }
+
+    function openAllureOnce(url) {
+      if (!awaitAllureOpen) return;
+      if (!url || url === lastAllureUrl) return;
+      lastAllureUrl = url;
+      window.open(url, '_blank', 'noopener');
     }
 
     // expose some functions to inline handlers
