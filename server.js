@@ -139,6 +139,8 @@ function setStatusRunning(name) {
     ...(collectionResults.get(name) || {}),
     status: 'running',
     failures: null,
+    assertionsTotal: 0,
+    assertionsFailed: 0,
     startedAt: Date.now(),
     resultLine: `${name} — ▶ Выполняется...`,
   });
@@ -147,9 +149,12 @@ function setStatusRunning(name) {
 function setStatusDone(name, failures) {
   const finishedAt = Date.now();
   const resultLine = makeResultLine(name, failures, finishedAt);
+  const prev = collectionResults.get(name) || {};
   collectionResults.set(name, {
     status: 'done',
     failures,
+    assertionsTotal: prev.assertionsTotal || 0,
+    assertionsFailed: prev.assertionsFailed || 0,
     finishedAt,
     resultLine,
   });
@@ -159,6 +164,8 @@ function setStatusError(name, message) {
   collectionResults.set(name, {
     status: 'error',
     failures: null,
+    assertionsTotal: 0,
+    assertionsFailed: 0,
     finishedAt: Date.now(),
     resultLine: `${name} — ❌ Ошибка запуска: ${message}`,
   });
@@ -489,6 +496,14 @@ app.post('/run', async (req, res) => {
           } catch (_) { /* ignore non-JSON */ }
         })
         .on('assertion', (err, args) => {
+          const status = collectionResults.get(name) || {};
+          const nextTotal = (status.assertionsTotal || 0) + 1;
+          const nextFailed = (status.assertionsFailed || 0) + (err ? 1 : 0);
+          collectionResults.set(name, {
+            ...status,
+            assertionsTotal: nextTotal,
+            assertionsFailed: nextFailed
+          });
           ssePush({
             type: 'assertion',
             collection: name,
@@ -496,6 +511,7 @@ app.post('/run', async (req, res) => {
             assertion: args?.assertion,
             error: err ? String(err) : null
           });
+          ssePush({ type: 'collection-status', collection: name, ...collectionResults.get(name) });
         })
         .on('console', (err, args) => {
           if (args?.messages?.length) {

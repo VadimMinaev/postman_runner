@@ -142,6 +142,9 @@
     .status-running { background: rgba(59,130,246,.2); color:#93c5fd; border:1px solid rgba(59,130,246,.4); }
     .status-done { background: rgba(16,185,129,.2); color:#6ee7b7; border:1px solid rgba(16,185,129,.4); }
     .status-error { background: rgba(239,68,68,.2); color:#fecaca; border:1px solid rgba(239,68,68,.4); }
+    .result-metrics { display:flex; align-items:center; gap:8px; font-size:12px; }
+    .metric-ok { color:#6ee7b7; font-weight:700; }
+    .metric-fail { color:#fecaca; font-weight:700; }
     .card-checkbox { width:20px; height:20px; accent-color:#60a5fa; cursor:pointer; transform: scale(1.2); }
     .card-text { flex:1; white-space: normal; word-break: break-word; line-height:1.4; }
     .card-icon { margin-right:8px; font-size:18px; }
@@ -577,7 +580,22 @@
           tag.className = 'result-status status-running';
           tag.textContent = 'IDLE';
         }
+        const metrics = document.createElement('div');
+        metrics.className = 'result-metrics';
+        const okEl = document.createElement('div');
+        const failEl = document.createElement('div');
+        const total = Number.isFinite(status.assertionsTotal) ? status.assertionsTotal : 0;
+        const failed = Number.isFinite(status.assertionsFailed) ? status.assertionsFailed : 0;
+        const passed = Math.max(0, total - failed);
+        okEl.className = 'metric-ok';
+        okEl.textContent = `OK: ${passed}`;
+        failEl.className = 'metric-fail';
+        failEl.textContent = `FAIL: ${failed}`;
+        metrics.appendChild(okEl);
+        metrics.appendChild(failEl);
+
         row.appendChild(nameEl);
+        row.appendChild(metrics);
         row.appendChild(tag);
         resultsContainer.appendChild(row);
       });
