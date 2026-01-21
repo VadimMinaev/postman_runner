@@ -130,10 +130,13 @@
     }
     .card:hover { background: rgba(255,255,255,.12); transform: translateY(-2px); box-shadow: var(--shadow-md); }
     [data-theme="dark"] .card:hover { background: rgba(0,0,0,.4); }
-    .results-list { display:flex; flex-direction:column; gap:10px; margin-top:10px; }
-    .result-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px;
+    .results-collapsible { overflow:hidden; transition: all .5s cubic-bezier(.4,0,.2,1); margin-top:10px; }
+    .results-collapsible.collapsed { max-height:0; opacity:0; transform: translateY(-20px); }
+    .results-collapsible.expanded { max-height:1200px; opacity:1; transform: translateY(0); }
+    .results-list { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:10px; }
+    .result-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px;
       border-radius:12px; background: var(--glass-bg); border:1px solid var(--glass-border); color: var(--text-secondary);
-      transition: var(--transition); }
+      transition: var(--transition); min-height:52px; }
     .result-name { flex:1; white-space: normal; word-break: break-word; }
     .result-status { font-size:12px; font-weight:700; padding:6px 10px; border-radius:999px; text-transform: uppercase; letter-spacing:.5px; }
     .status-running { background: rgba(59,130,246,.2); color:#93c5fd; border:1px solid rgba(59,130,246,.4); }
@@ -262,8 +265,11 @@
     <div class="glass-card">
       <div class="section-header">
         <span class="section-title">📊 Результаты по коллекциям</span>
+        <button class="btn btn-secondary" id="toggleResultsBtn" onclick="toggleResults()">👁️ Показать</button>
       </div>
-      <div class="results-list" id="resultsContainer"></div>
+      <div class="results-collapsible collapsed" id="resultsCollapsible">
+        <div class="results-list" id="resultsContainer"></div>
+      </div>
     </div>
 
     <div class="glass-card">
@@ -283,6 +289,7 @@
     </div>
 
     <button class="btn btn-primary" id="runBtn" onclick="runCollections()">▶️ Запустить тестирование</button>
+    <button class="btn btn-secondary" id="openAllureBtn" onclick="openAllureClick()" disabled>📊 Открыть Allure</button>
 
     <pre class="output" id="output"></pre>
   </div>
@@ -295,6 +302,7 @@
     let selectedAll = false;
     let theme = 'light';
     let showConfig = false;
+    let showResults = false;
     let awaitAllureOpen = false;
     let lastAllureUrl = '';
     const collectionStatuses = new Map();
@@ -317,13 +325,18 @@
     const saveConfigBtn = document.getElementById('saveConfigBtn');
     const refreshBtn = document.getElementById('refreshBtn');
     const runBtn = document.getElementById('runBtn');
+    const openAllureBtn = document.getElementById('openAllureBtn');
+    const resultsCollapsible = document.getElementById('resultsCollapsible');
+    const toggleResultsBtn = document.getElementById('toggleResultsBtn');
 
     function init() {
       loadTheme();
       loadConfigVisibility();
+      loadResultsVisibility();
       loadConfig();
       loadData();
       initStream(); // подписка на SSE
+      updateAllureButton();
     }
 
     // SSE stream
@@ -405,6 +418,29 @@
       } else {
         configCollapsible.classList.remove('expanded');
         configCollapsible.classList.add('collapsed');
+      }
+    }
+
+    // RESULTS visibility
+    function loadResultsVisibility() {
+      const saved = localStorage.getItem('showResults') === 'true';
+      showResults = saved;
+      updateResultsVisibility();
+    }
+    function toggleResults() {
+      showResults = !showResults;
+      localStorage.setItem('showResults', showResults.toString());
+      updateResultsVisibility();
+    }
+    function updateResultsVisibility() {
+      if (showResults) {
+        resultsCollapsible.classList.remove('collapsed');
+        resultsCollapsible.classList.add('expanded');
+        toggleResultsBtn.textContent = '🙈 Скрыть';
+      } else {
+        resultsCollapsible.classList.remove('expanded');
+        resultsCollapsible.classList.add('collapsed');
+        toggleResultsBtn.textContent = '👁️ Показать';
       }
     }
 
@@ -604,6 +640,8 @@
 
       setLoading(runBtn, true);
       awaitAllureOpen = true;
+      lastAllureUrl = '';
+      updateAllureButton();
       outputEl.textContent = `⏳ Запуск ${selectedItems.length} коллекций...\n${selectedEnvironment ? `🌍 Окружение: ${selectedEnvironment}` : '🚫 Без окружения'}`;
 
       try {
@@ -633,7 +671,18 @@
       if (!awaitAllureOpen) return;
       if (!url || url === lastAllureUrl) return;
       lastAllureUrl = url;
+      updateAllureButton();
       window.open(url, '_blank', 'noopener');
+    }
+
+    function updateAllureButton() {
+      openAllureBtn.disabled = !lastAllureUrl;
+      openAllureBtn.textContent = lastAllureUrl ? '📊 Открыть Allure' : '📊 Allure недоступен';
+    }
+
+    function openAllureClick() {
+      if (!lastAllureUrl) return;
+      window.open(lastAllureUrl, '_blank', 'noopener');
     }
 
     // expose some functions to inline handlers
@@ -645,6 +694,8 @@
     window.toggleSelectAll = toggleSelectAll;
     window.toggleCollection = toggleCollection;
     window.runCollections = runCollections;
+    window.openAllureClick = openAllureClick;
+    window.toggleResults = toggleResults;
 
     document.addEventListener('DOMContentLoaded', init);
   </script>
