@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs-extra');
 const path = require('path');
 const { spawn } = require('child_process');
+const crypto = require('crypto');
 const newman = require('newman');
 const axios = require('axios');
 require('dotenv').config();
@@ -10,6 +11,10 @@ require('dotenv').config();
 // ----------------------- Базовая настройка приложения -----------------------
 const app = express();
 const PORT = process.env.PORT || 3000;
+const AUTH_USER = process.env.BASIC_AUTH_USER || 'vadmin';
+const AUTH_PASS = process.env.BASIC_AUTH_PASS || 'vadmin';
+const AUTH_COOKIE = 'auth_token';
+const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 
 // ----------------------- Пути к рабочим директориям и файлам -----------------------
 const collDir = path.join(__dirname, 'collections');
@@ -17,6 +22,7 @@ const envDir = path.join(__dirname, 'environments');
 const allureResults = path.join(__dirname, 'allure-results');
 const allureReport = path.join(__dirname, 'allure-report');
 const configPath = path.join(__dirname, 'config.json');
+const sessionsPath = path.join(__dirname, 'auth-sessions.json');
 
 // Гарантируем наличие папок/конфига
 fs.ensureDirSync(collDir);
@@ -24,28 +30,99 @@ fs.ensureDirSync(envDir);
 fs.ensureDirSync(allureResults);
 fs.ensureDirSync(allureReport);
 fs.ensureFileSync(configPath);
+fs.ensureFileSync(sessionsPath);
 
 // ----------------------- Загрузка и инициализация конфига -----------------------
-let config = { apiKey: '', workspaceId: '', useApiMode: true };
+const defaultConfig = { apiKey: '', workspaceId: '', useApiMode: true };
+let config = { ...defaultConfig };
 
-try {
-  const fileContent = fs.readFileSync(configPath, 'utf8').trim();
-  if (fileContent) {
-    config = JSON.parse(fileContent);
-  }
-} catch (err) {
-  console.warn('⚠️ config.json повреждён или пуст. Используется конфиг по умолчанию.');
+const authSessions = new Map();
+
+function persistSessions() {
+  const sessions = Array.from(authSessions.entries()).map(([token, data]) => ({
+    token,
+    user: data.user,
+    expiresAt: data.expiresAt
+  }));
+  fs.writeFileSync(sessionsPath, JSON.stringify({ sessions }, null, 2));
 }
 
-// ----------------------- Мидлвары Express -----------------------
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/allure-report', express.static(allureReport));
-app.use(express.json());
+function loadSessions() {
+  try {
+    const content = fs.readFileSync(sessionsPath, 'utf8').trim();
+    if (!content) return;
+    const parsed = JSON.parse(content);
+    const now = Date.now();
+    (parsed.sessions || []).forEach(s => {
+      if (s.expiresAt && s.expiresAt > now) {
+        authSessions.set(s.token, { user: s.user, expiresAt: s.expiresAt });
+      }
+    });
+    persistSessions();
+  } catch (err) {
+    console.warn('⚠️ auth-sessions.json повреждён или пуст. Сессии сброшены.');
+  }
+}
+
+function parseCookies(headerValue) {
+  const list = {};
+  if (!headerValue) return list;
+  headerValue.split(';').forEach(cookie => {
+    const parts = cookie.split('=');
+    const key = parts.shift().trim();
+    const value = decodeURIComponent(parts.join('='));
+    if (key) list[key] = value;
+  });
+  return list;
+}
+
+function isAuthenticated(req) {
+  const cookies = parseCookies(req.headers.cookie);
+  const token = cookies[AUTH_COOKIE];
+  if (!token) return false;
+  const session = authSessions.get(token);
+  if (!session) return false;
+  if (Date.now() > session.expiresAt) {
+    authSessions.delete(token);
+    persistSessions();
+    return false;
+  }
+  return true;
+}
+
+function authMiddleware(req, res, next) {
+  const openPaths = new Set(['/health', '/login', '/logout', '/login.html', '/Service_Logo_full_.svg']);
+  if (openPaths.has(req.path)) return next();
+  if (isAuthenticated(req)) return next();
+  if (req.headers.accept && req.headers.accept.includes('text/html')) {
+    return res.redirect('/login');
+  }
+  return res.status(401).json({ error: 'unauthorized' });
+}
+
+async function loadConfigFromStorage() {
+  try {
+    const fileContent = fs.readFileSync(configPath, 'utf8').trim();
+    if (fileContent) config = JSON.parse(fileContent);
+  } catch (err) {
+    console.warn('⚠️ config.json повреждён или пуст. Используется конфиг по умолчанию.');
+  }
+}
+
+async function saveConfigToStorage() {
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+}
 
 // ----------------------- Health-check для Railway -----------------------
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
+
+// ----------------------- Мидлвары Express -----------------------
+app.use(authMiddleware);
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/allure-report', express.static(allureReport));
+app.use(express.json());
 
 // ----------------------- Хранилище результатов по коллекциям -----------------------
 const collectionResults = new Map();
@@ -149,18 +226,48 @@ app.get('/config', (req, res) => {
   res.json(config);
 });
 
-app.post('/config', (req, res) => {
+app.post('/config', async (req, res) => {
   const { apiKey, workspaceId, useApi } = req.body;
   config.apiKey = apiKey || '';
   config.workspaceId = workspaceId || '';
   config.useApiMode = !!useApi;
   try {
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    await saveConfigToStorage();
     res.json({ success: true });
   } catch (e) {
     console.error('❌ Не удалось сохранить config.json:', e.message);
     res.status(500).json({ success: false, error: 'Write failed' });
   }
+});
+
+// ----------------------- Авторизация -----------------------
+app.get('/login', (req, res) => {
+  if (isAuthenticated(req)) return res.redirect('/');
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (username === AUTH_USER && password === AUTH_PASS) {
+    const token = crypto.randomBytes(32).toString('hex');
+    authSessions.set(token, { user: username, expiresAt: Date.now() + SESSION_TTL_MS });
+    persistSessions();
+    const secure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+    res.cookie(AUTH_COOKIE, token, { httpOnly: true, sameSite: 'lax', secure });
+    return res.json({ success: true });
+  }
+  return res.status(401).json({ success: false, error: 'invalid_credentials' });
+});
+
+app.post('/logout', (req, res) => {
+  const cookies = parseCookies(req.headers.cookie);
+  const token = cookies[AUTH_COOKIE];
+  if (token) {
+    authSessions.delete(token);
+    persistSessions();
+  }
+  res.cookie(AUTH_COOKIE, '', { httpOnly: true, sameSite: 'lax', expires: new Date(0) });
+  res.json({ success: true });
 });
 
 // ----------------------- Список коллекций и окружений -----------------------
@@ -441,12 +548,18 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // ----------------------- Старт HTTP-сервера -----------------------
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`);
-  console.log(`🌐 Доступен по:`);
-  if (process.env.RAILWAY_PUBLIC_DOMAIN) {
-    console.log(`   https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
-  } else {
-    console.log(`   http://localhost:${PORT}`);
-  }
-});
+async function bootstrap() {
+  loadSessions();
+  await loadConfigFromStorage();
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Сервер запущен на порту ${PORT}`);
+    console.log(`🌐 Доступен по:`);
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+      console.log(`   https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+    } else {
+      console.log(`   http://localhost:${PORT}`);
+    }
+  });
+}
+
+bootstrap();
