@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: postman-runner
+    env: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 3000
