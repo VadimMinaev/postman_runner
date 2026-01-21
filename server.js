@@ -363,7 +363,13 @@ app.post('/refresh', async (req, res) => {
 
 // ----------------------- Генерация Allure -----------------------
 async function generateAllure({ resultsDir, reportDir }) {
-  const localAllure = path.join(__dirname, 'node_modules', '.bin', 'allure');
+  const isWin = process.platform === 'win32';
+  const localAllure = path.join(
+    __dirname,
+    'node_modules',
+    '.bin',
+    isWin ? 'allure.cmd' : 'allure'
+  );
 
   const asPromise = (child, label) =>
     new Promise((resolve, reject) => {
@@ -376,7 +382,10 @@ async function generateAllure({ resultsDir, reportDir }) {
   // Стратегия 1: локальный бинарник
   if (fs.existsSync(localAllure)) {
     try {
-      const p = spawn(localAllure, ['generate', resultsDir, '--clean', '-o', reportDir], { stdio: 'pipe' });
+      const p = spawn(localAllure, ['generate', resultsDir, '--clean', '-o', reportDir], {
+        stdio: 'pipe',
+        shell: isWin
+      });
       await asPromise(p, 'local-allure');
       return { ok: true, strategy: 'local' };
     } catch (e) {
@@ -386,7 +395,7 @@ async function generateAllure({ resultsDir, reportDir }) {
 
   // Стратегия 2: npx
   try {
-    const cmd = `npx allure-commandline generate "${resultsDir}" --clean -o "${reportDir}"`;
+    const cmd = `npx --yes allure-commandline generate "${resultsDir}" --clean -o "${reportDir}"`;
     const p = spawn(cmd, { shell: true, stdio: 'pipe' });
     await asPromise(p, 'npx-allure');
     return { ok: true, strategy: 'npx' };
