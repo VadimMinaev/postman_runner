@@ -6,30 +6,36 @@
   <title>🧑‍💻Postman Runner ©️vadmin</title>
   <style>
     :root {
-      --primary-gradient: linear-gradient(135deg, #03197a 0%, #0694a7 100%);
-      --secondary-gradient: linear-gradient(45deg, #39598c, #1d4ed8);
-      --success-gradient: linear-gradient(45deg, #10b981, #059669);
-      --glass-bg: rgba(255, 255, 255, 0.1);
-      --glass-border: rgba(255, 255, 255, 0.2);
-      --text-primary: #760000;
-      --text-secondary: #f1f5f9;
-      --text-muted: rgba(19, 16, 183, 0.7);
-      --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.2);
-      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
-      --border-radius: 16px;
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --primary-gradient: radial-gradient(1200px 600px at 20% -10%, rgba(59,130,246,.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(16,185,129,.25), transparent 55%),
+        linear-gradient(135deg, #0b1024 0%, #0b3a4b 55%, #0b5f69 100%);
+      --secondary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --glass-bg: rgba(15, 23, 42, 0.55);
+      --glass-border: rgba(148, 163, 184, 0.25);
+      --panel-bg: rgba(2, 6, 23, 0.45);
+      --text-primary: #f8fafc;
+      --text-secondary: #e2e8f0;
+      --text-muted: rgba(226, 232, 240, 0.6);
+      --shadow-lg: 0 30px 80px rgba(2, 6, 23, 0.45);
+      --shadow-md: 0 16px 35px rgba(2, 6, 23, 0.35);
+      --border-radius: 18px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     [data-theme="dark"] {
-      --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      --secondary-gradient: linear-gradient(45deg, #2d3748, #1a202c);
-      --success-gradient: linear-gradient(45deg, #38a169, #2f855a);
-      --glass-bg: rgba(0, 0, 0, 0.3);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-primary: #ffffff;
+      --primary-gradient: radial-gradient(1200px 600px at 20% -10%, rgba(99,102,241,.3), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(56,189,248,.18), transparent 55%),
+        linear-gradient(135deg, #0b1024 0%, #0a0f1f 100%);
+      --secondary-gradient: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+      --success-gradient: linear-gradient(135deg, #34d399 0%, #059669 100%);
+      --glass-bg: rgba(2, 6, 23, 0.7);
+      --glass-border: rgba(148, 163, 184, 0.2);
+      --panel-bg: rgba(2, 6, 23, 0.7);
+      --text-primary: #f8fafc;
       --text-secondary: #e2e8f0;
-      --text-muted: rgba(255, 255, 255, 0.6);
-      --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.5);
-      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.3);
+      --text-muted: rgba(226, 232, 240, 0.55);
+      --shadow-lg: 0 30px 80px rgba(2, 6, 23, 0.65);
+      --shadow-md: 0 16px 35px rgba(2, 6, 23, 0.5);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -37,13 +43,31 @@
       background: var(--primary-gradient);
       min-height: 100vh;
       color: var(--text-primary);
-      padding: 20px; line-height: 1.6; transition: var(--transition);
+      padding: 24px;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(600px 300px at 15% 15%, rgba(255,255,255,.08), transparent 65%),
+        radial-gradient(500px 280px at 85% 10%, rgba(255,255,255,.06), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
     }
     .container {
-      max-width: 1500px; margin: 0 auto; background: var(--glass-bg);
-      backdrop-filter: blur(20px); border-radius: 40px; padding: 40px;
-      box-shadow: var(--shadow-lg); border: 1px solid var(--glass-border);
+      max-width: 1350px;
+      margin: 0 auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(22px);
+      border-radius: 32px;
+      padding: 36px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--glass-border);
       animation: slideIn 0.6s ease-out;
+      position: relative;
+      z-index: 1;
     }
     .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000;
       background: var(--glass-bg); backdrop-filter: blur(10px);
@@ -74,39 +98,39 @@
     .config-icon { font-size: 20px; transition: transform .3s ease; }
     .config-toggle:hover .config-icon { transform: rotate(90deg); }
     @keyframes slideIn { from { opacity:0; transform: translateY(30px);} to { opacity:1; transform: translateY(0);} }
-    .logo { display:block; margin:0 auto 30px; width:200px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.3)); transition: var(--transition);}
+    .logo { display:block; margin:0 auto 26px; width:180px; filter: drop-shadow(0 6px 14px rgba(0,0,0,.35)); transition: var(--transition);}
     .logo:hover { transform: scale(1.05); }
-    .title { text-align:center; margin-bottom: 40px; font-size:32px; font-weight:700;
-      background: linear-gradient(45deg, #fff, #f0f9ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text;
+    .title { text-align:center; margin-bottom: 10px; font-size:34px; font-weight:700;
+      background: linear-gradient(90deg, #e2e8f0, #ffffff, #bae6fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text;
       text-shadow: 0 2px 4px rgba(0,0,0,.1);
     }
-    .glass-card { background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: var(--border-radius);
-      padding: 24px; border: 1px solid var(--glass-border); margin-bottom: 24px; transition: var(--transition);
+    .subtitle { text-align:center; margin-bottom: 24px; color: var(--text-muted); font-size:14px; }
+    .glass-card { background: var(--panel-bg); backdrop-filter: blur(14px); border-radius: var(--border-radius);
+      padding: 24px; border: 1px solid var(--glass-border); margin-bottom: 22px; transition: var(--transition);
     }
-    .glass-card:hover { background: rgba(255,255,255,.15); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-    [data-theme="dark"] .glass-card:hover { background: rgba(0,0,0,.4); }
+    .glass-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
     .config-collapsible { overflow:hidden; transition: all .5s cubic-bezier(.4,0,.2,1); margin-bottom: 24px; }
     .config-collapsible.collapsed { max-height:0; margin-bottom:0; opacity:0; transform: translateY(-20px); }
     .config-collapsible.expanded { max-height:500px; opacity:1; transform: translateY(0); }
     .form-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:24px; }
     .form-group { margin-bottom: 24px; }
     .form-row { display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-bottom: 24px; }
-    .form-label { display:block; margin-bottom:8px; color:var(--text-secondary); font-weight:600; font-size:14px; text-transform:uppercase; letter-spacing:.5px; position:relative; }
+    .form-label { display:block; margin-bottom:8px; color:var(--text-secondary); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.8px; position:relative; }
     .status-indicator { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; animation: pulse 2s infinite; }
     .status-connected { background:#10b981; } .status-disconnected { background:#ef4444; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
-    .form-input, .form-select { width:100%; padding:14px 16px; font-size:16px; border-radius:12px;
-      border:2px solid rgba(255,255,255,.2); background: var(--glass-bg); color: var(--text-primary);
+    .form-input, .form-select { width:100%; padding:14px 16px; font-size:15px; border-radius:12px;
+      border:1px solid rgba(148,163,184,.35); background: rgba(15,23,42,.6); color: var(--text-primary);
       transition: var(--transition); backdrop-filter: blur(10px);
     }
-    [data-theme="dark"] .form-input, [data-theme="dark"] .form-select { border:2px solid rgba(255,255,255,.1); background: rgba(0,0,0,.2); }
-    .form-input:focus, .form-select:focus { outline:none; border-color:#60a5fa; background: rgba(255,255,255,.15);
-      box-shadow: 0 0 20px rgba(96,165,250,.3); transform: scale(1.02);
+    [data-theme="dark"] .form-input, [data-theme="dark"] .form-select { border:1px solid rgba(148,163,184,.2); background: rgba(2,6,23,.55); }
+    .form-input:focus, .form-select:focus { outline:none; border-color:#60a5fa; background: rgba(15,23,42,.8);
+      box-shadow: 0 0 0 4px rgba(59,130,246,.2); transform: translateY(-1px);
     }
     [data-theme="dark"] .form-input:focus, [data-theme="dark"] .form-select:focus { background: rgba(0,0,0,.3); }
     .form-input::placeholder { color: var(--text-muted); }
-    .btn { padding:14px 24px; font-size:16px; font-weight:600; border-radius:12px; border:none; cursor:pointer;
-      margin-right:12px; margin-bottom:12px; transition: var(--transition); text-transform:uppercase; letter-spacing:.5px;
+    .btn { padding:12px 20px; font-size:15px; font-weight:600; border-radius:12px; border:none; cursor:pointer;
+      margin-right:12px; margin-bottom:12px; transition: var(--transition); text-transform:none; letter-spacing:.2px;
       position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:8px;
     }
     .btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
@@ -115,40 +139,66 @@
     .btn:hover::before { left:100%; }
     .btn:hover { transform: translateY(-2px); }
     .btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-    .btn-primary { background: var(--secondary-gradient); color:#fff; box-shadow: 0 4px 15px rgba(59,130,246,.4);
-      font-size:18px; padding:18px 36px; width:100%; justify-content:center;
+    .btn-primary { background: var(--secondary-gradient); color:#fff; box-shadow: 0 10px 25px rgba(37,99,235,.35);
+      font-size:17px; padding:16px 32px; width:100%; justify-content:center;
     }
-    .btn-primary:hover { background: linear-gradient(45deg, #1d4ed8, #1e40af); box-shadow: 0 8px 25px rgba(59,130,246,.6); }
-    .btn-secondary { background: linear-gradient(45deg, #6b7280, #4b5563); color:#fff; box-shadow: 0 4px 15px rgba(107,114,128,.4); }
-    .btn-secondary:hover { background: linear-gradient(45deg, #4b5563, #374151); box-shadow: 0 8px 25px rgba(107,114,128,.6); }
-    .btn-success { background: var(--success-gradient); color:#fff; box-shadow: 0 4px 15px rgba(16,185,129,.4); }
-    .btn-success:hover { background: linear-gradient(45deg, #059669, #047857); box-shadow: 0 8px 25px rgba(16,185,129,.6); }
-    .cards { display:grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap:16px; margin-top:16px; }
+    .btn-primary:hover { filter: brightness(1.05); box-shadow: 0 14px 30px rgba(37,99,235,.45); }
+    .btn-secondary { background: rgba(148,163,184,.18); color: var(--text-secondary); box-shadow: inset 0 0 0 1px rgba(148,163,184,.35); }
+    .btn-secondary:hover { background: rgba(148,163,184,.28); box-shadow: inset 0 0 0 1px rgba(148,163,184,.5); }
+    .btn-success { background: var(--success-gradient); color:#fff; box-shadow: 0 10px 25px rgba(16,185,129,.35); }
+    .btn-success:hover { filter: brightness(1.05); box-shadow: 0 14px 30px rgba(16,185,129,.45); }
+    .toolbar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin: 12px 0 4px; }
+    .search-input { flex:1; min-width:220px; padding:12px 14px; border-radius:12px;
+      border:1px solid rgba(148,163,184,.3); background: rgba(15,23,42,.55); color: var(--text-primary);
+      transition: var(--transition);
+    }
+    .search-input:focus { outline:none; border-color:#60a5fa; box-shadow: 0 0 0 4px rgba(59,130,246,.18); }
+    .chip-group { display:flex; flex-wrap:wrap; gap:8px; }
+    .chip { padding:8px 12px; border-radius:999px; border:1px solid rgba(148,163,184,.25); background: rgba(15,23,42,.4);
+      color: var(--text-secondary); font-size:12px; font-weight:700; letter-spacing:.4px; cursor:pointer; transition: var(--transition);
+    }
+    .chip.active { background: rgba(59,130,246,.2); border-color: rgba(59,130,246,.45); color:#bfdbfe; }
+    .chip:hover { transform: translateY(-1px); }
+
+    .cards { display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:16px; margin-top:16px; }
+    .cards.compact { grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); }
+    .cards.compact .card { padding:12px 14px; font-size:14px; min-height:56px; }
+    .cards.compact .card-status { gap:6px; }
+    .cards.compact .card-metrics { font-size:11px; }
+    .cards.compact .status-pill { font-size:9px; padding:3px 6px; }
     .card { display:flex; align-items:center; gap:12px; padding:16px 20px; border-radius:12px; background: var(--glass-bg);
-      border:1px solid var(--glass-border); font-size:16px; font-weight:500; color: var(--text-secondary);
-      transition: var(--transition); cursor:pointer; backdrop-filter: blur(10px); position:relative;
+      border:1px solid var(--glass-border); font-size:15px; font-weight:600; color: var(--text-secondary);
+      transition: var(--transition); cursor:pointer; backdrop-filter: blur(10px); position:relative; min-height:64px;
     }
-    .card:hover { background: rgba(255,255,255,.12); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-    [data-theme="dark"] .card:hover { background: rgba(0,0,0,.4); }
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: rgba(148,163,184,.45); }
+    .card--running { box-shadow: 0 0 0 1px rgba(59,130,246,.25), 0 8px 25px rgba(59,130,246,.12); }
+    .card--done { box-shadow: 0 0 0 1px rgba(16,185,129,.2), 0 8px 25px rgba(16,185,129,.12); }
+    .card--error { box-shadow: 0 0 0 1px rgba(239,68,68,.25), 0 8px 25px rgba(239,68,68,.12); }
     .card-status { display:flex; align-items:center; gap:8px; margin-left:auto; }
     .card-metrics { display:flex; align-items:center; gap:6px; font-size:12px; }
-    .metric-ok { color:#6ee7b7; font-weight:700; }
-    .metric-fail { color:#fecaca; font-weight:700; }
-    .status-pill { font-size:11px; font-weight:700; padding:4px 8px; border-radius:999px; text-transform: uppercase; letter-spacing:.5px; }
+    .metric-ok { color:#86efac; font-weight:700; }
+    .metric-fail { color:#fca5a5; font-weight:700; }
+    .status-pill { font-size:10px; font-weight:700; padding:4px 8px; border-radius:999px; text-transform: uppercase; letter-spacing:.6px; }
     .status-running { background: rgba(59,130,246,.2); color:#93c5fd; border:1px solid rgba(59,130,246,.4); }
     .status-done { background: rgba(16,185,129,.2); color:#6ee7b7; border:1px solid rgba(16,185,129,.4); }
     .status-error { background: rgba(239,68,68,.2); color:#fecaca; border:1px solid rgba(239,68,68,.4); }
-    .card-checkbox { width:20px; height:20px; accent-color:#60a5fa; cursor:pointer; transform: scale(1.2); }
-    .card-text { flex:1; white-space: normal; word-break: break-word; line-height:1.4; }
+    .card-checkbox { width:18px; height:18px; accent-color:#60a5fa; cursor:pointer; transform: scale(1.15); }
+    .card-text { flex:1; white-space: normal; word-break: break-word; line-height:1.4; min-width:0; display:flex; flex-direction:column; gap:6px; }
+    .card-name { white-space: normal; word-break: break-word; }
+    .progress { height:6px; background: rgba(148,163,184,.2); border-radius:999px; overflow:hidden; position:relative; }
+    .progress .bar { height:100%; width:0; border-radius:999px; transition: width .3s ease; }
+    .progress.ok .bar { background: linear-gradient(90deg, #34d399, #10b981); }
+    .progress.fail .bar { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+    .progress-meta { display:flex; align-items:center; gap:8px; font-size:11px; color: var(--text-muted); }
     .card-icon { margin-right:8px; font-size:18px; }
-    .output { margin-top:24px; background: rgba(0,0,0,.4); backdrop-filter: blur(10px); padding:20px; border-radius: var(--border-radius);
-      color:#22c55e; font-family: 'JetBrains Mono','Fira Code','Courier New',monospace; white-space: pre-wrap; font-size:14px;
-      border:1px solid var(--glass-border); min-height: 120px; position:relative; line-height:1.5; overflow:auto; max-height: 50vh;
+    .output { margin-top:24px; background: rgba(2,6,23,.75); backdrop-filter: blur(12px); padding:20px; border-radius: var(--border-radius);
+      color:#4ade80; font-family: 'JetBrains Mono','Fira Code','Courier New',monospace; white-space: pre-wrap; font-size:13px;
+      border:1px solid rgba(148,163,184,.25); min-height: 120px; position:relative; line-height:1.6; overflow:auto; max-height: 50vh;
     }
-    [data-theme="dark"] .output { background: rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.1); }
+    [data-theme="dark"] .output { background: rgba(2,6,23,.85); border:1px solid rgba(148,163,184,.18); }
     .output:empty::before { content:'💻 Вывод команд будет отображаться здесь...'; color:var(--text-muted); font-style: italic; }
     .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .section-title { font-size:18px; font-weight:600; color: var(--text-secondary); text-transform: uppercase; letter-spacing:.5px; display:flex; align-items:center; gap:8px; }
+    .section-title { font-size:14px; font-weight:700; color: var(--text-secondary); text-transform: uppercase; letter-spacing:.9px; display:flex; align-items:center; gap:8px; }
     .switcher { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
     .switcher .form-label { margin-bottom:0; white-space:nowrap; }
     .switcher .form-select { min-width:200px; }
@@ -158,8 +208,8 @@
     }
     @keyframes spin { 0%{ transform: translateY(-50%) rotate(0deg);} 100%{ transform: translateY(-50%) rotate(360deg);} }
     .stats-bar { display:flex; gap:24px; justify-content:center; margin-bottom:32px; flex-wrap:wrap; }
-    .stat-item { text-align:center; padding:12px 20px; background: var(--glass-bg); border-radius:12px; backdrop-filter: blur(10px);
-      border:1px solid var(--glass-border); transition: var(--transition);
+    .stat-item { text-align:center; padding:12px 20px; background: rgba(15,23,42,.6); border-radius:12px; backdrop-filter: blur(10px);
+      border:1px solid rgba(148,163,184,.25); transition: var(--transition);
     }
     .stat-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
     .stat-value { font-size:24px; font-weight:700; color:#60a5fa; }
@@ -194,6 +244,7 @@
   <div class="container">
     <img class="logo" src="Service_Logo_full_.svg" alt="Logo" />
     <h1 class="title">🚀 Postman Runner</h1>
+    <div class="subtitle">Запускайте коллекции, отслеживайте прогресс и открывайте Allure за секунды</div>
 
     <div class="stats-bar">
       <div class="stat-item">
@@ -255,6 +306,17 @@
         <span class="section-title">📋 Коллекции</span>
         <button class="btn btn-success" id="selectAllBtn" onclick="toggleSelectAll()">✅ Выбрать все</button>
       </div>
+      <div class="toolbar">
+        <input class="search-input" id="collectionSearch" placeholder="Поиск коллекций..." oninput="setSearchQuery()" />
+        <div class="chip-group" id="statusChips">
+          <button class="chip active" data-status="all" onclick="setStatusFilter('all')">Все</button>
+          <button class="chip" data-status="running" onclick="setStatusFilter('running')">Running</button>
+          <button class="chip" data-status="done" onclick="setStatusFilter('done')">Done</button>
+          <button class="chip" data-status="error" onclick="setStatusFilter('error')">Error</button>
+          <button class="chip" data-status="idle" onclick="setStatusFilter('idle')">Idle</button>
+        </div>
+        <button class="chip" id="compactToggle" onclick="toggleCompact()">Компактно</button>
+      </div>
       <div class="cards" id="collectionsContainer"></div>
     </div>
 
@@ -290,6 +352,9 @@
     let showConfig = false;
     let awaitAllureOpen = false;
     let lastAllureUrl = '';
+    let searchQuery = '';
+    let statusFilter = 'all';
+    let compactMode = false;
     const collectionStatuses = new Map();
 
     // DOM
@@ -299,6 +364,9 @@
     const environmentSelectEl = document.getElementById('environmentSelect');
     const outputEl = document.getElementById('output');
     const collectionsContainer = document.getElementById('collectionsContainer');
+    const collectionSearchEl = document.getElementById('collectionSearch');
+    const statusChipsEl = document.getElementById('statusChips');
+    const compactToggleEl = document.getElementById('compactToggle');
     const apiStatusEl = document.getElementById('apiStatus');
     const workspaceStatusEl = document.getElementById('workspaceStatus');
     const collectionsCountEl = document.getElementById('collectionsCount');
@@ -318,6 +386,7 @@
       loadData();
       initStream(); // подписка на SSE
       updateAllureButton();
+      loadCompactMode();
     }
 
     // SSE stream
@@ -418,6 +487,36 @@
       else { button.classList.remove('loading'); button.disabled = false; }
     }
 
+    function setSearchQuery() {
+      searchQuery = collectionSearchEl.value || '';
+      renderCollections();
+    }
+
+    function setStatusFilter(next) {
+      statusFilter = next;
+      const chips = statusChipsEl.querySelectorAll('.chip');
+      chips.forEach((chip) => {
+        chip.classList.toggle('active', chip.dataset.status === next);
+      });
+      renderCollections();
+    }
+
+    function loadCompactMode() {
+      compactMode = localStorage.getItem('compactMode') === 'true';
+      updateCompactMode();
+    }
+
+    function toggleCompact() {
+      compactMode = !compactMode;
+      localStorage.setItem('compactMode', compactMode.toString());
+      updateCompactMode();
+    }
+
+    function updateCompactMode() {
+      collectionsContainer.classList.toggle('compact', compactMode);
+      compactToggleEl.classList.toggle('active', compactMode);
+    }
+
     // LOAD config/data
     async function loadConfig() {
       try {
@@ -476,11 +575,31 @@
     // RENDER
     function renderCollections() {
       collectionsContainer.innerHTML = '';
-      collections.forEach((collection, index) => {
+      const normalizedQuery = searchQuery.trim().toLowerCase();
+      const filtered = collections.filter((collection) => {
+        const status = collectionStatuses.get(collection.name) || {};
+        const s = status.status || 'idle';
+        const matchesStatus = statusFilter === 'all' || s === statusFilter;
+        const label = (collection.name || '').replace(/\.json$/, '').toLowerCase();
+        const matchesQuery = !normalizedQuery || label.includes(normalizedQuery);
+        return matchesStatus && matchesQuery;
+      });
+
+      if (!filtered.length) {
+        const empty = document.createElement('div');
+        empty.className = 'card';
+        empty.textContent = 'Нет коллекций по текущему фильтру';
+        collectionsContainer.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach((collection, index) => {
         const status = collectionStatuses.get(collection.name) || {};
         const total = Number.isFinite(status.assertionsTotal) ? status.assertionsTotal : 0;
         const failed = Number.isFinite(status.assertionsFailed) ? status.assertionsFailed : 0;
         const passed = Math.max(0, total - failed);
+        const progressPct = total > 0 ? Math.round((passed / total) * 100) : 0;
+        const progressClass = failed > 0 ? 'fail' : 'ok';
         const s = status.status || 'idle';
         let statusClass = 'status-running';
         let statusText = 'IDLE';
@@ -495,12 +614,19 @@
           statusText = 'ERROR';
         }
         const card = document.createElement('label');
-        card.className = 'card';
+        const stateClass = s === 'done' ? 'card--done' : s === 'error' ? 'card--error' : s === 'running' ? 'card--running' : '';
+        card.className = `card ${stateClass}`.trim();
         card.style.animationDelay = `${index * 0.1}s`;
         card.innerHTML = `
           <span class="card-icon">📊</span>
-          <input type="checkbox" class="card-checkbox" data-collection="${collection.name}" onchange="toggleCollection('${collection.name}')"/>
-          <span class="card-text">${(collection.name || '').replace(/\.json$/, '')}</span>
+          <input type="checkbox" class="card-checkbox" data-collection="${collection.name}" ${selectedCollections.includes(collection.name) ? 'checked' : ''} onchange="toggleCollection('${collection.name}')"/>
+          <span class="card-text">
+            <span class="card-name">${(collection.name || '').replace(/\.json$/, '')}</span>
+            <span class="progress ${progressClass}">
+              <span class="bar" style="width:${progressPct}%"></span>
+            </span>
+            <span class="progress-meta">${total > 0 ? `${passed}/${total} (${progressPct}%)` : 'Нет assertions'}</span>
+          </span>
           <span class="card-status">
             <span class="card-metrics">
               <span class="metric-ok">OK: ${passed}</span>
@@ -634,6 +760,9 @@
     window.toggleCollection = toggleCollection;
     window.runCollections = runCollections;
     window.openAllureClick = openAllureClick;
+    window.setSearchQuery = setSearchQuery;
+    window.setStatusFilter = setStatusFilter;
+    window.toggleCompact = toggleCompact;
 
     document.addEventListener('DOMContentLoaded', init);
   </script>
