@@ -142,4 +142,27 @@ log "Cleaning old backups (keep $KEEP_BACKUPS)..."
 ls -1dt "${BACKUP_DIR}/backup_"*.tar.gz 2>/dev/null | tail -n +"$((KEEP_BACKUPS+1))" | xargs -r rm -f
 ls -1dt "${BACKUP_DIR}/backup_"*.meta 2>/dev/null | tail -n +"$((KEEP_BACKUPS+1))" | xargs -r rm -f
 
+log "Final checks..."
+local_code="$(curl -fsS -o /dev/null -w "%{http_code}" "http://127.0.0.1:${HOST_PORT}/health" || true)"
+domain_code="000"
+if [ -n "${DOMAIN_URL:-}" ]; then
+  domain_code="$(curl -fsS -o /dev/null -w "%{http_code}" "${DOMAIN_URL%/}/health" || true)"
+fi
+
+if [[ ! "$local_code" =~ ^2|3 ]]; then
+  warn "Local check failed (HTTP $local_code)."
+else
+  ok "Local check passed (HTTP $local_code)."
+fi
+
+if [ -n "${DOMAIN_URL:-}" ]; then
+  if [[ ! "$domain_code" =~ ^2|3 ]]; then
+    warn "Domain check failed (HTTP $domain_code)."
+  else
+    ok "Domain check passed (HTTP $domain_code)."
+  fi
+else
+  warn "DOMAIN_URL not set, skipping domain check."
+fi
+
 ok "Docker deployment complete."
