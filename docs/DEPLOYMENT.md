@@ -2,7 +2,7 @@
 
 Эта инструкция настраивает безопасный деплой с бэкапами, проверками и откатом.
 
-## Первый запуск
+## Первый запуск (PM2 режим)
 
 ```bash
 cd /opt/postman_runner
@@ -61,4 +61,38 @@ KEEP_BACKUPS=5 \
 
 ```
 /opt/backups/postman_runner/backup_YYYYMMDD_HHMMSS.tar.gz
+```
+
+---
+
+## Docker режим (рекомендуется для текущей установки)
+
+### Первый запуск
+
+```bash
+cd /opt/postman_runner
+chmod +x deploy-safe-docker.sh rollback-docker.sh
+mkdir -p /opt/backups/postman_runner_docker
+```
+
+### Обновление одной командой
+
+```bash
+ssh root@your-server "cd /opt/postman_runner && ./deploy-safe-docker.sh -y"
+```
+
+### Откат
+
+```bash
+ssh root@your-server "cd /opt/postman_runner && ./rollback-docker.sh --latest --yes"
+```
+
+### Переменные (если нужно)
+
+```bash
+HOST_PORT=3001 \
+CONTAINER_PORT=3000 \
+DATA_DIR=/opt/postman_runner/data \
+KEEP_BACKUPS=5 \
+./deploy-safe-docker.sh -y
 ```
