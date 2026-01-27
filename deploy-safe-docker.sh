@@ -102,8 +102,17 @@ docker run -d --name "${CONTAINER_NAME}-temp" \
   -e BASIC_AUTH_PASS="${BASIC_AUTH_PASS:-vadmin}" \
   "${IMAGE_NAME}:${ts}"
 
-sleep 2
-status_code="$(curl -fsS -o /dev/null -w "%{http_code}" "http://127.0.0.1:${TEMP_PORT}/health" || true)"
+log "Waiting for health check..."
+status_code="000"
+for i in {1..15}; do
+  sleep 2
+  status_code="$(curl -fsS -o /dev/null -w "%{http_code}" "http://127.0.0.1:${TEMP_PORT}/health" || true)"
+  if [[ "$status_code" =~ ^2|3 ]]; then
+    ok "Health check passed (HTTP $status_code)."
+    break
+  fi
+done
+
 if [[ ! "$status_code" =~ ^2|3 ]]; then
   err "Health check failed (HTTP $status_code). Rolling back..."
   docker logs "${CONTAINER_NAME}-temp" || true
@@ -111,7 +120,6 @@ if [[ ! "$status_code" =~ ^2|3 ]]; then
   ./rollback-docker.sh --latest --yes
   exit 1
 fi
-ok "Health check passed (HTTP $status_code)."
 
 log "Switching containers..."
 docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
