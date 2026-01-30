@@ -6,6 +6,8 @@ services:
     build: .
     container_name: ${PROJECT_NAME:-postman-runner}-app
     restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-3001}:3000"
     environment:
       - PORT=3000
       - BASIC_AUTH_USER=${BASIC_AUTH_USER:-admin}
@@ -16,34 +18,10 @@ services:
     networks:
       - internal
 
-  # ============================================
-  # Caddy (reverse proxy + auto HTTPS)
-  # ============================================
-  caddy:
-    image: caddy:2-alpine
-    container_name: ${PROJECT_NAME:-postman-runner}-caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    environment:
-      - DOMAIN=${DOMAIN:-localhost}
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - app
-    networks:
-      - internal
-
 networks:
   internal:
     driver: bridge
 
 volumes:
-  caddy_data:
-  caddy_config:
   app_data:
   app_envs:
