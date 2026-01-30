@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # ============================================
   # Приложение
@@ -15,7 +13,6 @@ services:
     volumes:
       - app_data:/app/collections
       - app_envs:/app/environments
-      - app_config:/app/config.json
     networks:
       - internal
 
@@ -50,4 +47,3 @@ volumes:
   caddy_config:
   app_data:
   app_envs:
-  app_config:
